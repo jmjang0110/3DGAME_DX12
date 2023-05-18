@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="GameFramework">
+      <UniqueIdentifier>{2022f07b-1b60-46ab-a52d-a64b674a984f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="main">
+      <UniqueIdentifier>{575bc941-5015-4360-95cc-4d6d8e1f9f73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility">
+      <UniqueIdentifier>{a0d56e5f-0b75-4c90-93de-92a89ae340ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility\pch">
+      <UniqueIdentifier>{acba5b5c-788e-4a1c-9eea-8a77ff806bf9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility\리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="GameFramework\Device">
+      <UniqueIdentifier>{c5e41b59-16d9-463e-8369-7da4f037d1f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\CommandQueue">
+      <UniqueIdentifier>{d4b76766-2a74-4331-bfed-3aa531a62406}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\SwapChain">
+      <UniqueIdentifier>{5520b3a5-3977-4dc6-af20-ff779599f661}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\RootSignature">
+      <UniqueIdentifier>{0c05bea4-3514-4c77-b449-72ae49ab5788}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\Shader">
+      <UniqueIdentifier>{36dfeeb4-1aee-4608-a06e-afa5faa734b3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CGameFramework.h">
+      <Filter>GameFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Utility\pch</Filter>
+    </ClInclude>
+    <ClInclude Include="2018180035JJM_DX12.h">
+      <Filter>main</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="CDevice.h">
+      <Filter>GameFramework\Device</Filter>
+    </ClInclude>
+    <ClInclude Include="CRootSignature.h">
+      <Filter>GameFramework\RootSignature</Filter>
+    </ClInclude>
+    <ClInclude Include="CSwapChain.h">
+      <Filter>GameFramework\SwapChain</Filter>
+    </ClInclude>
+    <ClInclude Include="CCommandQueue.h">
+      <Filter>GameFramework\CommandQueue</Filter>
+    </ClInclude>
+    <ClInclude Include="CShader.h">
+      <Filter>GameFramework\Shader</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CGameFramework.cpp">
+      <Filter>GameFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Utility\pch</Filter>
+    </ClCompile>
+    <ClCompile Include="2018180035JJM_DX12.cpp">
+      <Filter>main</Filter>
+    </ClCompile>
+    <ClCompile Include="CDevice.cpp">
+      <Filter>GameFramework\Device</Filter>
+    </ClCompile>
+    <ClCompile Include="CRootSignature.cpp">
+      <Filter>GameFramework\RootSignature</Filter>
+    </ClCompile>
+    <ClCompile Include="CSwapChain.cpp">
+      <Filter>GameFramework\SwapChain</Filter>
+    </ClCompile>
+    <ClCompile Include="CCommandQueue.cpp">
+      <Filter>GameFramework\CommandQueue</Filter>
+    </ClCompile>
+    <ClCompile Include="CShader.cpp">
+      <Filter>GameFramework\Shader</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="2018180035JJM_DX12.rc">
+      <Filter>Utility\리소스 파일</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="small.ico">
+      <Filter>Utility\리소스 파일</Filter>
+    </Image>
+    <Image Include="2018180035JJM_DX12.ico">
+      <Filter>Utility\리소스 파일</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
