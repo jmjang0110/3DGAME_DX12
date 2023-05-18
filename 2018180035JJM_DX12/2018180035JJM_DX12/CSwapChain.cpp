@@ -39,11 +39,17 @@ void CSwapChain::OnCreate(WindowInfo windowInfo)
 	std::shared_ptr<CCommandQueue>  pCmdQueue        = COMMAND_QUEUE(CGameFramework);
 
 	pDevice->GetDxgiFactory4()->CreateSwapChainForHwnd(pCmdQueue->GetCommandQueue().Get(), windowInfo.hWnd,
-		&dxgiSwapChainDesc, &dxgiSwapChainFullScreenDesc, NULL, (IDXGISwapChain1**)m_pdxgiSwapChain.Get());
+		&dxgiSwapChainDesc, &dxgiSwapChainFullScreenDesc, NULL, (IDXGISwapChain1**)m_pdxgiSwapChain.GetAddressOf());
 
 	pDevice->GetDxgiFactory4()->MakeWindowAssociation(windowInfo.hWnd , DXGI_MWA_NO_ALT_ENTER);	//“Alt+Enter” 키의 동작을 비활성화한다. 
 	m_nSwapChainBufferIndex = m_pdxgiSwapChain->GetCurrentBackBufferIndex();			//스왑체인의 현재 후면버퍼 인덱스를 저장한다. 
-		
+
+
+
+	CreateRTVdescriptorHeap();
+	CreateDSVdescriptorHeap();
+	CreateRTV();
+	CreateDSV();
 
 }
 
@@ -87,6 +93,27 @@ ComPtr<ID3D12Resource> CSwapChain::GetCurRTVBackBuffer()
 	
 	return m_ppd3dRenderTargetBuffers[m_nSwapChainBufferIndex];
 
+}
+
+D3D12_CPU_DESCRIPTOR_HANDLE CSwapChain::GetRTVHandle(UINT index)
+{
+	D3D12_CPU_DESCRIPTOR_HANDLE d3dRtvCPUDescriptorHandle = m_pd3dRtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+	d3dRtvCPUDescriptorHandle.ptr += (index * m_nRtvDescriptorIncrementSize); //현재의 렌더 타겟에 해당하는 서술자의 CPU 주소(핸들)를 계산한다. 
+	return d3dRtvCPUDescriptorHandle;
+}
+
+D3D12_CPU_DESCRIPTOR_HANDLE CSwapChain::GetCurRTVBackBufferHandle()
+{
+	D3D12_CPU_DESCRIPTOR_HANDLE d3dRtvCPUDescriptorHandle = m_pd3dRtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+	d3dRtvCPUDescriptorHandle.ptr += (m_nSwapChainBufferIndex * m_nRtvDescriptorIncrementSize); //현재의 렌더 타겟에 해당하는 서술자의 CPU 주소(핸들)를 계산한다. 
+	return d3dRtvCPUDescriptorHandle;
+}
+
+D3D12_CPU_DESCRIPTOR_HANDLE CSwapChain::GetDSVHandle()
+{
+	//깊이-스텐실 서술자의 CPU 주소를 계산한다. 
+	D3D12_CPU_DESCRIPTOR_HANDLE d3dDsvCPUDescriptorHandle = m_pd3dDsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart(); 
+	return d3dDsvCPUDescriptorHandle;
 }
 
 void CSwapChain::CreateRTVdescriptorHeap()

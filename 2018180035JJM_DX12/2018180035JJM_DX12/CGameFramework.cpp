@@ -66,29 +66,7 @@ void CGameFramework::OnDestroy()
 {
 }
 
-void CGameFramework::CreateSwapChain()
-{
-}
 
-void CGameFramework::CreateRtvAndDsvDescriptorHeaps()
-{
-}
-
-void CGameFramework::CreateDirect3DDevice()
-{
-}
-
-void CGameFramework::CreateCommandQueueAndList()
-{
-}
-
-void CGameFramework::CreateRenderTargetViews()
-{
-}
-
-void CGameFramework::CreateDepthStencilView()
-{
-}
 
 void CGameFramework::BuildObjects()
 {

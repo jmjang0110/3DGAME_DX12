@@ -17,7 +17,11 @@ void CCommandQueue::OnCreate(WindowInfo WindowInfo)
 {
 	std::shared_ptr<CDevice> pDevice = DEVICE(CGameFramework);
 
-	if (pDevice.get()) return;
+	if (!pDevice.get()) 
+		return;
+	m_SwapChain = SWAP_CHAIN(CGameFramework);
+
+
 
 	D3D12_COMMAND_QUEUE_DESC d3dCommandQueueDesc;
 	::ZeroMemory(&d3dCommandQueueDesc, sizeof(D3D12_COMMAND_QUEUE_DESC));
@@ -49,7 +53,7 @@ void CCommandQueue::OnCreate(WindowInfo WindowInfo)
 
 // [ FENCE ]
 
-	HRESULT hResult = pDevice->GetDevice()->CreateFence(0, D3D12_FENCE_FLAG_NONE, __uuidof(ID3D12Fence), (void**)&m_pd3dFence);
+	hResult = pDevice->GetDevice()->CreateFence(0, D3D12_FENCE_FLAG_NONE, __uuidof(ID3D12Fence), (void**)&m_pd3dFence);
 	m_nFenceValue   = 0;//펜스를 생성하고 펜스 값을 0으로 설정한다. 
 	m_hFenceEvent   = ::CreateEvent(NULL, FALSE, FALSE, NULL);
 
@@ -87,24 +91,22 @@ void CCommandQueue::Prepare_Rendering()
 
 
 	//뷰포트와 씨저 사각형을 설정한다.
-	m_pd3dCommandList->RSSetViewports(1, &CGameFramework::GetInst()->GetViewPort());
-	m_pd3dCommandList->RSSetScissorRects(1, &CGameFramework::GetInst()->GetScissorRect());
+	D3D12_VIEWPORT ViewPort = CGameFramework::GetInst()->GetViewPort();
+	D3D12_RECT ScissorRect  = CGameFramework::GetInst()->GetScissorRect();
+	m_pd3dCommandList->RSSetViewports(1, &ViewPort);
+	m_pd3dCommandList->RSSetScissorRects(1, &ScissorRect);
  
-	D3D12_CPU_DESCRIPTOR_HANDLE d3dRtvCPUDescriptorHandle = m_pd3dRtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
-	d3dRtvCPUDescriptorHandle.ptr += (m_nSwapChainBufferIndex * m_nRtvDescriptorIncrementSize);//현재의 렌더 타겟에 해당하는 서술자의 CPU 주소(핸들)를 계산한다. 
 	
-
 	//원하는 색상으로 렌더 타겟(뷰)을 지운다. 
 	float pfClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f };
-	m_pd3dCommandList->ClearRenderTargetView(d3dRtvCPUDescriptorHandle,
-		pfClearColor/*Colors::Azure*/, 0, NULL);
-	
-	//깊이-스텐실 서술자의 CPU 주소를 계산한다. 
-	D3D12_CPU_DESCRIPTOR_HANDLE d3dDsvCPUDescriptorHandle = m_pd3dDsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+	D3D12_CPU_DESCRIPTOR_HANDLE d3dRtvCPUDescriptorHandle = pSwapChain->GetCurRTVBackBufferHandle();
+	m_pd3dCommandList->ClearRenderTargetView(d3dRtvCPUDescriptorHandle, pfClearColor/*Colors::Azure*/, 0, NULL);
 	
 	//원하는 값으로 깊이-스텐실(뷰)을 지운다. 
-	m_pd3dCommandList->ClearDepthStencilView(d3dDsvCPUDescriptorHandle,D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, NULL);
+	D3D12_CPU_DESCRIPTOR_HANDLE d3dDsvCPUDescriptorHandle = pSwapChain->GetDSVHandle();	 //깊이-스텐실 서술자의 CPU 주소를 계산한다. 
+	m_pd3dCommandList->ClearDepthStencilView(d3dDsvCPUDescriptorHandle,D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, NULL); 
 	
+
 	//렌더 타겟 뷰(서술자)와 깊이-스텐실 뷰(서술자)를 출력-병합 단계(OM)에 연결한다. 
 	m_pd3dCommandList->OMSetRenderTargets(1, &d3dRtvCPUDescriptorHandle, TRUE,
 		&d3dDsvCPUDescriptorHandle);

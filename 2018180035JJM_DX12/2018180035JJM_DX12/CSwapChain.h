@@ -20,12 +20,12 @@ class CSwapChain
 {
 
 private:
-	ComPtr<IDXGISwapChain3>		m_pdxgiSwapChain;	//스왑 체인 인터페이스에 대한 포인터이다. 주로 디스플레이를 제어하기 위하여 필요하다. 
-	bool						m_bMsaa4xEnable        = false;
-	UINT						m_nMsaa4xQualityLevels = 0;	//MSAA 다중 샘플링을 활성화하고 다중 샘플링 레벨을 설정한다.
+	ComPtr<IDXGISwapChain3>		m_pdxgiSwapChain;					//스왑 체인 인터페이스에 대한 포인터이다. 주로 디스플레이를 제어하기 위하여 필요하다. 
+	bool						m_bMsaa4xEnable				= false;
+	UINT						m_nMsaa4xQualityLevels		= 0;	//MSAA 다중 샘플링을 활성화하고 다중 샘플링 레벨을 설정한다.
 
-	static const UINT			m_nSwapChainBuffers		= 2;//스왑 체인의 후면 버퍼의 개수이다. 
-	UINT						m_nSwapChainBufferIndex;	//현재 스왑 체인의 후면 버퍼 인덱스이다.
+	static const UINT			m_nSwapChainBuffers			= 2;	//스왑 체인의 후면 버퍼의 개수이다. 
+	UINT						m_nSwapChainBufferIndex;			//현재 스왑 체인의 후면 버퍼 인덱스이다.
 
 private:
 /// RTV
@@ -52,8 +52,14 @@ public:
 	void Present();
 	void SwapIndex();
 
-	ComPtr<ID3D12Resource> GetRTVBuffer(UINT index);
-	ComPtr<ID3D12Resource> GetCurRTVBackBuffer();
+	ComPtr<ID3D12Resource>		GetRTVBuffer(UINT index);
+	D3D12_CPU_DESCRIPTOR_HANDLE GetRTVHandle(UINT index);
+
+	ComPtr<ID3D12Resource>		GetCurRTVBackBuffer();
+	D3D12_CPU_DESCRIPTOR_HANDLE GetCurRTVBackBufferHandle();
+
+	D3D12_CPU_DESCRIPTOR_HANDLE GetDSVHandle();
+
 
 
 public:

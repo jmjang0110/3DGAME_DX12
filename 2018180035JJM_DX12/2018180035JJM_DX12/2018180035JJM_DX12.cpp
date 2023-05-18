@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include "2018180035JJM_DX12.h"
+#include "CGameFramework.h"
 
 #define MAX_LOADSTRING 100
 
@@ -44,16 +45,37 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     MSG msg;
 
     // 기본 메시지 루프입니다:
-    while (GetMessage(&msg, nullptr, 0, 0))
+    while (true)
     {
-        if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+        /*
+            MEssage 가 있는지 없는지 확인한다.
+            PM_REMOVE : 어떤 키보드를 누른다거나 마우스 클릭하거나 입력값들을 msg 로 하는데
+            Message Queue 에다가 넣는다. 이것을 하나씩 꺼내서 사용
+        */
+
+
+        if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
         {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
+            if (msg.message == WM_QUIT) // 종료한다면  
+                break;
+
+
+            if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+            {
+                TranslateMessage(&msg);
+                DispatchMessage(&msg);
+            }
+
+            // TODO
+            // - Game Logic - 
+            CGameFramework::GetInst()->FrameAdvance();
+
         }
+
+
     }
 
-    return (int) msg.wParam;
+    return (int)msg.wParam;
 }
 
 
@@ -109,6 +131,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);
+
+    CGameFramework::GetInst()->OnCreate(hInstance, hWnd);
 
     return TRUE;
 
