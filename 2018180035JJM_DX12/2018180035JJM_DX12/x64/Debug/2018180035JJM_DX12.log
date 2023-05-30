@@ -1,3 +1,6 @@
-﻿  CSwapChain.cpp
-C:\MyGithub\School\3DHW\3DGAME_DX12\2018180035JJM_DX12\2018180035JJM_DX12\stdafx.h(31,10): warning C4067: 전처리기 지시문 다음에 예기치 않은 토큰이 있습니다. 줄 바꿈 문자가 필요합니다.
+﻿  2018180035JJM_DX12.cpp
+  CCommandQueue.cpp
+  CGameFramework.cpp
+  CSwapChain.cpp
+  코드를 생성하고 있습니다...
   2018180035JJM_DX12.vcxproj -> C:\MyGithub\School\3DHW\3DGAME_DX12\2018180035JJM_DX12\x64\Debug\2018180035JJM_DX12.exe

@@ -24,12 +24,13 @@ private:
 	bool						m_bMsaa4xEnable				= false;
 	UINT						m_nMsaa4xQualityLevels		= 0;	//MSAA 다중 샘플링을 활성화하고 다중 샘플링 레벨을 설정한다.
 
-	static const UINT			m_nSwapChainBuffers			= 2;	//스왑 체인의 후면 버퍼의 개수이다. 
-	UINT						m_nSwapChainBufferIndex;			//현재 스왑 체인의 후면 버퍼 인덱스이다.
+	UINT						m_BackBufferIdx;			//현재 스왑 체인의 후면 버퍼 인덱스이다.
 
+	bool						m_bFullScreenState			= false;
 private:
 /// RTV
-	ComPtr<ID3D12Resource>				m_ppd3dRenderTargetBuffers[m_nSwapChainBuffers];
+	ComPtr<ID3D12Resource>				m_ppd3dRenderTargetBuffers[SWAP_CHAIN_BUFFER_COUNT];
+	D3D12_CPU_DESCRIPTOR_HANDLE			m__RTV_Handles[SWAP_CHAIN_BUFFER_COUNT];
 	ComPtr<ID3D12DescriptorHeap>		m_pd3dRtvDescriptorHeap;
 	UINT								m_nRtvDescriptorIncrementSize;//렌더 타겟 버퍼, 서술자 힙 인터페이스 포인터, 렌더 타겟 서술자 원소의 크기이다
 
@@ -42,24 +43,10 @@ public:
 	CSwapChain();
 	~CSwapChain();
 
-
-public:
-	ComPtr<IDXGISwapChain3> GetDxgiSwapChain() { return m_pdxgiSwapChain; }
-
-
 public:
 	void OnCreate(WindowInfo WindowInfo);
 	void Present();
-	void SwapIndex();
-
-	ComPtr<ID3D12Resource>		GetRTVBuffer(UINT index);
-	D3D12_CPU_DESCRIPTOR_HANDLE GetRTVHandle(UINT index);
-
-	ComPtr<ID3D12Resource>		GetCurRTVBackBuffer();
-	D3D12_CPU_DESCRIPTOR_HANDLE GetCurRTVBackBufferHandle();
-
-	D3D12_CPU_DESCRIPTOR_HANDLE GetDSVHandle();
-
+	void ChangeSwapchainState();
 
 
 public:
@@ -69,14 +56,29 @@ public:
 	void CreateRTVdescriptorHeap();
 	void CreateDSVdescriptorHeap();
 
+
+
+/// [ G E T ] 
 public:
-	void SetSwapchainDesc(WindowInfo windowInfo
-		, DXGI_SWAP_CHAIN_DESC1* dxgiSwapChainDesc);
+	ComPtr<IDXGISwapChain3>			GetDxgiSwapChain()		{ return m_pdxgiSwapChain; }
+	ComPtr<ID3D12Resource>			GetRTVBuffer(UINT index);
+	D3D12_CPU_DESCRIPTOR_HANDLE		GetRTVHandle(UINT index);
 
-	void SetSwapchainDesc_FullScreen(WindowInfo windowInfo
-		, DXGI_SWAP_CHAIN_FULLSCREEN_DESC* dxgiSwapChainDesc);
+	ComPtr<ID3D12Resource>			GetCurRTVBackBuffer();
+	ComPtr<ID3D12DescriptorHeap>	GetRtvDescriptorHeap()  { return m_pd3dRtvDescriptorHeap; }
+	UINT							GetRtvDescriptorIncrementSize() { return m_nRtvDescriptorIncrementSize; }
+	UINT							GetCurBackBufferIndex() { return m_BackBufferIdx; }
+	D3D12_CPU_DESCRIPTOR_HANDLE		GetCurRTVBackBufferHandle();
 
-	void SetMsaaQualityLevels(WindowInfo windowInfo,
-		D3D12_FEATURE_DATA_MULTISAMPLE_QUALITY_LEVELS* d3dMsaaQualityLevels);
+	D3D12_CPU_DESCRIPTOR_HANDLE		GetDSVHandle();
+	bool							GetFullScreenState()	{ return m_bFullScreenState; }
+
+
+
+/// [ S E T ]
+public:
+	void						SetFullScreenState(bool bFullScreenstate) { m_bFullScreenState = bFullScreenstate; }
+
+
 };
 

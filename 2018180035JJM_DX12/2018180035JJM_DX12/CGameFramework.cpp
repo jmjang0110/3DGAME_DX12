@@ -6,6 +6,8 @@
 #include "CCommandQueue.h"
 #include "CRootSignature.h"
 #include "CSwapChain.h"
+#include "CGraphicsPipelineState.h"
+#include "CGameObject.h"
 
 
 CGameFramework* CGameFramework::m_pInst = nullptr;
@@ -17,6 +19,9 @@ CGameFramework::CGameFramework()
 
 CGameFramework::~CGameFramework()
 {
+	if (m_pTestObj)
+		delete m_pTestObj;
+
 }
 
 bool CGameFramework::OnCreate(HINSTANCE hInstance, HWND hMainWnd)
@@ -26,18 +31,13 @@ bool CGameFramework::OnCreate(HINSTANCE hInstance, HWND hMainWnd)
 	m_Window.nWndClientHeight = FRAME_BUFFER_HEIGHT;
 	m_Window.nWndClientWidth  = FRAME_BUFFER_WIDTH;
 
-	//뷰포트를 주 윈도우의 클라이언트 영역 전체로 설정한다. 
+///뷰포트를 주 윈도우의 클라이언트 영역 전체로 설정한다. 
 	m_d3dScissorRect = { 0, 0, m_Window.nWndClientWidth, m_Window.nWndClientHeight };
+	m_d3dViewport    = { 0, 0, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT, 0.0f, 1.0f };
 
 	/*펜스와 동기화를 위한 이벤트 객체를 생성한다(이벤트 객체의 초기값을 FALSE이다). 이벤트가 실행되면(Signal) 이
 	벤트의 값을 자동적으로 FALSE가 되도록 생성한다.*/
-	m_d3dViewport.TopLeftX = 0;
-	m_d3dViewport.TopLeftY = 0;
-	m_d3dViewport.Width    = static_cast<float>(m_Window.nWndClientWidth);
-	m_d3dViewport.Height   = static_cast<float>(m_Window.nWndClientHeight);
-	m_d3dViewport.MinDepth = 0.0f;
 
-	m_d3dViewport.MaxDepth = 1.0f;
 
 
 
@@ -45,6 +45,8 @@ bool CGameFramework::OnCreate(HINSTANCE hInstance, HWND hMainWnd)
 	m_CommandQueue  = std::make_shared<CCommandQueue>();
 	m_SwapChain     = std::make_shared<CSwapChain>();
 	m_RootSignature = std::make_shared<CRootSignature>();
+	m_GraphicsPipelineStateMachine = std::make_shared<CGraphicsPipelineState>();
+
 
 
 // [ DEVICE ]
@@ -55,6 +57,19 @@ bool CGameFramework::OnCreate(HINSTANCE hInstance, HWND hMainWnd)
 
 // [ SWAPCHAIN ]
 	m_SwapChain->OnCreate(m_Window);
+
+// [ ROOT SIGNATURE ]
+	m_RootSignature->OnCreate();
+
+// [ DX12 PIPELINE STATE ]
+	m_GraphicsPipelineStateMachine->OnCreate();
+
+	m_pTestObj = new CGameObject;
+
+
+#ifdef _WITH_SWAPCHAIN_FULLSCREEN_STATE
+	//m_SwapChain->ChangeSwapchainState();
+#endif
 
 
 	return true;
@@ -78,6 +93,7 @@ void CGameFramework::ReleaseObjects()
 
 void CGameFramework::ProcessInput()
 {
+
 }
 
 void CGameFramework::AnimateObjects()
@@ -93,13 +109,23 @@ void CGameFramework::FrameAdvance()
 	m_CommandQueue->Prepare_Rendering();
 	
 	// TODO : 렌더링 코드는 여기에 추가될 것이다. 
+	if (m_pTestObj)
+		m_pTestObj->Render();
+
 
 	m_CommandQueue->Execute_Rendering();
+
+
+	/// RENDERING -> FULL SCREEN 터지네..? 
+	/*std::shared_ptr<CSwapChain> pSC = SWAP_CHAIN(CGameFramework);
+	pSC->ChangeSwapchainState();*/
 
 }
 
 void CGameFramework::WaitForGpuComplete()
 {
+
+
 }
 
 void CGameFramework::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)

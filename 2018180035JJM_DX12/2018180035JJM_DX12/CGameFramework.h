@@ -5,12 +5,16 @@ class CCommandQueue;
 class CShader;
 class CRootSignature;
 class CSwapChain;
-
+class CGraphicsPipelineState;
 
 
 class CGameFramework
 {
 	SINGLETON_PATTERN(CGameFramework);
+
+private:
+	class CGameObject* m_pTestObj;
+
 
 private:
 // WINDOW 
@@ -23,14 +27,17 @@ private:
 	std::shared_ptr<CCommandQueue>				m_CommandQueue;
 	std::shared_ptr<CSwapChain>					m_SwapChain;
 	std::shared_ptr<CRootSignature>				m_RootSignature;
+	std::shared_ptr<CGraphicsPipelineState>		m_GraphicsPipelineStateMachine;
 
 
 public:
 // [ GET ]
-	std::shared_ptr<class CDevice>			GetDevice()				{ return m_Device; }
-	std::shared_ptr<class CCommandQueue>	GetCmdQueue()			{ return m_CommandQueue; }
-	std::shared_ptr<class CSwapChain>		GetSwapChain()			{ return m_SwapChain; }
-	std::shared_ptr<class CRootSignature>	GetRootSignature()		{ return m_RootSignature; }
+	std::shared_ptr<class CDevice>					GetDevice()									{ return m_Device; }
+	std::shared_ptr<class CCommandQueue>			GetCmdQueue()								{ return m_CommandQueue; }
+	std::shared_ptr<class CSwapChain>				GetSwapChain()								{ return m_SwapChain; }
+	std::shared_ptr<class CRootSignature>			GetRootSignature()							{ return m_RootSignature; }
+	std::shared_ptr<class CGraphicsPipelineState>	GetGraphicsPipelineStateMachine()			{ return m_GraphicsPipelineStateMachine; }
+
 
 	WindowInfo								GetWindowInfo()			{ return m_Window; }
 	D3D12_VIEWPORT							GetViewPort()			{ return m_d3dViewport; }

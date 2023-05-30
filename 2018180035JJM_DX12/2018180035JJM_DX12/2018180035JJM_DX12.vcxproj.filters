@@ -17,20 +17,47 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="GameFramework\Device">
-      <UniqueIdentifier>{c5e41b59-16d9-463e-8369-7da4f037d1f0}</UniqueIdentifier>
+    <Filter Include="GameFramework\DX12_Graphic_Devices">
+      <UniqueIdentifier>{2b5b6d30-6b40-4147-840a-d73ccc77c1e2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameFramework\CommandQueue">
+    <Filter Include="GameFramework\DX12_Graphic_Devices\CommandQueue">
       <UniqueIdentifier>{d4b76766-2a74-4331-bfed-3aa531a62406}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameFramework\SwapChain">
-      <UniqueIdentifier>{5520b3a5-3977-4dc6-af20-ff779599f661}</UniqueIdentifier>
+    <Filter Include="GameFramework\DX12_Graphic_Devices\Device">
+      <UniqueIdentifier>{c5e41b59-16d9-463e-8369-7da4f037d1f0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameFramework\RootSignature">
+    <Filter Include="GameFramework\DX12_Graphic_Devices\RootSignature">
       <UniqueIdentifier>{0c05bea4-3514-4c77-b449-72ae49ab5788}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameFramework\Shader">
+    <Filter Include="GameFramework\DX12_Graphic_Devices\Shader">
       <UniqueIdentifier>{36dfeeb4-1aee-4608-a06e-afa5faa734b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\DX12_Graphic_Devices\SwapChain">
+      <UniqueIdentifier>{5520b3a5-3977-4dc6-af20-ff779599f661}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\Engine">
+      <UniqueIdentifier>{63db8f56-fe51-4217-8bcc-455692b9c02c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\Engine\Scene">
+      <UniqueIdentifier>{df936a75-d1f1-4086-8470-58703c7146d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\Engine\Key">
+      <UniqueIdentifier>{2bd21461-c097-453f-9e25-2cd38ae52f8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\Engine\GameObject">
+      <UniqueIdentifier>{f317fa66-4d73-4bfc-9408-efc8a7ef6bc8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\Engine\Resource">
+      <UniqueIdentifier>{e3f70af4-5e6d-43b3-81a0-f542ccb65593}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\DX12_Graphic_Devices\GraphicsPipelineState">
+      <UniqueIdentifier>{41a0c671-9c84-4ee6-8b2a-aa5832c2898f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\Engine\Resource\HLSL">
+      <UniqueIdentifier>{6ef96583-298f-4b1e-bc89-0b559b908e67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\Engine\GameObject\Mesh">
+      <UniqueIdentifier>{e5490cc0-c033-4986-a5a9-8bc86effafd8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -50,19 +77,40 @@
       <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="CDevice.h">
-      <Filter>GameFramework\Device</Filter>
+      <Filter>GameFramework\DX12_Graphic_Devices\Device</Filter>
     </ClInclude>
     <ClInclude Include="CRootSignature.h">
-      <Filter>GameFramework\RootSignature</Filter>
+      <Filter>GameFramework\DX12_Graphic_Devices\RootSignature</Filter>
     </ClInclude>
     <ClInclude Include="CSwapChain.h">
-      <Filter>GameFramework\SwapChain</Filter>
+      <Filter>GameFramework\DX12_Graphic_Devices\SwapChain</Filter>
     </ClInclude>
     <ClInclude Include="CCommandQueue.h">
-      <Filter>GameFramework\CommandQueue</Filter>
+      <Filter>GameFramework\DX12_Graphic_Devices\CommandQueue</Filter>
     </ClInclude>
     <ClInclude Include="CShader.h">
-      <Filter>GameFramework\Shader</Filter>
+      <Filter>GameFramework\DX12_Graphic_Devices\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="CKeyManager.h">
+      <Filter>GameFramework\Engine\Key</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="CScene.h">
+      <Filter>GameFramework\Engine\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="CGameObject.h">
+      <Filter>GameFramework\Engine\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="CGraphicsPipelineState.h">
+      <Filter>GameFramework\DX12_Graphic_Devices\GraphicsPipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="d3dx12.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="CMesh.h">
+      <Filter>GameFramework\Engine\GameObject\Mesh</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -76,19 +124,34 @@
       <Filter>main</Filter>
     </ClCompile>
     <ClCompile Include="CDevice.cpp">
-      <Filter>GameFramework\Device</Filter>
+      <Filter>GameFramework\DX12_Graphic_Devices\Device</Filter>
     </ClCompile>
     <ClCompile Include="CRootSignature.cpp">
-      <Filter>GameFramework\RootSignature</Filter>
+      <Filter>GameFramework\DX12_Graphic_Devices\RootSignature</Filter>
     </ClCompile>
     <ClCompile Include="CSwapChain.cpp">
-      <Filter>GameFramework\SwapChain</Filter>
+      <Filter>GameFramework\DX12_Graphic_Devices\SwapChain</Filter>
     </ClCompile>
     <ClCompile Include="CCommandQueue.cpp">
-      <Filter>GameFramework\CommandQueue</Filter>
+      <Filter>GameFramework\DX12_Graphic_Devices\CommandQueue</Filter>
     </ClCompile>
     <ClCompile Include="CShader.cpp">
-      <Filter>GameFramework\Shader</Filter>
+      <Filter>GameFramework\DX12_Graphic_Devices\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="CKeyManager.cpp">
+      <Filter>GameFramework\Engine\Key</Filter>
+    </ClCompile>
+    <ClCompile Include="CSene.cpp">
+      <Filter>GameFramework\Engine\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="CGameObject.cpp">
+      <Filter>GameFramework\Engine\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="CGraphicsPipelineState.cpp">
+      <Filter>GameFramework\DX12_Graphic_Devices\GraphicsPipelineState</Filter>
+    </ClCompile>
+    <ClCompile Include="CMesh.cpp">
+      <Filter>GameFramework\Engine\GameObject\Mesh</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -103,5 +166,13 @@
     <Image Include="2018180035JJM_DX12.ico">
       <Filter>Utility\리소스 파일</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="VertexShader.hlsl">
+      <Filter>GameFramework\Engine\Resource\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="PixelShader.hlsl">
+      <Filter>GameFramework\Engine\Resource\HLSL</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

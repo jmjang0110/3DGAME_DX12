@@ -1,14 +1,24 @@
 #pragma once
+
 class CShader
 {
 
 private:
-	ID3D12PipelineState* m_pd3dPipelineState; //그래픽스 파이프라인 상태 객체에 대한 인터페이스 포인터이다. 
-	
-public:
+	SHADER_TYPE							m_eType{};
 
+	ComPtr<ID3DBlob>					m_VSBlob{};
+	ComPtr<ID3DBlob>					m_PSBlob{};
+
+public:
 	CShader();
 	~CShader();
+public:
+	BOOL OnCreate(SHADER_TYPE		   eShaderType,
+				   const LPCWSTR& wstrFileName,
+				   const LPCSTR&  strFuncName,
+				   const LPCSTR&  strShaderVersion);
+
+	ComPtr<ID3DBlob> GetBlob(SHADER_TYPE eShaderType);
 
 
 };
