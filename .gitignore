@@ -51,6 +51,15 @@
 # User-specific files (MonoDevelop/Xamarin Studio)
 ./2018180035JJM_DX12/.vs/
 .vs/
+.vs\
+/.vs
+*.vs
+*..vsidx
+2018180035JJM_DX12/x64
+2018180035JJM_DX12/.vs\
+2018180035JJM_DX12/
+
+2018180035JJM_DX12\.vs\2018180035JJM_DX12\v17
 
 # Mono auto generated files
 mono_crash.*
