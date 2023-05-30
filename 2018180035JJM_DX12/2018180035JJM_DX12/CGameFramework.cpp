@@ -26,6 +26,8 @@ CGameFramework::~CGameFramework()
 
 bool CGameFramework::OnCreate(HINSTANCE hInstance, HWND hMainWnd)
 {
+	int a = 0;
+
 	m_Window.hInstance        = hInstance;
 	m_Window.hWnd             = hMainWnd;
 	m_Window.nWndClientHeight = FRAME_BUFFER_HEIGHT;
