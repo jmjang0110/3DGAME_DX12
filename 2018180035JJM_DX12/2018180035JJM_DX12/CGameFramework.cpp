@@ -26,7 +26,8 @@ CGameFramework::~CGameFramework()
 
 bool CGameFramework::OnCreate(HINSTANCE hInstance, HWND hMainWnd)
 {
-	int a = 0;
+	int aasdf = 123;
+
 
 	m_Window.hInstance        = hInstance;
 	m_Window.hWnd             = hMainWnd;
