@@ -63,6 +63,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
     }
 
+    CGameFramework::GetInst()->OnDestroy();
+
     return (int)msg.wParam;
 }
 

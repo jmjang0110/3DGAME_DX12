@@ -9,6 +9,14 @@
 #include "CGraphicsPipelineState.h"
 #include "CGameObject.h"
 
+#include "ResourceManager.h"
+
+#include "CScene.h"
+#include "CFileManager.h"
+#include "CTimer.h"
+#include "CKeyManager.h"
+
+
 
 CGameFramework* CGameFramework::m_pInst = nullptr;
 
@@ -19,14 +27,14 @@ CGameFramework::CGameFramework()
 
 CGameFramework::~CGameFramework()
 {
-	if (m_pTestObj)
-		delete m_pTestObj;
+	if (m_pCurScene)
+		delete m_pCurScene;
 
+		
 }
 
 bool CGameFramework::OnCreate(HINSTANCE hInstance, HWND hMainWnd)
 {
-	int aasdf = 123;
 
 
 	m_Window.hInstance        = hInstance;
@@ -52,6 +60,9 @@ bool CGameFramework::OnCreate(HINSTANCE hInstance, HWND hMainWnd)
 
 
 
+
+
+
 // [ DEVICE ]
 	m_Device->OnCreate();
 
@@ -64,17 +75,16 @@ bool CGameFramework::OnCreate(HINSTANCE hInstance, HWND hMainWnd)
 // [ ROOT SIGNATURE ]
 	m_RootSignature->OnCreate();
 
-// [ DX12 PIPELINE STATE ]
-	m_GraphicsPipelineStateMachine->OnCreate();
-
-	m_pTestObj = new CGameObject;
-
-
 #ifdef _WITH_SWAPCHAIN_FULLSCREEN_STATE
 	//m_SwapChain->ChangeSwapchainState();
 #endif
 
+	ResourceManager::GetInst()->OnCreate();
+	BuildObjects();
 
+	CGameTimer::GetInst()->Init();
+
+	CKeyManager::GetInst()->Init();
 	return true;
 
 
@@ -82,14 +92,55 @@ bool CGameFramework::OnCreate(HINSTANCE hInstance, HWND hMainWnd)
 
 void CGameFramework::OnDestroy()
 {
+	if (m_pCurScene)
+		delete m_pCurScene;
+
+	if (m_Device)
+		m_Device->~CDevice();
+
+	if (m_CommandQueue)
+		m_CommandQueue->~CCommandQueue();
+
+	if (m_SwapChain)
+		m_SwapChain->~CSwapChain();
+
+	if (m_RootSignature)
+		m_RootSignature->~CRootSignature();
+
+	ResourceManager::GetInst()->OnDestroy();
+	CFileManager::GetInst()->Destroy();
+
+	
+
+
 }
 
 
 
 void CGameFramework::BuildObjects()
 {
-}
 
+	COMMAND_LIST(CGameFramework)->Reset(COMMAND_QUEUE(CGameFramework)->GetCommandAllocator().Get(), NULL);
+
+	//씬 객체를 생성하고 씬에 포함될 게임 객체들을 생성한다
+	m_pCurScene = new CScene;
+
+	
+
+	m_pCurScene->OnCreate();
+
+
+	COMMAND_LIST(CGameFramework)->Close();
+	ID3D12CommandList* ppd3dCommandLists[] = { COMMAND_LIST(CGameFramework).Get() };
+	COMMAND_QUEUE(CGameFramework)->GetCommandQueue()->ExecuteCommandLists(1, ppd3dCommandLists);
+
+	COMMAND_QUEUE(CGameFramework)->WaitForGpuComplete();
+	
+	m_pCurScene->ReleaseUploadBuffers();
+
+
+	
+}
 void CGameFramework::ReleaseObjects()
 {
 }
@@ -105,25 +156,39 @@ void CGameFramework::AnimateObjects()
 
 void CGameFramework::FrameAdvance()
 {
+/// TIMER  
+	CGameTimer::GetInst()->Tick(60.f);
+	float fTimeElapsed = CGameTimer::GetInst()->GetTimeElapsed();
 
-	ProcessInput();
-	AnimateObjects();
 
+/// UPDATE
+	if (m_pCurScene)
+	{
+		CKeyManager::GetInst()->Update();
+		m_pCurScene->Update(fTimeElapsed);
+		m_pCurScene->FinalUpdate(fTimeElapsed);
+	}
+
+/// RENDER 
 	m_CommandQueue->Prepare_Rendering();
-	
-	// TODO : 렌더링 코드는 여기에 추가될 것이다. 
-	if (m_pTestObj)
-		m_pTestObj->Render();
-
-
+	if(m_pCurScene) m_pCurScene->Render();
 	m_CommandQueue->Execute_Rendering();
 
+	
 
-	/// RENDERING -> FULL SCREEN 터지네..? 
+/// TIMER 
+	int FPS = CGameTimer::GetInst()->GetFrameRate(m_pszFrameRate + 12, 37);
+	std::wstring wstr = L"( " + std::to_wstring(FPS) + L" - FPS ) - 2018180035 장재문";
+	::SetWindowText(m_Window.hWnd, wstr.c_str());
+
+
+/// RENDERING -> FULL SCREEN 터지네..? 
 	/*std::shared_ptr<CSwapChain> pSC = SWAP_CHAIN(CGameFramework);
 	pSC->ChangeSwapchainState();*/
 
 }
+
+
 
 void CGameFramework::WaitForGpuComplete()
 {
@@ -143,3 +208,5 @@ LRESULT CGameFramework::OnProcessingWindowMessage(HWND hWnd, UINT nMessageID, WP
 {
 	return LRESULT();
 }
+
+

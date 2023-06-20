@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -128,42 +128,73 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="2018180035JJM_DX12.h" />
+    <ClInclude Include="BulletScript.h" />
+    <ClInclude Include="CameraScript.h" />
+    <ClInclude Include="CCamera.h" />
     <ClInclude Include="CCommandQueue.h" />
+    <ClInclude Include="CComponent.h" />
     <ClInclude Include="CDevice.h" />
+    <ClInclude Include="CEntity.h" />
+    <ClInclude Include="CFileManager.h" />
     <ClInclude Include="CGameFramework.h" />
     <ClInclude Include="CGameObject.h" />
     <ClInclude Include="CGraphicsPipelineState.h" />
     <ClInclude Include="CKeyManager.h" />
+    <ClInclude Include="CLight.h" />
+    <ClInclude Include="CMaterial.h" />
     <ClInclude Include="CMesh.h" />
     <ClInclude Include="CRootSignature.h" />
     <ClInclude Include="CScene.h" />
+    <ClInclude Include="CScript.h" />
     <ClInclude Include="CShader.h" />
     <ClInclude Include="CSwapChain.h" />
+    <ClInclude Include="CTimer.h" />
+    <ClInclude Include="CTransform.h" />
+    <ClInclude Include="CVertex.h" />
     <ClInclude Include="d3dx12.h" />
+    <ClInclude Include="PlayerScript.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="SimpleMath.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="TankMonster.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Utility.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="2018180035JJM_DX12.cpp" />
+    <ClCompile Include="BulletScript.cpp" />
+    <ClCompile Include="CameraScript.cpp" />
+    <ClCompile Include="CCamera.cpp" />
     <ClCompile Include="CCommandQueue.cpp" />
+    <ClCompile Include="CComponent.cpp" />
     <ClCompile Include="CDevice.cpp" />
+    <ClCompile Include="CEntity.cpp" />
+    <ClCompile Include="CFileManager.cpp" />
     <ClCompile Include="CGameFramework.cpp" />
     <ClCompile Include="CGameObject.cpp" />
     <ClCompile Include="CGraphicsPipelineState.cpp" />
     <ClCompile Include="CKeyManager.cpp" />
+    <ClCompile Include="CLight.cpp" />
+    <ClCompile Include="CMaterial.cpp" />
     <ClCompile Include="CMesh.cpp" />
     <ClCompile Include="CRootSignature.cpp" />
+    <ClCompile Include="CScript.cpp" />
     <ClCompile Include="CSene.cpp" />
     <ClCompile Include="CShader.cpp" />
     <ClCompile Include="CSwapChain.cpp" />
+    <ClCompile Include="CTimer.cpp" />
+    <ClCompile Include="CTransform.cpp" />
+    <ClCompile Include="CVertex.cpp" />
+    <ClCompile Include="PlayerScript.cpp" />
+    <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="TankMonster.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="2018180035JJM_DX12.rc" />
@@ -173,22 +204,51 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="PixelShader.hlsl">
+    <None Include="ClassDiagram.cd" />
+    <None Include="Light.hlsl">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.1</ShaderModel>
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.1</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </EntryPointName>
+    </None>
+    <None Include="PixelShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.1</ShaderModel>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="VertexShader.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.1</ShaderModel>
+      <FileType>Document</FileType>
+    </None>
+    <None Include="value.hlsl">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.1</ShaderModel>
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.1</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </EntryPointName>
+    </None>
+    <None Include="VertexShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.1</ShaderModel>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </FxCompile>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.1</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </EntryPointName>
+      <FileType>Document</FileType>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

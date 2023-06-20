@@ -21,7 +21,7 @@ void CSwapChain::OnCreate(WindowInfo windowInfo)
 	windowInfo.nWndClientHeight = rcClient.bottom - rcClient.top;
 
 
-	D3D12_FEATURE_DATA_MULTISAMPLE_QUALITY_LEVELS d3dMsaaQualityLevels;
+	D3D12_FEATURE_DATA_MULTISAMPLE_QUALITY_LEVELS d3dMsaaQualityLevels{};
 	d3dMsaaQualityLevels.Format           = DXGI_FORMAT_R8G8B8A8_UNORM;
 	d3dMsaaQualityLevels.SampleCount      = 4;
 	d3dMsaaQualityLevels.Flags            = D3D12_MULTISAMPLE_QUALITY_LEVELS_FLAG_NONE;
@@ -114,7 +114,7 @@ void CSwapChain::OnCreate(WindowInfo windowInfo)
 
 
 /// (4) CREATE SWPCHAIN
-	DEVICE(CGameFramework)->GetDxgiFactory4()->CreateSwapChain(COMMAND_QUEUE(CGameFramework)->GetCommandQueue().Get()
+	hResult = DEVICE(CGameFramework)->GetDxgiFactory4()->CreateSwapChain(COMMAND_QUEUE(CGameFramework)->GetCommandQueue().Get()
 		, &dxgiSwapChainDesc, (IDXGISwapChain**)m_pdxgiSwapChain.GetAddressOf());
 	m_BackBufferIdx = m_pdxgiSwapChain->GetCurrentBackBufferIndex();
 	hResult = DEVICE(CGameFramework)->GetDxgiFactory4()->MakeWindowAssociation(CGameFramework::GetInst()->GetWindowInfo().hWnd, DXGI_MWA_NO_ALT_ENTER);
@@ -233,7 +233,7 @@ void CSwapChain::ChangeSwapchainState()
 	m_pdxgiSwapChain->GetFullscreenState(&bFullScreenState, NULL);
 	m_pdxgiSwapChain->SetFullscreenState(!bFullScreenState, NULL);
 	
-	DXGI_MODE_DESC dxgiTargetParameters;
+	DXGI_MODE_DESC dxgiTargetParameters{};
 
 	dxgiTargetParameters.Format                  = DXGI_FORMAT_R8G8B8A8_UNORM;
 	dxgiTargetParameters.Width                   = CGameFramework::GetInst()->GetWindowInfo().nWndClientWidth;
@@ -314,7 +314,7 @@ void CSwapChain::CreateDSV()
 	std::shared_ptr<CDevice> pDevice = DEVICE(CGameFramework);
 	WindowInfo sWindowInfo = CGameFramework::GetInst()->GetWindowInfo();
 
-	D3D12_RESOURCE_DESC d3dResourceDesc;
+	D3D12_RESOURCE_DESC d3dResourceDesc{};
 	d3dResourceDesc.Dimension          = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
 	d3dResourceDesc.Alignment          = 0;
 	d3dResourceDesc.Width              = sWindowInfo.nWndClientWidth;
@@ -337,7 +337,7 @@ void CSwapChain::CreateDSV()
 	d3dHeapProperties.VisibleNodeMask          = 1;
 	
 	
-	D3D12_CLEAR_VALUE d3dClearValue;
+	D3D12_CLEAR_VALUE d3dClearValue{};
 	d3dClearValue.Format               = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	d3dClearValue.DepthStencil.Depth   = 1.0f;
 	d3dClearValue.DepthStencil.Stencil = 0;
@@ -346,9 +346,15 @@ void CSwapChain::CreateDSV()
 	D3D12_CPU_DESCRIPTOR_HANDLE d3dDsvCPUDescriptorHandle = m_pd3dDsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 
 	//깊이-스텐실 버퍼를 생성한다.
-	pDevice->GetDevice()->CreateCommittedResource(&d3dHeapProperties, D3D12_HEAP_FLAG_NONE,&d3dResourceDesc, D3D12_RESOURCE_STATE_DEPTH_WRITE, &d3dClearValue,__uuidof(ID3D12Resource), (void**)&m_pd3dDepthStencilBuffer);
+	pDevice->GetDevice()->CreateCommittedResource(&d3dHeapProperties
+												, D3D12_HEAP_FLAG_NONE
+												,&d3dResourceDesc
+												, D3D12_RESOURCE_STATE_DEPTH_WRITE
+												, &d3dClearValue
+												,__uuidof(ID3D12Resource)
+												, (void**)&m_pd3dDepthStencilBuffer);
 	
-	D3D12_DEPTH_STENCIL_VIEW_DESC d3dDepthStencilViewDesc;
+	D3D12_DEPTH_STENCIL_VIEW_DESC d3dDepthStencilViewDesc{};
 	::ZeroMemory(&d3dDepthStencilViewDesc, sizeof(D3D12_DEPTH_STENCIL_VIEW_DESC));
 	d3dDepthStencilViewDesc.Format        = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	d3dDepthStencilViewDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;

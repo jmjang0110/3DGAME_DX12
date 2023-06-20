@@ -56,8 +56,47 @@
     <Filter Include="GameFramework\Engine\Resource\HLSL">
       <UniqueIdentifier>{6ef96583-298f-4b1e-bc89-0b559b908e67}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameFramework\Engine\GameObject\Mesh">
+    <Filter Include="GameFramework\Engine\GameObject\Component">
+      <UniqueIdentifier>{00426b83-c5db-48c6-9d46-059f0e5ed300}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\Engine\GameObject\Component\Transform">
+      <UniqueIdentifier>{eade209d-ada2-4406-94a9-c5a4bbdadd86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\Engine\Resource\Mesh">
       <UniqueIdentifier>{e5490cc0-c033-4986-a5a9-8bc86effafd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\Engine\Resource\Mesh\Vertex">
+      <UniqueIdentifier>{92e60223-0cc6-4d2d-9093-3a1d20e970c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\Engine\Resource\Material">
+      <UniqueIdentifier>{c38aa5bf-2038-4ca6-a6a1-d4dec85d549b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\Engine\Resource\Light">
+      <UniqueIdentifier>{6cb71517-1665-418a-ad9e-ddc6ecad88c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\Engine\File">
+      <UniqueIdentifier>{12c6100d-708e-405b-97b4-10e39f5e8b09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\Engine\Timer">
+      <UniqueIdentifier>{9f934018-ae39-42e6-9290-80b44b9caf34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\Engine\GameObject\Component\Camera">
+      <UniqueIdentifier>{69712e5e-7adf-45e4-ab26-a7c659882a55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script">
+      <UniqueIdentifier>{22588163-0869-420d-9321-318b239e0854}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Camera">
+      <UniqueIdentifier>{61d643aa-7b42-482a-93a3-db9f37af762b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Player">
+      <UniqueIdentifier>{63d8befd-4e28-4738-8ac7-fc06a0da8d6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Bullet">
+      <UniqueIdentifier>{0fd2d4cc-aa2d-485e-ba64-b50988569e50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Monster">
+      <UniqueIdentifier>{7ffda179-4cc2-40d3-a051-813ffe68be27}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -110,7 +149,53 @@
       <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="CMesh.h">
-      <Filter>GameFramework\Engine\GameObject\Mesh</Filter>
+      <Filter>GameFramework\Engine\Resource\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleMath.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="CEntity.h" />
+    <ClInclude Include="ResourceManager.h">
+      <Filter>GameFramework\Engine\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="CVertex.h">
+      <Filter>GameFramework\Engine\Resource\Mesh\Vertex</Filter>
+    </ClInclude>
+    <ClInclude Include="CComponent.h">
+      <Filter>GameFramework\Engine\GameObject\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="CTransform.h">
+      <Filter>GameFramework\Engine\GameObject\Component\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="CMaterial.h">
+      <Filter>GameFramework\Engine\Resource\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="CLight.h">
+      <Filter>GameFramework\Engine\Resource\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="CFileManager.h">
+      <Filter>GameFramework\Engine\File</Filter>
+    </ClInclude>
+    <ClInclude Include="CTimer.h">
+      <Filter>GameFramework\Engine\Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="CCamera.h">
+      <Filter>GameFramework\Engine\GameObject\Component\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraScript.h">
+      <Filter>Script\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="CScript.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerScript.h">
+      <Filter>Script\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="BulletScript.h">
+      <Filter>Script\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="TankMonster.h">
+      <Filter>Script\Monster</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -151,7 +236,50 @@
       <Filter>GameFramework\DX12_Graphic_Devices\GraphicsPipelineState</Filter>
     </ClCompile>
     <ClCompile Include="CMesh.cpp">
-      <Filter>GameFramework\Engine\GameObject\Mesh</Filter>
+      <Filter>GameFramework\Engine\Resource\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="CEntity.cpp" />
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>GameFramework\Engine\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="CVertex.cpp">
+      <Filter>GameFramework\Engine\Resource\Mesh\Vertex</Filter>
+    </ClCompile>
+    <ClCompile Include="CComponent.cpp">
+      <Filter>GameFramework\Engine\GameObject\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="CTransform.cpp">
+      <Filter>GameFramework\Engine\GameObject\Component\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="CMaterial.cpp">
+      <Filter>GameFramework\Engine\Resource\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="CLight.cpp">
+      <Filter>GameFramework\Engine\Resource\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="CFileManager.cpp">
+      <Filter>GameFramework\Engine\File</Filter>
+    </ClCompile>
+    <ClCompile Include="CTimer.cpp">
+      <Filter>GameFramework\Engine\Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="CCamera.cpp">
+      <Filter>GameFramework\Engine\GameObject\Component\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraScript.cpp">
+      <Filter>Script\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="CScript.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerScript.cpp">
+      <Filter>Script\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="BulletScript.cpp">
+      <Filter>Script\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="TankMonster.cpp">
+      <Filter>Script\Monster</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -168,11 +296,18 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="VertexShader.hlsl">
+    <None Include="value.hlsl">
       <Filter>GameFramework\Engine\Resource\HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="PixelShader.hlsl">
+    </None>
+    <None Include="Light.hlsl">
       <Filter>GameFramework\Engine\Resource\HLSL</Filter>
-    </FxCompile>
+    </None>
+    <None Include="PixelShader.hlsl">
+      <Filter>GameFramework\Engine\Resource\HLSL</Filter>
+    </None>
+    <None Include="VertexShader.hlsl">
+      <Filter>GameFramework\Engine\Resource\HLSL</Filter>
+    </None>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>

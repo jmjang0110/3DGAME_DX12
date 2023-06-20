@@ -53,7 +53,8 @@ void CCommandQueue::OnCreate(WindowInfo WindowInfo)
 
 /// [ FENCE ]
 
-	hResult = pDevice->GetDevice()->CreateFence(0, D3D12_FENCE_FLAG_NONE, __uuidof(ID3D12Fence), (void**)m_pd3dFence.GetAddressOf());
+	hResult = pDevice->GetDevice()->CreateFence(0, D3D12_FENCE_FLAG_NONE
+, __uuidof(ID3D12Fence), (void**)m_pd3dFence.GetAddressOf());
 	for(int i = 0 ; i < SWAP_CHAIN_BUFFER_COUNT; ++i) 
 		m_nFenceValues[i] = 0; /// 펜스를 생성하고 펜스 값을 0으로 설정한다. 
 
@@ -84,7 +85,7 @@ void CCommandQueue::Prepare_Rendering()
 	m_pd3dCommandList->ResourceBarrier(1, &m_d3dResourceBarrier);
 
 	/// 그래픽 루트 시그너쳐를 설정한다. 
-	COMMAND_QUEUE(CGameFramework)->GetCommandList()->SetGraphicsRootSignature(ROOT_SIGNATURE(CGameFramework)->GetRootSignature().Get());
+	COMMAND_LIST(CGameFramework)->SetGraphicsRootSignature(ROOT_SIGNATURE(CGameFramework).Get());
 
 
 	/// 뷰포트와 씨저 사각형을 설정한다.
@@ -130,7 +131,7 @@ void CCommandQueue::Execute_Rendering()
 
 	/// 명령 리스트를 명령 큐에 추가하여 실행한다. - Command List 수행 
 	ID3D12CommandList* ppd3dCommandLists[] = { m_pd3dCommandList.Get()};
-m_pd3dCommandQueue->ExecuteCommandLists(1, ppd3dCommandLists); // 교수님 코드 
+	m_pd3dCommandQueue->ExecuteCommandLists(1, ppd3dCommandLists); // 교수님 코드 
 	//m_pd3dCommandQueue->ExecuteCommandLists(_countof(ppd3dCommandLists),ppd3dCommandLists); // _countof 사용  
 
 /// GPU가 모든 명령 리스트를 실행할 때 까지 기다린다.
@@ -190,4 +191,10 @@ ComPtr<ID3D12CommandQueue> CCommandQueue::GetCommandQueue()
 ComPtr<ID3D12GraphicsCommandList> CCommandQueue::GetCommandList()
 {
 	return m_pd3dCommandList;
+}
+
+ComPtr<ID3D12CommandAllocator> CCommandQueue::GetCommandAllocator()
+{
+	return m_pd3dCommandAllocator;
+
 }

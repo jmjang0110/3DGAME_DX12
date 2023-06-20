@@ -9,12 +9,13 @@ CShader::~CShader()
 {
 }
 
-BOOL CShader::OnCreate(SHADER_TYPE eShaderType,
+BOOL CShader::OnCreate( SHADER_TYPE eShaderType,
 						const LPCWSTR& wstrFileName,
 						const LPCSTR& strFuncName,
 						const LPCSTR& strShaderVersion)
 {
 
+	m_eType = eShaderType;
 
 	UINT nCompileFlags = 0;
 #if defined(_DEBUG)
@@ -25,8 +26,17 @@ BOOL CShader::OnCreate(SHADER_TYPE eShaderType,
 	{
 	case SHADER_TYPE::VERTEX_SHADER:
 	{
-		D3DCompileFromFile(wstrFileName, NULL, NULL, strFuncName, strShaderVersion, nCompileFlags, 0,
-			m_VSBlob.GetAddressOf(), NULL);
+		HRESULT hResult = ::D3DCompileFromFile(wstrFileName, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, strFuncName, strShaderVersion, nCompileFlags, 0, m_VSBlob.GetAddressOf(), m_ErrorBlob.GetAddressOf());
+		char* pErrorString = NULL;
+		if (m_ErrorBlob) 
+			pErrorString = (char*)m_ErrorBlob->GetBufferPointer();
+
+		if (m_VSBlob) {
+		m_ShaderByteCode.BytecodeLength = m_VSBlob->GetBufferSize();
+		m_ShaderByteCode.pShaderBytecode = m_VSBlob->GetBufferPointer();
+		}
+
+
 	}
 		break;
 	case SHADER_TYPE::HULL_SHADER:
@@ -37,8 +47,18 @@ BOOL CShader::OnCreate(SHADER_TYPE eShaderType,
 		break;
 	case SHADER_TYPE::PIXEL_SHADER:
 	{
-		D3DCompileFromFile(wstrFileName, NULL, NULL, strFuncName, strShaderVersion, nCompileFlags, 0,
-			m_PSBlob.GetAddressOf(), NULL);
+		D3DCompileFromFile(wstrFileName, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, strFuncName, strShaderVersion, nCompileFlags, 0,
+			m_PSBlob.GetAddressOf(), m_ErrorBlob.GetAddressOf());
+	
+		char* pErrorString = NULL;
+		if (m_ErrorBlob)
+			pErrorString = (char*)m_ErrorBlob->GetBufferPointer();
+
+		if (m_PSBlob) {
+			m_ShaderByteCode.BytecodeLength = m_PSBlob->GetBufferSize();
+			m_ShaderByteCode.pShaderBytecode = m_PSBlob->GetBufferPointer();
+		}
+
 	}
 		break;
 	}
@@ -70,4 +90,18 @@ ComPtr<ID3DBlob> CShader::GetBlob(SHADER_TYPE eShaderType)
 		break;
 	}
 
+	return nullptr;
+
+}
+
+void CShader::CreateShaderVariables()
+{
+}
+
+void CShader::UpdateShaderVariables()
+{
+}
+
+void CShader::ReleaseShaderVariables()
+{
 }

@@ -38,7 +38,7 @@ public:
 
 	ComPtr<ID3D12CommandQueue> GetCommandQueue();
 	ComPtr<ID3D12GraphicsCommandList> GetCommandList();
-
+	ComPtr<ID3D12CommandAllocator> GetCommandAllocator();
 
 
 };
