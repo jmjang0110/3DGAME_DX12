@@ -290,7 +290,7 @@ void TankMonsterScript::Fire()
 
 			pBulletTrans->SetPosition(BulletStartPos);
 			pBulletTrans->SetRotation(vGunRot);
-			pBulletTrans->SetScale(2.f, 2.f, 2.f);
+			//pBulletTrans->SetScale(2.f, 2.f, 2.f);
 
 			XMFLOAT3 vForwardDir = pGunTrans->GetWorldDir(DIR_TYPE::FRONT);
 

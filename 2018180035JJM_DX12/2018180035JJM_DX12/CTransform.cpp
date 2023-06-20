@@ -110,7 +110,7 @@ XMFLOAT3 CTransform::GetVectorReverse(XMFLOAT3 xmf3Dir)
 void CTransform::ComputeWorldTransform(XMFLOAT4X4* pxmf4x4Parent)
 {
 
-	m_xmf4x4Transform = Matrix4x4::Multiply(m_xmf4x4Transform, m_xmf4x4Scale);				/// S
+	//m_xmf4x4Transform = Matrix4x4::Multiply(m_xmf4x4Transform, m_xmf4x4Scale);			/// S
 	m_xmf4x4Transform = Matrix4x4::Multiply(m_xmf4x4Transform, m_xmf4x4Rotation);		/// R 
 	m_xmf4x4Transform = Matrix4x4::Multiply(m_xmf4x4Transform, m_xmf4x4Translation);	/// T
 
@@ -135,7 +135,7 @@ void CTransform::FinalUpdate(float _fTimeElapsed)
 	std::string name = pObj->GetName();
 	
 	// SCALE
-	UpdateScale();
+	//UpdateScale();
 
 	// ROTATE
 	m_xmf3Radian = ToRadian(m_xmf3Degree);
@@ -220,8 +220,8 @@ void CTransform::UpdateScale()
 {
 
 	// 크기 x 회전(자전) x 이동
-	XMMATRIX matScale = XMMatrixScaling(m_xmf3Scale.x, m_xmf3Scale.y, m_xmf3Scale.z);
-	XMStoreFloat4x4(&m_xmf4x4Scale, matScale);
+	//XMMATRIX matScale = XMMatrixScaling(m_xmf3Scale.x, m_xmf3Scale.y, m_xmf3Scale.z);
+	//XMStoreFloat4x4(&m_xmf4x4Scale, matScale);
 
 
 }

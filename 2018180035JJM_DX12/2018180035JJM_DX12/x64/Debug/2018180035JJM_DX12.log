@@ -1,6 +1,2 @@
-﻿  CSene.cpp
-  PlayerScript.cpp
-C:\MyGithub\School\3DHW\3DGAME_DX12\2018180035JJM_DX12\2018180035JJM_DX12\PlayerScript.cpp(178,18): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\MyGithub\School\3DHW\3DGAME_DX12\2018180035JJM_DX12\2018180035JJM_DX12\PlayerScript.cpp(192,9): warning C4244: 'return': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  코드를 생성하고 있습니다...
+﻿  CTransform.cpp
   2018180035JJM_DX12.vcxproj -> C:\MyGithub\School\3DHW\3DGAME_DX12\2018180035JJM_DX12\x64\Debug\2018180035JJM_DX12.exe

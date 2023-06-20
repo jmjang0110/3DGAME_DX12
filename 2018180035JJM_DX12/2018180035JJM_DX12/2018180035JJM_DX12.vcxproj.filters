@@ -98,6 +98,9 @@
     <Filter Include="Script\Monster">
       <UniqueIdentifier>{7ffda179-4cc2-40d3-a051-813ffe68be27}</UniqueIdentifier>
     </Filter>
+    <Filter Include="D12 정리">
+      <UniqueIdentifier>{cbe7fd6f-d395-46f4-b17a-6b8c132e99a3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CGameFramework.h">
@@ -309,5 +312,28 @@
       <Filter>GameFramework\Engine\Resource\HLSL</Filter>
     </None>
     <None Include="ClassDiagram.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Resource.txt">
+      <Filter>D12 정리</Filter>
+    </Text>
+    <Text Include="Descriptor.txt">
+      <Filter>D12 정리</Filter>
+    </Text>
+    <Text Include="RootSignature.txt">
+      <Filter>D12 정리</Filter>
+    </Text>
+    <Text Include="Pipeline.txt">
+      <Filter>D12 정리</Filter>
+    </Text>
+    <Text Include="질문거리.txt">
+      <Filter>D12 정리</Filter>
+    </Text>
+    <Text Include="Frame_Hiererarchy.txt">
+      <Filter>D12 정리</Filter>
+    </Text>
+    <Text Include="HLSL.txt">
+      <Filter>D12 정리</Filter>
+    </Text>
   </ItemGroup>
 </Project>

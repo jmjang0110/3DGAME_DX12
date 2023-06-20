@@ -48,8 +48,6 @@ CGameObject::~CGameObject()
 
 void CGameObject::Render()
 {
-	if (GetName() == "Cube")
-		int i = 0; 
 
 	for (auto com : m_arrCom) {
 		if(com) com->UpdateShaderVariables();

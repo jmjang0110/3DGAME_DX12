@@ -107,7 +107,7 @@ void CMesh::OnCreate(MeshLoadInfo* tMeshInfo)
 			m_pd3dSubSet_IndexBuffers.push_back(pIdxBuffer);
 			m_pd3dSubSet_IndexUploadBuffers.push_back(pIdxUploadBuffer);
 
-			pIdxBufferView.BufferLocation = m_pd3dSubSet_IndexBuffers[i]->GetGPUVirtualAddress();
+			pIdxBufferView.BufferLocation = m_pd3dSubSet_IndexBuffers[i]->GetGPUVirtualAddress(); /// 버퍼 리소스의 GPU 주소 반환 
 			pIdxBufferView.Format         = DXGI_FORMAT_R32_UINT;
 			pIdxBufferView.SizeInBytes    = sizeof(UINT) * m_tMeshInfo.m_pnSubSetIndices[i];
 
@@ -132,6 +132,12 @@ void CMesh::Render(int nSubSet)
 	{
 		pCmdList->IASetIndexBuffer(&(m_pd3dSubSet_IndexBufferViews[nSubSet]));
 		pCmdList->DrawIndexedInstanced(m_pnSubSetIndices[nSubSet], 1, 0, 0, 0);
+		
+			/// DrawIndexedInstanced( 인덱스 개수
+			///						, 인스턴스 개수
+			///						, 시작 인덱스 위치
+			///						, 각 정점 인덱스에 더해지는 값
+			///						, 인스턴스 인덱스에 더해지는 값 )	
 	}
 	else
 	{

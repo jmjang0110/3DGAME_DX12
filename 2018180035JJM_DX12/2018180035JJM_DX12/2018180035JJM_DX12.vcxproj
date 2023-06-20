@@ -250,6 +250,15 @@
       <FileType>Document</FileType>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="Descriptor.txt" />
+    <Text Include="Frame_Hiererarchy.txt" />
+    <Text Include="HLSL.txt" />
+    <Text Include="Pipeline.txt" />
+    <Text Include="Resource.txt" />
+    <Text Include="RootSignature.txt" />
+    <Text Include="질문거리.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

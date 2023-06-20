@@ -1,0 +1,106 @@
+
+루트 시그니쳐 ( Root Signature )
+
+* graphics Root Signature
+* Compute Root Signature
+
+
+
+- 쉐이더(GPU 함수)가 사용하는 리소스 바인딩에 대한 규약이다
+
+- 쉐이더가 요구하는 리소스와 명령 리스트를 연결하기  위한 정보이며 
+
+- 쉐이더 프로그램이 요구하는 각 바인딩에 대하여 하나의 루트 시그니쳐가 필요하다.
+
+
+ - 어떤 리소스(데이터)들이 그래픽스 파이프라인의 쉐이더에 연결되는가를 정의한다. 
+ - 명령 리스트들을 쉐이더 리소스에 연결
+   쉐이더 ( GPU 함수 ) 가 요구하는 데이터 형을 정의 한다. 
+
+● Root Parameters
+	 하나의 루트 시그니쳐는 64개의 32 비트 DWORD 배열
+	 많이 사용하는 매개변수를 앞쪽에 배치하는 것이 좋음 ( 빠른 )
+
+● Root Constant		[   루트 상수   ]
+	- 매개변수가 32비트 상수들을 포함 ( 쉐이더 변수에 값을 전달 )
+	- 서술자 힙이 필요없다.
+
+● Root Descriptor	[  루트 서술자  ]
+	- 매개변수가 내부적인 서술자를 직접 포함 
+	- 서술자 힙이 필요없다.
+	- 버퍼 리소스에 대한 SRV/UAV
+	- 상수 버퍼에 대한 CBV
+	
+● Descriptor Table  [ 서술자 테이블 ]
+	- 서술자 힙에 간접적으로 접근해야 하므로 시간걸린다. 
+	
+													
+	[ Root Signature ]								
+	[0][	uint		][ b3 ]						
+	[1][	float4		][ b1 ]								CBV_SRV_UAV
+	[2][	Desc Table	][    ]------------------->		 [ Descriptor Heap ]
+	[3][	Desc Table	][    ]								[ SRV ][ t0 ]
+	[5][	CBV			][ b0 ]								[ SRV ][ t1 ]
+	[5][	UAV			][ u2 ]								[ CBV ][ b2 ]
+															[ CBV ][ b4 ]
+															[ UAV ][ u0 ]
+
+
+
+● Root Argument     [ 루트 인자 ] -> 실행시 쉐이더로 전달 되는 루트 매개변수의 값 
+
+● CBV [ Constant Buffer View ]
+	- 상수 버퍼 뷰를 생성하는 것은 응용프로그램 CPU이다 -> 이를 사용하는 것은 GPU  
+
+
+
+D3D12SErializeRootSignature()
+ID3D12Device::CreateRootSignature()
+ID3D12Device::CreateGraphicsPipelineState()
+ID3D12Device::CreateComputePipelineState()
+ID3D12GraphicsCommandList::SetGraphicsRootSignature()
+ID3D12GraphicsCommandList::SetComputeRootSignature()
+
+ID3D12GraphicsCommandList::SetGraphicsRoot32BitConstant()
+ID3D12GraphicsCommandList::SetGraphicsRoot32BitConstants()
+
+ID3D12GraphicsCommandList::SetGraphicsRootConstantBufferView()  CBV
+ID3D12GraphicsCommandList::SetGraphicsRootShaderResourceView()  SRV
+ID3D12GraphicsCommandList::SetGraphicsRootUnorderedAccessView() UAV
+
+ID3D12GraphicsCommandList::SetGraphicsRootDescriptorTable() [ Graphic ]Descriptor Table 
+ID3D12GraphicsCommandList::SetComputeRootDescriptorTable()  [ Compute ]Descriptor Table 
+
+ID3D12GraphicsCommandList::ClearDepthStencilView()
+ID3D12GraphicsCommandList::ClearRenderTargetView()
+ID3D12GraphicsCommandList::ClearUnorderedAccessViewUint()
+ID3D12GraphicsCommandList::ClearUnorderedAccessViewFloat()
+ID3D12GraphicsCommandList::OMsetRenderTargets()
+
+
+ID3D12Device::CreateCommittedResource()
+ID3D12Device::CreateConstantBufferView() CBV
+ID3D12Device::CreateDescriptorHeap()
+ID3D12Device::CreateUnorderedAccessView() UAV
+ID3D12Device::CreateShaderResourceView() SRV
+ID3D12Device::CreateRenderTargetView()   RTV
+ID3D12Device::CreateDepthStencilView() DSV
+ID3D12Device::CreateSampler()
+
+ID3D12Device::CopyDescriptors()
+ID3D12Device::CopyDescriptorsSimple()
+
+
+● Const Buffer [ 상수 버퍼 ]
+	상수버퍼는 여러개의 쉐이더 상수들 그룹을 동시에 갱신할 수 있는 특별한 버퍼 
+	크기는 최소 하드웨어 할당 크기 256바이트 배수이어야한다. 
+
+	응용 프로그램에서 변경한 용도로 -> D3D12_HEAP_TYPE_UPLOAD
+	GPU는 상수 버퍼으 데이터를 읽음 -> D3D12_RESOURCE_STATE_GENERIC_READ 
+
+
+	D3D12_ROOT_CONSTANTS{};
+	D3D12_ROOT_DESCRIPTOR{};
+	D3D12_ROOT_DESCRIPTOR_TABLE{};
+	D3D12_DESCRIPTOR_RANGE{};
+	D3D12_DESCRIPTOR_RANGE_TYPE{};

@@ -20,9 +20,9 @@ private:
 
 private:
 // WINDOW 
-	WindowInfo					m_Window{};
-	D3D12_VIEWPORT				m_d3dViewport{};
-	D3D12_RECT					m_d3dScissorRect{};//뷰포트와 씨저 사각형이다. 
+	WindowInfo									m_Window{};
+	D3D12_VIEWPORT								m_d3dViewport{};
+	D3D12_RECT									m_d3dScissorRect{};//뷰포트와 씨저 사각형이다. 
 
 // DXGI DEVICE 
 	std::shared_ptr<CDevice>					m_Device{};
@@ -31,7 +31,7 @@ private:
 	std::shared_ptr<CRootSignature>				m_RootSignature{};
 	std::shared_ptr<CGraphicsPipelineState>		m_GraphicsPipelineStateMachine{};
 
-	_TCHAR						m_pszFrameRate[50];
+	_TCHAR										m_pszFrameRate[50];
 
 public:
 // [ GET ]

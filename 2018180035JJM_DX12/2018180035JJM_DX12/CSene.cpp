@@ -105,7 +105,7 @@ void CScene::OnCreate()
 	
 	
 	AddTank();
-	//AddMonster();
+	AddMonster();
 
 
 	SAFE_DELETE(pModel)
@@ -117,7 +117,7 @@ void CScene::OnCreate()
 
 	TransCom = new CTransform;
 	TransCom->SetPosition(0.f, 0.f, -50.f);
-	TransCom->SetScale(0.5f, 0.5f, 0.5f);
+	//TransCom->SetScale(0.5f, 0.5f, 0.5f);
 
 	pObj->AddComponent(TransCom);
 	PushBack_GameObject(pObj);
@@ -410,8 +410,6 @@ void CScene::PushBack_GameObject(CGameObject* pObj)
 CGameObject* CScene::GetObjByName(std::string name)
 {
 	CGameObject* pChild = nullptr;
-
-
 	for (auto pObj : m_vecObjects) {
 
 		if (name == pObj->GetName()) {

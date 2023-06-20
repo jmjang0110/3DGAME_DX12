@@ -87,7 +87,7 @@ ComPtr<ID3D12Resource> ResourceManager::CreateBufferResource(void* pData
 															, ComPtr<ID3D12Resource>* pd3dUploadBuffer)
 {
 	ComPtr<ID3D12Resource> pd3dBuffer{};
-
+	
 	D3D12_HEAP_PROPERTIES d3dHeapPropertiesDesc;
 	::ZeroMemory(&d3dHeapPropertiesDesc, sizeof(D3D12_HEAP_PROPERTIES));
 	d3dHeapPropertiesDesc.Type                 = d3dHeapType;
@@ -248,13 +248,15 @@ void ResourceManager::CreateDefault_IPlayout()
 	D3D12_INPUT_ELEMENT_DESC* pd3dInputElementDescs = new D3D12_INPUT_ELEMENT_DESC[nInputElementDescs];
 
 	//정점은 위치 벡터(POSITION)와 색상(COLOR)을 가진다. 
-	pd3dInputElementDescs[0] = { "POSITION"
-								, 0
-								, DXGI_FORMAT_R32G32B32_FLOAT
-								, 0
-								, 0
-								, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA
-								, 0 };
+	pd3dInputElementDescs[0] = { "POSITION"										/// SemanticName
+								, 0												/// SemanticIndex		
+								, DXGI_FORMAT_R32G32B32_FLOAT					/// Format
+								, 0												/// InputSlot
+								, 0												/// AlignedByteOffset
+								, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA	/// InputSlotClass
+								, 0 };											/// InstanceDataStepRate
+
+
 
 	pd3dInputElementDescs[1] = { "COLOR"
 								, 0

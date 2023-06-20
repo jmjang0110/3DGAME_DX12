@@ -21,6 +21,7 @@ void CMaterial::UpdateShaderVariable()
 {
 	auto pCmdList = COMMAND_LIST(CGameFramework);
 
+	/// SetGraphicsRoot32BitConstants( 
 	pCmdList->SetGraphicsRoot32BitConstants(1, 4, &m_tColor.m_xmf4Ambient, 16);
 	pCmdList->SetGraphicsRoot32BitConstants(1, 4, &m_tColor.m_xmf4Diffuse, 20);
 	pCmdList->SetGraphicsRoot32BitConstants(1, 4, &m_tColor.m_xmf4Specular, 24);

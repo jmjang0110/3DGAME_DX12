@@ -23,5 +23,6 @@ void CScript::Init()
 
 void CScript::Update(float _fTimeElapsed)
 {
+	
 
 }
