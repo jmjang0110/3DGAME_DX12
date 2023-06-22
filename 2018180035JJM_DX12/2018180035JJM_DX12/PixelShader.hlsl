@@ -36,4 +36,10 @@ float4 PSLighting(VS_LIGHTING_OUTPUT input) : SV_TARGET
 #endif
 }
 
+// ============================= Basic Mesh No Light ======================================
+float4 PS_Basic(VS_BASIC_OUTPUT input) : SV_TARGET
+{
+    return input.color;
+    
 
+}

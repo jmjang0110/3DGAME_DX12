@@ -5,6 +5,15 @@
 #define VERTEXT_COLOR				0x02
 #define VERTEXT_NORMAL				0x04
 
+struct PosColorVertex
+{
+	XMFLOAT3 Pos;
+	XMFLOAT4 Color;
+	PosColorVertex() {}
+	PosColorVertex(float x, float y, float z, XMFLOAT4 color) { Pos = XMFLOAT3(x, y, z); Color = color; }
+	~PosColorVertex() {};
+};
+
 struct MeshLoadInfo
 {
 	char							m_pstrMeshName[256] = { 0 };
@@ -89,6 +98,9 @@ public:
 public:
 	void CreateNormalBufferResource(MeshLoadInfo* pMeshInfo);
 	void CreateIndexBufferResource(MeshLoadInfo* pMeshInfo);
+	void CreateIndexBufferResource(int nIndices, UINT* pnIndices);
+	void CreateVertexBufferResource(int nVertices, XMFLOAT3* pnVertices);
+	void SetType(UINT Type) { m_nType |= Type; }
 
 
 public:

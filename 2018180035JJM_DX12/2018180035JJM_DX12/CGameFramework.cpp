@@ -59,10 +59,6 @@ bool CGameFramework::OnCreate(HINSTANCE hInstance, HWND hMainWnd)
 	m_GraphicsPipelineStateMachine = std::make_shared<CGraphicsPipelineState>();
 
 
-
-
-
-
 // [ DEVICE ]
 	m_Device->OnCreate();
 
@@ -124,9 +120,6 @@ void CGameFramework::BuildObjects()
 
 	//씬 객체를 생성하고 씬에 포함될 게임 객체들을 생성한다
 	m_pCurScene = new CScene;
-
-	
-
 	m_pCurScene->OnCreate();
 
 

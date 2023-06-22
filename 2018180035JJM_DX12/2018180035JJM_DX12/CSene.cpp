@@ -26,8 +26,14 @@
 #include "Utility.h"
 
 
+#include "CHeightmapGrid.h"
+#include "CHeightmapTerrain.h"
+#include "CHeightMapImage.h"
 
+#include "RotateScript.h"
+#include "HellicopterScript.h"
 
+#include "AIScript.h"
 
 CScene::CScene()
 {
@@ -56,17 +62,105 @@ void CScene::OnCreate()
 	m_pLight->OnCreate();
 	AddCamera();
 
+	CGameObject*	PGunShip        = CFileManager::GetInst()->LoadGeometryFromFile("Model/Mi24.bin");
+	MeshLoadInfo*	pTankModelInfo  = CFileManager::GetInst()->LoadMeshInfo_Tank("Model/tank_body.bin");
+	CGameObject*	pModel          = CFileManager::GetInst()->LoadGeometryFromFile("Model/Apache.bin");
 
-	CGameObject* pModel = CFileManager::GetInst()->LoadGeometryFromFile("Model/Apache.bin");
-	//pObj->SetName("Apache");
-	//CTransform* TransCom = new CTransform;
-	//TransCom->SetPosition(0.f, 1.f, -50.f);
-	//TransCom->SetScale(0.1f, 0.1f, 0.1f);
-	//pObj->AddComponent(TransCom);
-	//PushBack_GameObject(pObj);
+	ResourceManager::GetInst()->CreateCubeMesh(10, 10, 10);
+
+	AddTerrain();
+
+	for(int i = 0 ; i < 20 ; ++i)
+		AddTank();
+
+	CGameObject* CubeObj = new CGameObject;
+	CubeObj->SetPipelineStateKeyName("Basic");
+	CubeObj->SetName("Cube");
+	CubeObj->SetMesh(ResourceManager::GetInst()->GetMesh("Cube"));
+	CubeObj->SetMaterial(0, ResourceManager::GetInst()->GetMaterial("rotor0"));
+	CTransform* CubeTrans = new CTransform;
+	CubeTrans->SetScale(0.2f, 0.2f, 0.2f);
+	CubeTrans->SetPosition(50.f, 0.f, 0.f);
+	CubeObj->AddComponent(CubeTrans);
+	PushBack_GameObject(CubeObj);
+
+
+
+	CGameObject* CubeObj2 = new CGameObject;
+	CubeObj2->SetPipelineStateKeyName("Basic");
+	CubeObj2->SetName("Cube2");
+	CubeObj2->SetMesh(ResourceManager::GetInst()->GetMesh("tank_body"));
+	CubeObj2->SetMaterial(0, ResourceManager::GetInst()->GetMaterial("rotor0"));
+
+	CTransform* Cube2Trans = new CTransform;
+	Cube2Trans->SetPosition(-50.f, 0.f, 0.f);
+	CubeObj2->AddComponent(Cube2Trans);
+	PushBack_GameObject(CubeObj2);
+
+
+	std::shared_ptr<CMesh> cube = ResourceManager::GetInst()->GetMesh("Cube");
+	std::shared_ptr<CMesh> Other = ResourceManager::GetInst()->GetMesh("tank_body");
+
+
+	int Width = CGameFramework::GetInst()->GetCurScene()->GetTerrain()->GetHeightMapWidth();
+	int Length = CGameFramework::GetInst()->GetCurScene()->GetTerrain()->GetHeightMapLength();
+	XMFLOAT3 scale = CGameFramework::GetInst()->GetCurScene()->GetTerrain()->GetScale();
+
+	float PosX = rand() % (int)(Width * scale.x);
+	float PosZ = rand() % (int)(Length * scale.z);
+	float PosY = CGameFramework::GetInst()->GetCurScene()->GetTerrain()->GetHeight(PosX, PosZ);
+
+	CGameObject* pObj_Body = new CGameObject;
+	pObj_Body->SetName("Player");
+	pObj_Body->SetPipelineStateKeyName("Illuminate");
+	pObj_Body->SetMesh(ResourceManager::GetInst()->GetMesh("Gunship_Instance"));
+	pObj_Body->SetMaterial(0, ResourceManager::GetInst()->GetMaterial("rotor0"));
+	CTransform* pModelTrans = new CTransform;
+	pModelTrans->SetPosition(PosX, PosY + 50.f , PosZ);
+	pObj_Body->AddComponent(pModelTrans);
+	
+	HellicopterScript* pHelSCript = new HellicopterScript(pObj_Body);
+	pHelSCript->SetAimPointObj(CubeObj);
+	pHelSCript->Init();
+	pObj_Body->AddScript(pHelSCript);
+	PushBack_GameObject(pObj_Body);
+
+
+
+	CGameObject* pObj_Rotor = new CGameObject;
+	pObj_Rotor->SetPipelineStateKeyName("Illuminate");
+	pObj_Rotor->SetMesh(ResourceManager::GetInst()->GetMesh("Rotor_Instance"));
+	pObj_Rotor->SetMaterial(0, ResourceManager::GetInst()->GetMaterial("rotor0"));
+	CTransform* pRotorTRans = new CTransform;
+	pRotorTRans->SetPosition(0.f, 5.f, 0.f);
+
+	RotateScript* pRotScript = new RotateScript;
+	pRotScript->Init();
+	pRotScript->SetTargetObject(pObj_Rotor);
+	pObj_Rotor->AddScript(pRotScript);
+	pObj_Rotor->AddComponent(pRotorTRans);
+
+	pObj_Body->AddChild(pObj_Rotor);
+
+
+
+
+
+
+	//for (int i = 0; i < 10; ++i)
+	//{
+	//	AddTank();
+	//}
+	SAFE_DELETE(PGunShip);
+	SAFE_DELETE(pModel);
+	SAFE_DELETE(pTankModelInfo);
+	return;
+
+
 
 
 	CGameObject* pBullet = new CGameObject;
+	pBullet->SetPipelineStateKeyName("Illuminate");
 	pBullet->SetName("skin");
 	pBullet->SetMesh(ResourceManager::GetInst()->GetMesh("skin"));
 	pBullet->SetMaterial(0, ResourceManager::GetInst()->GetMaterial("skin0"));
@@ -76,6 +170,8 @@ void CScene::OnCreate()
 	PushBack_GameObject(pBullet);
 	
 	pBullet = new CGameObject;
+	pBullet->SetPipelineStateKeyName("Illuminate");
+
 	pBullet->SetName("skin");
 	pBullet->SetMesh(ResourceManager::GetInst()->GetMesh("skin"));
 	pBullet->SetMaterial(0, ResourceManager::GetInst()->GetMaterial("skin0"));
@@ -85,6 +181,8 @@ void CScene::OnCreate()
 	PushBack_GameObject(pBullet);
 
 	pBullet = new CGameObject;
+	pBullet->SetPipelineStateKeyName("Illuminate");
+
 	pBullet->SetName("skin");
 	pBullet->SetMesh(ResourceManager::GetInst()->GetMesh("skin"));
 	pBullet->SetMaterial(0, ResourceManager::GetInst()->GetMaterial("skin0"));
@@ -94,6 +192,8 @@ void CScene::OnCreate()
 	PushBack_GameObject(pBullet);
 
 	pBullet = new CGameObject;
+	pBullet->SetPipelineStateKeyName("Illuminate");
+
 	pBullet->SetName("skin");
 	pBullet->SetMesh(ResourceManager::GetInst()->GetMesh("skin"));
 	pBullet->SetMaterial(0, ResourceManager::GetInst()->GetMaterial("skin0"));
@@ -145,13 +245,27 @@ void CScene::AddTank()
 	CGameObject* pObj = CFileManager::GetInst()->LoadGeometryFromFile("Model/Gunship.bin");
 	pObj->SetName("Gunship");
 	CTransform* TransCom = new CTransform;
-	TransCom->SetPosition(0.f, 1.f, -50.f);
+	TransCom->SetPosition(0.f, 0.f, -0.f);
 	pObj->AddComponent(TransCom);
 	SAFE_DELETE(pObj);
 
 
 	pObj = new CGameObject;
 	pObj->SetName("TankObject");
+	pObj->SetPipelineStateKeyName("Illuminate");
+	
+	m_vecMonsters.push_back(pObj);
+
+
+	int Width = CGameFramework::GetInst()->GetCurScene()->GetTerrain()->GetHeightMapWidth();
+	int Length = CGameFramework::GetInst()->GetCurScene()->GetTerrain()->GetHeightMapLength();
+	XMFLOAT3 scale = CGameFramework::GetInst()->GetCurScene()->GetTerrain()->GetScale();
+
+	float PosX = rand() % (int)(Width * scale.x);
+	float PosZ = rand() % (int)(Length * scale.z);
+
+
+
 	MeshLoadInfo* pTankModelInfo = CFileManager::GetInst()->LoadMeshInfo_Tank("Model/tank_body.bin");
 	if (pTankModelInfo)
 	{
@@ -164,22 +278,27 @@ void CScene::AddTank()
 				pMesh = std::make_shared<CMesh>();
 				pMesh->OnCreate(pTankModelInfo);
 				pMesh->CreateNormalBufferResource(pTankModelInfo);
+				pMesh->CreateIndexBufferResource(pTankModelInfo);
 				ResourceManager::GetInst()->AddMesh("tank_body", pMesh);
 			}
 		}
 		if (pMesh) {
-			pMesh->CreateIndexBufferResource(pTankModelInfo);
+			
 			pObj->SetMesh(pMesh);
 		}
 	}
 	pObj->SetMaterial(0, ResourceManager::GetInst()->GetMaterial("rotor0"));
 	TransCom = new CTransform;
-	TransCom->SetPosition(0.f, 0.f, -0.f);
+	TransCom->SetPosition(PosX, 0.f, PosZ);
 	pObj->AddComponent(TransCom);
 
 
-	PlayerScript* pPlayerSC = new PlayerScript;
-	pObj->AddScript(pPlayerSC);
+	//PlayerScript* pPlayerSC = new PlayerScript;
+	//pObj->AddScript(pPlayerSC);
+	AIScript* pAI = new AIScript;
+	pAI->SetTarget(GetObjByName("Player"));
+	pObj->AddScript(pAI);
+
 	PushBack_GameObject(pObj);
 
 	SAFE_DELETE(pTankModelInfo);
@@ -200,11 +319,12 @@ void CScene::AddTank()
 				pMesh = std::make_shared<CMesh>();
 				pMesh->OnCreate(pTankModelInfo);
 				pMesh->CreateNormalBufferResource(pTankModelInfo);
+				pMesh->CreateIndexBufferResource(pTankModelInfo);
 				ResourceManager::GetInst()->AddMesh("tank_turret", pMesh);
 			}
 		}
 		if (pMesh) {
-			pMesh->CreateIndexBufferResource(pTankModelInfo);
+			
 			pObj_turret->SetMesh(pMesh);
 		}
 	}
@@ -234,11 +354,12 @@ void CScene::AddTank()
 				pMesh = std::make_shared<CMesh>();
 				pMesh->OnCreate(pTankModelInfo);
 				pMesh->CreateNormalBufferResource(pTankModelInfo);
+				pMesh->CreateIndexBufferResource(pTankModelInfo);
 				ResourceManager::GetInst()->AddMesh("tank_gun", pMesh);
 			}
 		}
 		if (pMesh) {
-			pMesh->CreateIndexBufferResource(pTankModelInfo);
+
 			pObj_gun->SetMesh(pMesh);
 		}
 	}
@@ -252,8 +373,9 @@ void CScene::AddTank()
 	SAFE_DELETE(pTankModelInfo);
 
 
+	pAI->Init();
 
-	pPlayerSC->Init();
+	//pPlayerSC->Init();
 
 	return;
 
@@ -286,6 +408,8 @@ void CScene::AddMonster()
 {
 
 	CGameObject* pObj = new CGameObject;
+	pObj->SetPipelineStateKeyName("Illuminate");
+
 	pObj->SetName("TankMonster");
 	pObj->SetMesh(ResourceManager::GetInst()->GetMesh("tank_body"));
 	pObj->SetMaterial(0, ResourceManager::GetInst()->GetMaterial("rotor0"));
@@ -324,6 +448,46 @@ void CScene::AddMonster()
 	pMonsterSc->Init();
 	pMonScript_Gun->Init();
 }
+
+void CScene::AddTerrain()
+{
+	if (m_pTerrain)
+		return;
+
+	//지형을 확대할 스케일 벡터이다. x-축과 z-축은 8배, y-축은 2배 확대한다. 
+	XMFLOAT3 xmf3Scale(8.0f, 2.0f, 8.0f);
+	XMFLOAT4 xmf4Color(0.1f, 0.4f, 0.0f, 0.0f);
+
+	//지형을 높이 맵 이미지 파일(HeightMap.raw)을 사용하여 생성한다. 높이 맵의 크기는 가로x세로(257x257)이다. 
+#ifdef _WITH_TERRAIN_PARTITION
+	m_pTerrain = new CHeightmapTerrain(
+		_T("Image/HeightMap.raw")
+		, 257
+		, 257
+		, 17
+		, 17
+		, xmf3Scale
+		, xmf4Color);
+
+#else
+//지형을 하나의 격자 메쉬(257x257)로 생성한다. 
+	m_pTerrain = new CHeightmapTerrain(
+	 _T("Image/HeightMap.raw")
+		, 257
+		, 257
+		, 257
+		, 257
+		, xmf3Scale
+		, xmf4Color);
+
+#endif
+	CGameObject* pObj = m_pTerrain->GetTerrainObject();
+	pObj->SetPipelineStateKeyName("Basic");
+
+	PushBack_GameObject(pObj);
+
+}
+
 
 
 
@@ -370,17 +534,7 @@ void CScene::ReleaseShaderVariables()
 
 void CScene::Render()
 {
-	std::shared_ptr<CGraphicsPipelineState> pCurPipeline = std::make_shared<CGraphicsPipelineState>();
-	pCurPipeline = ResourceManager::GetInst()->GetPipelineState("Illuminate"); /// Illuminate 이름의 PipelineState 를 세팅한다. 
-	
-	if (pCurPipeline.get())
-	{
-		/// 현재 파이프라인으로 렌더링할 오브젝트 들을 집어넣는다 --> 현재 TEST로 그냥 다 집어넣는다. 
-		for (auto pObj : m_vecObjects) {
-			if(pObj->IsActive())
-				pCurPipeline->PushBack_GameObject(pObj);
-		}
-	}
+
 	
 	COMMAND_LIST(CGameFramework)->SetGraphicsRootSignature(ROOT_SIGNATURE(CGameFramework).Get());
 	if (m_pMainCamera)
@@ -394,9 +548,9 @@ void CScene::Render()
 	if (m_pLight)
 		m_pLight->UpdateGraphicsRootConstantBufferView();
 
-	pCurPipeline->SetPipelineState();
-	pCurPipeline->ExecuteRender();		/// 저장한 오브젝트들을 렌더링 한다. 
-	pCurPipeline->Clear_GameObject();
+	Render_PipelineState("Illuminate");
+	Render_PipelineState("Basic");
+
 }
 
 
@@ -404,6 +558,32 @@ void CScene::Render()
 void CScene::PushBack_GameObject(CGameObject* pObj)
 {
 	m_vecObjects.push_back(pObj);
+
+}
+
+bool CScene::Render_PipelineState(std::string PipelineStateName)
+{
+	std::shared_ptr<CGraphicsPipelineState> pCurPipeline = std::make_shared<CGraphicsPipelineState>();
+	pCurPipeline = ResourceManager::GetInst()->GetPipelineState(PipelineStateName); /// Illuminate 이름의 PipelineState 를 세팅한다. 
+	if (pCurPipeline == nullptr)
+		return false;
+
+
+	/// 현재 파이프라인으로 렌더링할 오브젝트 들을 집어넣는다 --> 현재 TEST로 그냥 다 집어넣는다. 
+	for (auto pObj : m_vecObjects) {
+		if (pObj->IsActive())
+		{
+			if(pObj->GetPipelineStateKeyName() == PipelineStateName)
+				pCurPipeline->PushBack_GameObject(pObj);
+		}
+	}
+	
+
+	pCurPipeline->SetPipelineState();
+	pCurPipeline->ExecuteRender();		/// 저장한 오브젝트들을 렌더링 한다. 
+	pCurPipeline->Clear_GameObject();
+
+	return true;
 
 }
 

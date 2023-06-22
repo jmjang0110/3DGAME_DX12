@@ -101,6 +101,24 @@
     <Filter Include="D12 정리">
       <UniqueIdentifier>{cbe7fd6f-d395-46f4-b17a-6b8c132e99a3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameFramework\Engine\Resource\Mesh\Heightmap">
+      <UniqueIdentifier>{b26cab7c-1058-46f2-beb6-d41c9a053822}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\Engine\Resource\Mesh\HeightmapGrid">
+      <UniqueIdentifier>{32ef9e70-0a03-48dd-8215-492a33da7a4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\Engine\Resource\Mesh\HeightMapTerrain">
+      <UniqueIdentifier>{cac847a5-ee26-43f2-a4cd-0d478a24f4d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Rotate">
+      <UniqueIdentifier>{9c14ae9c-3a17-4d2c-8f74-509070121834}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Hellicopter">
+      <UniqueIdentifier>{ae979179-ac9d-4694-b7a5-0aec75a84a62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\AI">
+      <UniqueIdentifier>{ac93b047-ff7d-43dc-a98a-b44386d5e017}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CGameFramework.h">
@@ -200,6 +218,24 @@
     <ClInclude Include="TankMonster.h">
       <Filter>Script\Monster</Filter>
     </ClInclude>
+    <ClInclude Include="CHeightMapImage.h">
+      <Filter>GameFramework\Engine\Resource\Mesh\Heightmap</Filter>
+    </ClInclude>
+    <ClInclude Include="CHeightmapGrid.h">
+      <Filter>GameFramework\Engine\Resource\Mesh\HeightmapGrid</Filter>
+    </ClInclude>
+    <ClInclude Include="CHeightmapTerrain.h">
+      <Filter>GameFramework\Engine\Resource\Mesh\HeightMapTerrain</Filter>
+    </ClInclude>
+    <ClInclude Include="RotateScript.h">
+      <Filter>Script\Rotate</Filter>
+    </ClInclude>
+    <ClInclude Include="HellicopterScript.h">
+      <Filter>Script\Hellicopter</Filter>
+    </ClInclude>
+    <ClInclude Include="AIScript.h">
+      <Filter>Script\AI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CGameFramework.cpp">
@@ -284,6 +320,24 @@
     <ClCompile Include="TankMonster.cpp">
       <Filter>Script\Monster</Filter>
     </ClCompile>
+    <ClCompile Include="CHeightMapImage.cpp">
+      <Filter>GameFramework\Engine\Resource\Mesh\Heightmap</Filter>
+    </ClCompile>
+    <ClCompile Include="CHeightmapGrid.cpp">
+      <Filter>GameFramework\Engine\Resource\Mesh\HeightmapGrid</Filter>
+    </ClCompile>
+    <ClCompile Include="CHeightmapTerrain.cpp">
+      <Filter>GameFramework\Engine\Resource\Mesh\HeightMapTerrain</Filter>
+    </ClCompile>
+    <ClCompile Include="RotateScript.cpp">
+      <Filter>Script\Rotate</Filter>
+    </ClCompile>
+    <ClCompile Include="HellicopterScript.cpp">
+      <Filter>Script\Hellicopter</Filter>
+    </ClCompile>
+    <ClCompile Include="AIScript.cpp">
+      <Filter>Script\AI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="2018180035JJM_DX12.rc">
@@ -305,13 +359,14 @@
     <None Include="Light.hlsl">
       <Filter>GameFramework\Engine\Resource\HLSL</Filter>
     </None>
-    <None Include="PixelShader.hlsl">
-      <Filter>GameFramework\Engine\Resource\HLSL</Filter>
-    </None>
+    <None Include="ClassDiagram.cd" />
     <None Include="VertexShader.hlsl">
       <Filter>GameFramework\Engine\Resource\HLSL</Filter>
     </None>
-    <None Include="ClassDiagram.cd" />
+    <None Include="PixelShader.hlsl">
+      <Filter>GameFramework\Engine\Resource\HLSL</Filter>
+    </None>
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Resource.txt">

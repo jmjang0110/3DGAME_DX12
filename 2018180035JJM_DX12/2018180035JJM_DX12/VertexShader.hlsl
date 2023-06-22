@@ -57,3 +57,31 @@ VS_LIGHTING_OUTPUT VSLighting(VS_LIGHTING_INPUT input)
 #endif
     return (output);
 }
+
+
+
+// ============================= Basic Mesh No Light ======================================
+struct VS_BASIC_INPUT
+{
+    float3 position : POSITION;
+    float4 color : COLOR;
+};
+
+struct VS_BASIC_OUTPUT
+{
+    float4 position : SV_POSITION;
+    float4 color : COLOR;
+};
+    
+VS_BASIC_OUTPUT VS_Basic(VS_BASIC_INPUT input)
+{
+    VS_BASIC_OUTPUT output;
+
+    output.position = mul(mul(mul(float4(input.position, 1.f), gmtxGameObject), gmtxView), gmtxProjection);
+    output.color = input.color;
+
+    return output;
+}
+
+
+

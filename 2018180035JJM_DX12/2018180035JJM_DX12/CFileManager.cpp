@@ -191,7 +191,12 @@ MeshLoadInfo* CFileManager::LoadMeshInfoFromFile(FILE* pInFile)
 	char pstrToken[64] = { '\0' };
 	UINT nReads = 0;
 
-	int nPositions = 0, nColors = 0, nNormals = 0, nIndices = 0, nSubMeshes = 0, nSubIndices = 0;
+	int nPositions = 0
+		, nColors = 0
+		, nNormals = 0
+		, nIndices = 0
+		, nSubMeshes = 0
+		, nSubIndices = 0;
 
 	MeshLoadInfo* pMeshInfo = new MeshLoadInfo;
 
@@ -234,6 +239,10 @@ MeshLoadInfo* CFileManager::LoadMeshInfoFromFile(FILE* pInFile)
 			{
 				pMeshInfo->m_nType |= VERTEXT_NORMAL;
 				pMeshInfo->m_pxmf3Normals = new XMFLOAT3[nNormals];
+
+				//XMFLOAT3* test = new XMFLOAT3[nNormals];
+				//nReads = (UINT)::fread(test, sizeof(XMFLOAT3), nNormals, pInFile);
+
 				nReads = (UINT)::fread(pMeshInfo->m_pxmf3Normals, sizeof(XMFLOAT3), nNormals, pInFile);
 			}
 		}
@@ -410,9 +419,6 @@ CGameObject* CFileManager::LoadFrameHierarchyFromFile(FILE* pInFile)
 
 						pMesh->m_Name = pMeshInfo->m_pstrMeshName;
 						ResourceManager::GetInst()->AddMesh(pMeshInfo->m_pstrMeshName,pMesh);
-						auto iter = ResourceManager::GetInst();
-						int i = 0;
-	
 
 					}
 				}

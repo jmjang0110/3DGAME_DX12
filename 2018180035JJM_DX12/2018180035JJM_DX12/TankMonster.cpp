@@ -49,6 +49,8 @@ void TankMonsterScript::Init()
 	for (UINT i = 0; i < m_iBulletMax; ++i) {
 
 		CGameObject* pBullet = new CGameObject;
+		pBullet->SetPipelineStateKeyName("Illuminate");
+
 		pBullet->SetName("Bullet");
 		pBullet->SetMesh(ResourceManager::GetInst()->GetMesh("Hellfire_Missile_Instance"));
 		pBullet->SetMaterial(0, ResourceManager::GetInst()->GetMaterial("skin0"));

@@ -15,6 +15,12 @@
 #include "CFileManager.h"
 #include "CMaterial.h"
 
+#include "CHeightmapGrid.h"
+#include "CHeightMapImage.h"
+#include "CHeightmapTerrain.h"
+
+
+
 
 
 ResourceManager* ResourceManager::m_pInst = nullptr;
@@ -49,7 +55,6 @@ void ResourceManager::OnDestroy()
 	for (auto iter = m_Mesh.begin(); iter != m_Mesh.end(); ++iter)
 	{
 		iter->second.reset();
-
 	}
 	m_Mesh.clear();
 
@@ -75,7 +80,10 @@ void ResourceManager::OnCreate()
 	Create_PipelineState_Illuminate();
 
 
-	//CreateCubeMesh(12.f, 12.f, 12.f);
+	CreateBasicInputLayout();
+	CreateBasicShaders();
+	CreateBasicPipelineState();
+
 
 }
 
@@ -362,10 +370,31 @@ void ResourceManager::Create_PipelineState_Illuminate()
 
 void ResourceManager::CreateCubeMesh(float width, float height, float depth)
 {
-	std::shared_ptr<CMesh> pMesh = std::make_shared<CMesh>();
-	pMesh->m_Name = "Cube";
+	/// ResourceManager OnCreate 에서 하면 안된다. 왜냐하면 Commandlist 가 닫혀있다...
 
-	MeshLoadInfo MeshInfo{};
+	MeshLoadInfo* pMeshInfo =  new MeshLoadInfo;
+	std::shared_ptr<CMesh> pMesh = std::make_shared<CMesh>();
+
+	/*
+		 [0]________[1]
+		  /|	   /|
+		 / |	  / |
+	 [3]/__|_____/[2]|[5]
+		| /	[4]	 |  /
+		|/		 | /
+	 [7]|________|/[6]
+	  
+	
+	*/
+
+	pMesh->m_Name = "Cube";
+	strcpy_s(pMeshInfo->m_pstrMeshName, "Cube");
+
+// <Bounds>:
+	pMeshInfo->m_xmf3AABBCenter = { XMFLOAT3(-37.1882629, 11.1295128,0.601368666) };
+	pMeshInfo->m_xmf3AABBExtents = { XMFLOAT3(52.5753098, 12.7004261,8.22197151) };
+	pMeshInfo->m_nVertices = 8;
+
 	int _vertices = 8;
 	int _stride = sizeof(XMFLOAT3);
 
@@ -373,57 +402,363 @@ void ResourceManager::CreateCubeMesh(float width, float height, float depth)
 	float fy = height * 0.5f;
 	float fz = depth * 0.5f;
 
-	
-	XMFLOAT4 color = XMFLOAT4(1.f, 0.f, 0.f, 1.f);
-	MeshInfo.m_pxmf4Colors = &color;
+// <Positions>:
+	pMeshInfo->m_nType |= VERTEXT_POSITION;
+	pMeshInfo->m_pxmf3Positions = new XMFLOAT3[_vertices];
 
-	MeshInfo.m_pxmf3Positions = new XMFLOAT3[_vertices];
-
-	MeshInfo.m_pxmf3Positions[0]=((XMFLOAT3(-fx, +fy, -fz	)));
-	MeshInfo.m_pxmf3Positions[1]=((XMFLOAT3( +fx, +fy, -fz)));
-	MeshInfo.m_pxmf3Positions[2]=((XMFLOAT3( +fx, +fy, +fz)));
-	MeshInfo.m_pxmf3Positions[3]=((XMFLOAT3(-fx, +fy, +fz	)));
-	MeshInfo.m_pxmf3Positions[4]=((XMFLOAT3(-fx, -fy, -fz	)));
-	MeshInfo.m_pxmf3Positions[5]=((XMFLOAT3(+fx, -fy, -fz	)));
-	MeshInfo.m_pxmf3Positions[6]=((XMFLOAT3(+fx, -fy, +fz	)));
-	MeshInfo.m_pxmf3Positions[7]=((XMFLOAT3(-fx, -fy, +fz	)));
-	
-	MeshInfo.m_nType |= VERTEXT_POSITION;
-	MeshInfo.m_nVertices = _vertices;
-
-	MeshInfo.m_pxmf3Normals = new XMFLOAT3[_vertices];
-	MeshInfo.m_nType |= VERTEXT_NORMAL;
-	for (int i = 0; i < _vertices; ++i) {
-		MeshInfo.m_pxmf3Normals[i] = Vector3::Normalize(MeshInfo.m_pxmf3Positions[i]);
-	}
-	//pMesh->OnCreate(_vertices, _stride, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, vec);
-
+	pMeshInfo->m_pxmf3Positions[0]	=   XMFLOAT3(	-fx, +fy, -fz	);
+	pMeshInfo->m_pxmf3Positions[1]	=   XMFLOAT3(	+fx, +fy, -fz	);
+	pMeshInfo->m_pxmf3Positions[2]	=   XMFLOAT3(	+fx, +fy, +fz	);
+	pMeshInfo->m_pxmf3Positions[3]	=   XMFLOAT3(	-fx, +fy, +fz	);
+	pMeshInfo->m_pxmf3Positions[4]	=   XMFLOAT3(	-fx, -fy, -fz	);
+	pMeshInfo->m_pxmf3Positions[5]	=   XMFLOAT3(	+fx, -fy, -fz	);
+	pMeshInfo->m_pxmf3Positions[6]	=   XMFLOAT3(	+fx, -fy, +fz	);
+	pMeshInfo->m_pxmf3Positions[7]	=   XMFLOAT3(	-fx, -fy, +fz	);
 	
 
+
+// <Normals>:
+	pMeshInfo->m_nType |= VERTEXT_NORMAL;
+	pMeshInfo->m_pxmf3Normals = new XMFLOAT3[_vertices];
+
+	XMFLOAT3 Normal = XMFLOAT3(-fx, +fy, -fz);
+	pMeshInfo->m_pxmf3Normals[0] = Vector3::Normalize(Normal);
+	 Normal = XMFLOAT3(+fx, +fy, -fz);
+	pMeshInfo->m_pxmf3Normals[1] = Vector3::Normalize(Normal);
+	 Normal = XMFLOAT3(+fx, +fy, +fz);
+	pMeshInfo->m_pxmf3Normals[2] = Vector3::Normalize(Normal);
+	 Normal = XMFLOAT3(-fx, +fy, +fz);
+	pMeshInfo->m_pxmf3Normals[3] = Vector3::Normalize(Normal);
+	 Normal = XMFLOAT3(-fx, -fy, -fz);
+	pMeshInfo->m_pxmf3Normals[4] = Vector3::Normalize(Normal);
+	 Normal = XMFLOAT3(+fx, -fy, -fz);
+	pMeshInfo->m_pxmf3Normals[5] = Vector3::Normalize(Normal);
+	 Normal = XMFLOAT3(+fx, -fy, +fz);
+	pMeshInfo->m_pxmf3Normals[6] = Vector3::Normalize(Normal);
+	 Normal = XMFLOAT3(-fx, -fy, +fz);
+	pMeshInfo->m_pxmf3Normals[7] = Vector3::Normalize(Normal);
+
+	
+
+// <Indices>:
 	int _indexNum = 36;
-	MeshInfo.m_pnIndices = new UINT[_indexNum];
-	MeshInfo.m_pnIndices[0] =(3); MeshInfo.m_pnIndices[1] =(1); MeshInfo.m_pnIndices[2] =(0);
-	MeshInfo.m_pnIndices[3] =(2); MeshInfo.m_pnIndices[4] =(1); MeshInfo.m_pnIndices[5] =(3);
-	MeshInfo.m_pnIndices[6] =(0); MeshInfo.m_pnIndices[7] =(5); MeshInfo.m_pnIndices[8] =(4);
-	MeshInfo.m_pnIndices[9] =(1); MeshInfo.m_pnIndices[10]=(5); MeshInfo.m_pnIndices[11]=(0);
-	MeshInfo.m_pnIndices[12]=(3); MeshInfo.m_pnIndices[13]=(4); MeshInfo.m_pnIndices[14]=(7);
-	MeshInfo.m_pnIndices[15]=(0); MeshInfo.m_pnIndices[16]=(4); MeshInfo.m_pnIndices[17]=(3);
-	MeshInfo.m_pnIndices[18]=(1); MeshInfo.m_pnIndices[19]=(6); MeshInfo.m_pnIndices[20]=(5);
-	MeshInfo.m_pnIndices[21]=(2); MeshInfo.m_pnIndices[22]=(6); MeshInfo.m_pnIndices[23]=(1);
-	MeshInfo.m_pnIndices[24]=(2); MeshInfo.m_pnIndices[25]=(7); MeshInfo.m_pnIndices[26]=(6);
-	MeshInfo.m_pnIndices[27]=(3); MeshInfo.m_pnIndices[28]=(7); MeshInfo.m_pnIndices[29]=(2);
-	MeshInfo.m_pnIndices[30]=(6); MeshInfo.m_pnIndices[31]=(4); MeshInfo.m_pnIndices[32]=(5);
-	MeshInfo.m_pnIndices[33]=(7); MeshInfo.m_pnIndices[34]=(4); MeshInfo.m_pnIndices[35]=(6);
+	pMeshInfo->m_nIndices = _indexNum;
+
+	pMeshInfo->m_pnIndices = new UINT[_indexNum];
+	pMeshInfo->m_pnIndices[0] =(3); pMeshInfo->m_pnIndices[1] =(1); pMeshInfo->m_pnIndices[2] =(0);
+	pMeshInfo->m_pnIndices[3] =(2); pMeshInfo->m_pnIndices[4] =(1); pMeshInfo->m_pnIndices[5] =(3);
+	pMeshInfo->m_pnIndices[6] =(0); pMeshInfo->m_pnIndices[7] =(5); pMeshInfo->m_pnIndices[8] =(4);
+	pMeshInfo->m_pnIndices[9] =(1); pMeshInfo->m_pnIndices[10]=(5); pMeshInfo->m_pnIndices[11]=(0);
+	pMeshInfo->m_pnIndices[12]=(3); pMeshInfo->m_pnIndices[13]=(4); pMeshInfo->m_pnIndices[14]=(7);
+	pMeshInfo->m_pnIndices[15]=(0); pMeshInfo->m_pnIndices[16]=(4); pMeshInfo->m_pnIndices[17]=(3);
+	pMeshInfo->m_pnIndices[18]=(1); pMeshInfo->m_pnIndices[19]=(6); pMeshInfo->m_pnIndices[20]=(5);
+	pMeshInfo->m_pnIndices[21]=(2); pMeshInfo->m_pnIndices[22]=(6); pMeshInfo->m_pnIndices[23]=(1);
+	pMeshInfo->m_pnIndices[24]=(2); pMeshInfo->m_pnIndices[25]=(7); pMeshInfo->m_pnIndices[26]=(6);
+	pMeshInfo->m_pnIndices[27]=(3); pMeshInfo->m_pnIndices[28]=(7); pMeshInfo->m_pnIndices[29]=(2);
+	pMeshInfo->m_pnIndices[30]=(6); pMeshInfo->m_pnIndices[31]=(4); pMeshInfo->m_pnIndices[32]=(5);
+	pMeshInfo->m_pnIndices[33]=(7); pMeshInfo->m_pnIndices[34]=(4); pMeshInfo->m_pnIndices[35]=(6);
 
 
-	MeshInfo.m_nIndices = _indexNum;
+	pMeshInfo->m_nSubMeshes = 0;
+	pMeshInfo->m_pnSubSetIndices = nullptr;
+	pMeshInfo->m_ppnSubSetIndices = nullptr;
 
-	pMesh->OnCreate(&MeshInfo);
-	pMesh->CreateIndexBufferResource(&MeshInfo);
-	//pMesh->CreateNormalBufferResource(&MeshInfo);
-	pMesh->CreateNormalBufferResource(&MeshInfo);
+
+	pMesh->OnCreate(pMeshInfo);
+	//pMesh->CreateNormalBufferResource(pMeshInfo);
 	ResourceManager::GetInst()->AddMesh("Cube", pMesh);
+	pMesh->CreateIndexBufferResource(pMeshInfo);
+	pMesh->SetTopology(D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+}
 
+void ResourceManager::CreateBasicShaders()
+{
+
+	std::shared_ptr<CShader> VS = std::make_shared<CShader>();
+	std::shared_ptr<CShader> PS = std::make_shared<CShader>();
+
+	VS->OnCreate(SHADER_TYPE::VERTEX_SHADER, L"VertexShader.hlsl", "VS_Basic", "vs_5_1");
+	PS->OnCreate(SHADER_TYPE::PIXEL_SHADER, L"PixelShader.hlsl", "PS_Basic", "ps_5_1");
+
+	AddShader("Basic_VS", VS);
+	AddShader("Basic_PS", PS);
+}
+
+void ResourceManager::CreateBasicPipelineState()
+{
+	std::shared_ptr<CGraphicsPipelineState> pPS = std::make_shared<CGraphicsPipelineState>();
+
+	pPS->SetVertexShader(ResourceManager::GetInst()->GetShader("Basic_VS"));
+	pPS->SetPixelShader(ResourceManager::GetInst()->GetShader("Basic_PS"));
+
+	pPS->SetRasterizerState(ResourceManager::GetInst()->GetRasterizerDesc("Default"));
+	pPS->SetBlendState(ResourceManager::GetInst()->GetBlendDesc("Default"));
+	pPS->SetDepthStencilState(ResourceManager::GetInst()->GetDepthStencilState("Default"));
+	pPS->SetInputLayout(ResourceManager::GetInst()->GetInputLayoutDesc("basic"));
+
+	HRESULT hResult = pPS->CreateGraphicsPipelineState();
+	if (hResult == S_OK) {
+		ResourceManager::GetInst()->AddPipelineState("Basic", pPS);
+	}
+
+}
+
+void ResourceManager::CreateBasicInputLayout()
+{
+	UINT nInputElementDescs = 2;
+	D3D12_INPUT_ELEMENT_DESC* pd3dInputElementDescs = new D3D12_INPUT_ELEMENT_DESC[nInputElementDescs];
+
+	pd3dInputElementDescs[0] = { "POSITION"
+								, 0
+								, DXGI_FORMAT_R32G32B32_FLOAT
+								, 0
+								, 0
+								, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA
+								, 0 };
+	pd3dInputElementDescs[1] = { "COLOR"
+								, 0
+								, DXGI_FORMAT_R32G32B32A32_FLOAT
+								, 0
+								, 12
+								, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA
+								, 0 };
+
+
+
+	D3D12_INPUT_LAYOUT_DESC d3dInputLayoutDesc{};
+	d3dInputLayoutDesc.pInputElementDescs = pd3dInputElementDescs;
+	d3dInputLayoutDesc.NumElements        = nInputElementDescs;
+
+	AddInputLayoutDesc("basic", d3dInputLayoutDesc);
+
+}
+
+void ResourceManager::CreateSphereMesh()
+{
+	//MeshLoadInfo* pMeshInfo      = new MeshLoadInfo;
+	//std::shared_ptr<CMesh> pMesh = std::make_shared<CMesh>();
+
+
+	//UINT iStackCount		= 40; // 가로 분할 개수
+	//UINT iSliceCount		= 40; // 세로 분할 개수
+	//UINT _vertices = iStackCount * iSliceCount + 2;
+
+
+	//pMeshInfo->m_nType |= VERTEXT_POSITION;
+	//pMeshInfo->m_pxmf3Positions = new XMFLOAT3[_vertices];
+
+	//pMeshInfo->m_nType |= VERTEXT_NORMAL;
+	//pMeshInfo->m_pxmf3Normals = new XMFLOAT3[_vertices];
+
+	//// ===========
+	//// Sphere Mesh
+	//// ===========
+	//float fRadius = 0.5f;
+
+	//// Top
+	//XMFLOAT3 vPos                  = XMFLOAT3(0.f, fRadius, 0.f);
+	//XMFLOAT3 vNormal               = Vector3::Normalize(vPos);
+	//pMeshInfo->m_pxmf3Positions[0] = vPos;
+	//pMeshInfo->m_pxmf3Normals[0]   = vNormal;
+
+	//
+	//// Body
+
+
+	//float fStackAngle = XM_PI / iStackCount;
+	//float fSliceAngle = XM_2PI / iSliceCount;
+
+	//float fUVXStep = 1.f / static_cast<float>(iSliceCount);
+	//float fUVYStep = 1.f / static_cast<float>(iStackCount);
+
+	//for (UINT i = 1; i < iStackCount; ++i)
+	//{
+	//	float phi = i * fStackAngle;
+
+	//	for (UINT j = 0; j <= iSliceCount; ++j)
+	//	{
+	//		float theta = j * fSliceAngle;
+
+	//		vPos = XMFLOAT3(fRadius * sinf(i * fStackAngle) * cosf(j * fSliceAngle),
+	//			fRadius * cosf(i * fStackAngle),
+	//			fRadius * sinf(i * fStackAngle) * sinf(j * fSliceAngle));
+	//		vNormal = Vector3::Normalize(vPos);
+	//		
+	//		UINT idx = (i - 1) * 10 + (j + 1);
+	//		pMeshInfo->m_pxmf3Positions[idx] = vPos;
+	//		pMeshInfo->m_pxmf3Normals[idx] = vPos;
+
+	//	}
+	//}
+
+	//// Bottom
+	//vPos = XMFLOAT3(0.f, -fRadius, 0.f);
+	//vNormal = Vector3::Normalize(vPos);
+	//pMeshInfo->m_pxmf3Positions[_vertices - 1] = vPos;
+	//pMeshInfo->m_pxmf3Normals[_vertices  -1] = vNormal;
+
+
+
+	//// 인덱스
+	//
+	//int _indexNum          = _vertices;
+	//pMeshInfo->m_nIndices  = _indexNum;
+	//pMeshInfo->m_pnIndices = new UINT[_indexNum];
+
+	//// 북극점
+	//for (UINT i = 0; i < iSliceCount; i += 3)
+	//{
+	//	pMeshInfo->m_pnIndices[i] = 0;
+	//	pMeshInfo->m_pnIndices[i + 1] = i + 2;
+	//	pMeshInfo->m_pnIndices[i + 2] = i + 1
+	//}
+
+	//// 몸통
+
+	//int idx = iSliceCount;
+	//for (UINT i = 0; i < iStackCount - 2; ++i)
+	//{
+	//	for (UINT j = 0; j < iSliceCount; ++j)
+	//	{
+	//		// + 
+	//		// | \
+	//		// +--+
+	//		pMeshInfo->m_pnIndices[idx]     = (iSliceCount + 1) * (i)+(j)+1;
+	//		pMeshInfo->m_pnIndices[idx + 1] = (iSliceCount + 1) * (i + 1) + (j + 1) + 1;
+	//		pMeshInfo->m_pnIndices[idx + 2] = (iSliceCount + 1) * (i + 1) + (j)+1;
+
+	//		// +--+
+	//		//  \ |
+	//		//    +
+	//		pMeshInfo->m_pnIndices[idx + 3] = (iSliceCount + 1) * (i)+(j)+1;
+	//		pMeshInfo->m_pnIndices[idx + 4] = (iSliceCount + 1) * (i)+(j + 1) + 1;
+	//		pMeshInfo->m_pnIndices[idx + 5] = (iSliceCount + 1) * (i + 1) + (j + 1) + 1;
+
+	//		idx += 6;
+	//	}
+	//}
+
+	//// 남극점
+	//UINT iBottomIdx = static_cast<UINT>(vecVtx.size()) - 1;
+	//for (UINT i = 0; i < iSliceCount; ++i)
+	//{
+	//	vecIdx.push_back(iBottomIdx);
+	//	vecIdx.push_back(iBottomIdx - (i + 2));
+	//	vecIdx.push_back(iBottomIdx - (i + 1));
+	//}
+
+	//pMesh = new CMesh;
+	//pMesh->Create(vecVtx.data(), static_cast<UINT>(vecVtx.size()), vecIdx.data(), static_cast<UINT>(vecIdx.size()));
+	//AddRes(L"SphereMesh", pMesh, true);
+
+	//vecVtx.clear();
+
+	//vecIdx.clear();
+}
+
+std::shared_ptr<CMesh> ResourceManager::CreateGridTerrainMesh(int KeyNum
+	, int xStart
+	, int zStart
+	, int nWidth
+	, int nLength
+	, XMFLOAT3 xmf3Scale
+	, void* pContext) // CHeightMapImage
+{
+	CHeightmapGrid HeightmapGrid{};
+
+	MeshLoadInfo* pMeshInfo = new MeshLoadInfo;
+	std::shared_ptr<CMesh> pMesh = std::make_shared<CMesh>();
+
+	//격자는 삼각형 스트립으로 구성한다. 
+	pMeshInfo->m_nVertices = nWidth * nLength;	//격자의 교점(정점)의 개수는 (nWidth * nLength)이다. 
+	XMFLOAT3* pVertices = new XMFLOAT3[pMeshInfo->m_nVertices];
+
+	pMeshInfo->m_nType |= VERTEXT_NORMAL;
+	pMeshInfo->m_pxmf3Normals = new XMFLOAT3[pMeshInfo->m_nVertices];
+
+	float fHeight = 0.0f
+		, fMinHeight = +FLT_MAX
+		, fMaxHeight = -FLT_MAX;
+	/*
+		xStart와 zStart는 격자의 시작 위치(x-좌표와 z-좌표)를 나타낸다.
+		커다란 지형은 격자들의 이차원 배열로 만들 필
+		요가 있기 때문에 전체 지형에서 각 격자의 시작 위치를 나타내는 정보가 필요하다.
+	*/
+	for (int i = 0, z = zStart; z < (zStart + nLength); z++)
+	{
+		for (int x = xStart; x < (xStart + nWidth); x++, i++)
+		{
+			//정점의 높이와 색상을 높이 맵으로부터 구한다.
+			XMFLOAT3 xmf3Position = XMFLOAT3((x * xmf3Scale.x)
+				, HeightmapGrid.OnGetHeight(x, z, pContext),
+				(z * xmf3Scale.z));
+
+			XMFLOAT4 color = HeightmapGrid.OnGetColor(x, z, pContext);
+
+			XMFLOAT4 xmf4Color{};
+			xmf4Color = Vector4::Add(color, xmf4Color);
+
+			pVertices[i] = XMFLOAT3(xmf3Position);
+			XMFLOAT3 ColorNormal = XMFLOAT3(xmf4Color.x, xmf4Color.y, xmf4Color.z);
+			ColorNormal = Vector3::Normalize(ColorNormal);
+
+			pMeshInfo->m_pxmf3Normals[i] = XMFLOAT3(ColorNormal.x, ColorNormal.y, ColorNormal.z);
+
+			if (fHeight < fMinHeight) fMinHeight = fHeight;
+			if (fHeight > fMaxHeight) fMaxHeight = fHeight;
+		}
+	}
+	pMeshInfo->m_pxmf3Positions = pVertices;
+	//다음 그림은 격자의 교점(정점)을 나열하는 순서를 보여준다.
+
+	
+	pMeshInfo->m_nIndices = ((nWidth * 2) * (nLength - 1)) + ((nLength - 1) - 1);
+	UINT* pnIndices = new UINT[pMeshInfo->m_nIndices]; 
+	
+	for (int j = 0, z = 0; z < nLength - 1; z++)
+	{
+		if ((z % 2) == 0)
+		{
+			//홀수 번째 줄이므로(z = 0, 2, 4, ...) 인덱스의 나열 순서는 왼쪽에서 오른쪽 방향이다. 
+			for (int x = 0; x < nWidth; x++)
+			{
+				//첫 번째 줄을 제외하고 줄이 바뀔 때마다(x == 0) 첫 번째 인덱스를 추가한다. 
+				if ((x == 0) && (z > 0)) pnIndices[j++] = (UINT)(x + (z * nWidth));
+				//아래(x, z), 위(x, z+1)의 순서로 인덱스를 추가한다
+				pnIndices[j++] = (UINT)(x + (z * nWidth));
+				pnIndices[j++] = (UINT)((x + (z * nWidth)) + nWidth);
+			}
+		}
+		else
+		{
+			//짝수 번째 줄이므로(z = 1, 3, 5, ...) 인덱스의 나열 순서는 오른쪽에서 왼쪽 방향이다. 
+			for (int x = nWidth - 1; x >= 0; x--)
+			{
+				//줄이 바뀔 때마다(x == (nWidth-1)) 첫 번째 인덱스를 추가한다. 
+				if (x == (nWidth - 1)) pnIndices[j++] = (UINT)(x + (z * nWidth));
+				//아래(x, z), 위(x, z+1)의 순서로 인덱스를 추가한다. 
+				pnIndices[j++] = (UINT)(x + (z * nWidth));
+				pnIndices[j++] = (UINT)((x + (z * nWidth)) + nWidth);
+			}
+		}
+	}
+	pMeshInfo->m_pnIndices = pnIndices;
+	
+
+
+
+	pMesh->OnCreate(pMeshInfo);
+	pMesh->CreateNormalBufferResource(pMeshInfo);
+	pMesh->CreateIndexBufferResource(pMeshInfo);
+	pMesh->SetTopology(D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	
+	std::string Key = "HeightmapGridMesh_" + std::to_string(KeyNum);
+	ResourceManager::GetInst()->AddMesh(Key, pMesh);
+
+	
+	SAFE_DELETE(pVertices);
+	SAFE_DELETE(pnIndices);
+	return pMesh;
 
 }
 

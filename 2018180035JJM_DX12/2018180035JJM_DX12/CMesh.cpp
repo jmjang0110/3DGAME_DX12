@@ -15,6 +15,8 @@ CMesh::CMesh()
 
 CMesh::~CMesh()
 {
+
+
 }
 
 void CMesh::CreateNormalBufferResource(MeshLoadInfo* pMeshInfo)
@@ -45,6 +47,40 @@ void CMesh::CreateIndexBufferResource(MeshLoadInfo* pMeshInfo)
 	m_d3dIndexBufferView.BufferLocation = m_pd3dIndexBuffer->GetGPUVirtualAddress();
 	m_d3dIndexBufferView.Format         = DXGI_FORMAT_R32_UINT;
 	m_d3dIndexBufferView.SizeInBytes    = sizeof(UINT) * m_nIndices;
+
+}
+
+void CMesh::CreateIndexBufferResource(int nIndices, UINT* pnIndices)
+{
+	m_nIndices = nIndices;
+
+	m_pd3dIndexBuffer = ResourceManager::GetInst()->CreateBufferResource(pnIndices
+		, sizeof(UINT) * m_nIndices
+		, D3D12_HEAP_TYPE_DEFAULT
+		, D3D12_RESOURCE_STATE_INDEX_BUFFER
+		, &m_pd3dIndexUploadBuffer);
+
+	m_d3dIndexBufferView.BufferLocation = m_pd3dIndexBuffer->GetGPUVirtualAddress();
+	m_d3dIndexBufferView.Format = DXGI_FORMAT_R32_UINT;
+	m_d3dIndexBufferView.SizeInBytes = sizeof(UINT) * m_nIndices;
+
+}
+
+void CMesh::CreateVertexBufferResource(int nVertices, XMFLOAT3* pnVertices)
+{
+	m_nVertices = nVertices;
+
+	m_pd3dVertexBuffer = ResourceManager::GetInst()->CreateBufferResource(
+		pnVertices,
+		sizeof(XMFLOAT3) * nVertices,
+		D3D12_HEAP_TYPE_DEFAULT,
+		D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER,
+		&m_pd3dVertexUploadBuffer
+	);
+
+	m_d3dVertexBufferView.BufferLocation = m_pd3dVertexBuffer->GetGPUVirtualAddress();
+	m_d3dVertexBufferView.StrideInBytes = sizeof(XMFLOAT3);
+	m_d3dVertexBufferView.SizeInBytes = sizeof(XMFLOAT3) * nVertices;
 
 }
 
@@ -122,11 +158,22 @@ void CMesh::OnCreate(MeshLoadInfo* tMeshInfo)
 void CMesh::Render(int nSubSet)
 {
 
+
+
 	auto pCmdList = COMMAND_LIST(CGameFramework);
 
 	pCmdList->IASetPrimitiveTopology(m_d3dPrimitiveTopology);
-	D3D12_VERTEX_BUFFER_VIEW pVertexBufferViews[2] = { m_d3dVertexBufferView, m_d3dNormalBufferView};
-	pCmdList->IASetVertexBuffers(m_nSlot, 2, pVertexBufferViews);
+
+	if(m_pd3dNormalBuffer)
+	{
+		D3D12_VERTEX_BUFFER_VIEW pVertexBufferViews[2] = { m_d3dVertexBufferView, m_d3dNormalBufferView };
+		pCmdList->IASetVertexBuffers(m_nSlot, 2, pVertexBufferViews);
+	}
+	else 
+	{
+		D3D12_VERTEX_BUFFER_VIEW pVertexBufferViews[1] = { m_d3dVertexBufferView };
+		pCmdList->IASetVertexBuffers(m_nSlot, 1, &m_d3dVertexBufferView);
+	}
 
 	if ((m_nSubMeshes > 0) && (nSubSet < m_nSubMeshes))
 	{

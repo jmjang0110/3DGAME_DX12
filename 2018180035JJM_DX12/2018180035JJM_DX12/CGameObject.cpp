@@ -27,8 +27,9 @@ CGameObject::~CGameObject()
 	if (GetName() == "Gun")
 		int i = 0;
 
-	if (m_pMesh)
-		m_pMesh.reset();
+	for (auto mesh : m_pMesh)
+		mesh.reset();
+
 
 
 	auto asdfasdf = ResourceManager::GetInst();
@@ -55,8 +56,11 @@ void CGameObject::Render()
 
 	for (int i = 0; i < m_pMtrl.size(); ++i) {
 		m_pMtrl[i]->UpdateShaderVariable();
-		if (m_pMesh)
-			m_pMesh->Render(i);
+		
+		for (auto mesh : m_pMesh)
+		{
+			mesh->Render(i);
+		}
 	}
 
 	for (auto pObj : m_vecChild) {
@@ -96,8 +100,8 @@ void CGameObject::FinalUpdate(float _fTimeElapsed)
 
 void CGameObject::ReleaseMeshUploadBuffers()
 {
-	if (m_pMesh)
-		m_pMesh->ReleaseUploadBuffers();
+	for (auto pMesh : m_pMesh)
+		pMesh->ReleaseUploadBuffers();
 
 }
 

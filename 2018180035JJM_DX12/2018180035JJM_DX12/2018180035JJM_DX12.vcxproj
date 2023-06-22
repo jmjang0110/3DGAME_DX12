@@ -128,6 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="2018180035JJM_DX12.h" />
+    <ClInclude Include="AIScript.h" />
     <ClInclude Include="BulletScript.h" />
     <ClInclude Include="CameraScript.h" />
     <ClInclude Include="CCamera.h" />
@@ -139,6 +140,9 @@
     <ClInclude Include="CGameFramework.h" />
     <ClInclude Include="CGameObject.h" />
     <ClInclude Include="CGraphicsPipelineState.h" />
+    <ClInclude Include="CHeightmapGrid.h" />
+    <ClInclude Include="CHeightMapImage.h" />
+    <ClInclude Include="CHeightmapTerrain.h" />
     <ClInclude Include="CKeyManager.h" />
     <ClInclude Include="CLight.h" />
     <ClInclude Include="CMaterial.h" />
@@ -152,9 +156,11 @@
     <ClInclude Include="CTransform.h" />
     <ClInclude Include="CVertex.h" />
     <ClInclude Include="d3dx12.h" />
+    <ClInclude Include="HellicopterScript.h" />
     <ClInclude Include="PlayerScript.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="RotateScript.h" />
     <ClInclude Include="SimpleMath.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="TankMonster.h" />
@@ -163,6 +169,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="2018180035JJM_DX12.cpp" />
+    <ClCompile Include="AIScript.cpp" />
     <ClCompile Include="BulletScript.cpp" />
     <ClCompile Include="CameraScript.cpp" />
     <ClCompile Include="CCamera.cpp" />
@@ -174,6 +181,9 @@
     <ClCompile Include="CGameFramework.cpp" />
     <ClCompile Include="CGameObject.cpp" />
     <ClCompile Include="CGraphicsPipelineState.cpp" />
+    <ClCompile Include="CHeightmapGrid.cpp" />
+    <ClCompile Include="CHeightMapImage.cpp" />
+    <ClCompile Include="CHeightmapTerrain.cpp" />
     <ClCompile Include="CKeyManager.cpp" />
     <ClCompile Include="CLight.cpp" />
     <ClCompile Include="CMaterial.cpp" />
@@ -186,8 +196,10 @@
     <ClCompile Include="CTimer.cpp" />
     <ClCompile Include="CTransform.cpp" />
     <ClCompile Include="CVertex.cpp" />
+    <ClCompile Include="HellicopterScript.cpp" />
     <ClCompile Include="PlayerScript.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="RotateScript.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -205,6 +217,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
+    <None Include="ClassDiagram1.cd" />
     <None Include="Light.hlsl">
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.1</ShaderModel>
       <FileType>Document</FileType>
@@ -243,7 +256,7 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.1</ShaderModel>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.1</ShaderModel>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </EntryPointName>

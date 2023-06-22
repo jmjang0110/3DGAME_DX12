@@ -16,6 +16,11 @@
 #include "ResourceManager.h"
 #include "BulletScript.h"
 
+#include "CHeightmapGrid.h"
+#include  "CHeightMapImage.h"
+#include "CHeightmapTerrain.h"
+
+
 
 PlayerScript::PlayerScript()
 {
@@ -46,6 +51,8 @@ void PlayerScript::Init()
 	for (UINT i = 0; i < m_iBulletMax; ++i) {
 		
 		CGameObject* pBullet = new CGameObject;
+		pBullet->SetPipelineStateKeyName("Illuminate");
+
 		pBullet->SetName("Bullet");
 		pBullet->SetMesh(ResourceManager::GetInst()->GetMesh("Hellfire_Missile_Instance"));
 		pBullet->SetMaterial(0, ResourceManager::GetInst()->GetMaterial("skin0"));
@@ -80,6 +87,12 @@ void PlayerScript::Update(float _fTimeElapsed)
 	Update_InputKey(_fTimeElapsed);
 
 	Rotate_PlayerAxis_Sync_Camera_Axis(_fTimeElapsed);
+
+	CTransform* pTrans = GetOwner()->Get_Transform_Component();
+	XMFLOAT3 vPos = pTrans->GetCurPosition();
+	float fHeight = CGameFramework::GetInst()->GetCurScene()->GetTerrain()->GetHeight(vPos.x, vPos.z);
+	vPos.y = fHeight;
+	pTrans->SetPosition(vPos);
 
 }
 
@@ -272,9 +285,9 @@ void PlayerScript::Update_InputKey(float _fTimeElapsed)
 	if (KEY_PRESSED(m_eFrontKey)) {
 		XMFLOAT3 vDir = pCamTrans->GetWorldDir(DIR_TYPE::FRONT);
 
-		vCurPos.x += _fTimeElapsed * 10.f * vDir.x;
+		vCurPos.x += _fTimeElapsed * m_fMoveSpeed * vDir.x;
 		//vCurPos.y += _fTimeElapsed * 10.f * vFront.y;
-		vCurPos.z += _fTimeElapsed * 10.f * vDir.z;
+		vCurPos.z += _fTimeElapsed * m_fMoveSpeed * vDir.z;
 
 
 	}
@@ -282,27 +295,27 @@ void PlayerScript::Update_InputKey(float _fTimeElapsed)
 		XMFLOAT3 vDir = pCamTrans->GetWorldDir(DIR_TYPE::BACKWARD);
 
 
-		vCurPos.x += _fTimeElapsed * 10.f * vDir.x;
+		vCurPos.x += _fTimeElapsed * m_fMoveSpeed * vDir.x;
 		//vCurPos.y += _fTimeElapsed * 10.f * vFront.y;
-		vCurPos.z += _fTimeElapsed * 10.f * vDir.z;
+		vCurPos.z += _fTimeElapsed * m_fMoveSpeed * vDir.z;
 	}
 
 	if (KEY_PRESSED(m_eLeftKey)) {
 		XMFLOAT3 vDir = pCamTrans->GetWorldDir(DIR_TYPE::LEFT);
 
 
-		vCurPos.x += _fTimeElapsed * 10.f * vDir.x;
+		vCurPos.x += _fTimeElapsed * m_fMoveSpeed * vDir.x;
 		//vCurPos.y += _fTimeElapsed * 10.f * vFront.y;
-		vCurPos.z += _fTimeElapsed * 10.f * vDir.z;
+		vCurPos.z += _fTimeElapsed * m_fMoveSpeed * vDir.z;
 	}
 
 	if (KEY_PRESSED(m_eRightKey)) {
 		XMFLOAT3 vDir = pCamTrans->GetWorldDir(DIR_TYPE::RIGHT);
 
 
-		vCurPos.x += _fTimeElapsed * 10.f * vDir.x;
+		vCurPos.x += _fTimeElapsed * m_fMoveSpeed * vDir.x;
 		//vCurPos.y += _fTimeElapsed * 10.f * vFront.y;
-		vCurPos.z += _fTimeElapsed * 10.f * vDir.z;
+		vCurPos.z += _fTimeElapsed * m_fMoveSpeed * vDir.z;
 	}
 
 
@@ -390,6 +403,29 @@ void PlayerScript::Update_InputKey(float _fTimeElapsed)
 			}
 		}
 	}
+
+
+	if (KEY_PRESSED(KEY::NUM0))
+	{
+		CTransform* pTrans = GetOwner()->Get_Transform_Component();
+		XMFLOAT3 Pos = pTrans->GetCurPosition();
+		Pos.y += _fTimeElapsed * 50.f;
+		pTrans->SetPosition(Pos);
+
+	}
+	if (KEY_PRESSED(KEY::NUM1))
+	{
+		CTransform* pTrans = GetOwner()->Get_Transform_Component();
+		XMFLOAT3 Pos = pTrans->GetCurPosition();
+		Pos.y -= _fTimeElapsed * 50.f;
+		pTrans->SetPosition(Pos);
+
+	}
+
+
+
+
+
 
 }
 

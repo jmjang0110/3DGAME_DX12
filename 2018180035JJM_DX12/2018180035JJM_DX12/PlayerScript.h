@@ -50,6 +50,9 @@ private:
 
     XMFLOAT3                    m_xmf3_PastCamRot;
 
+
+    float m_fMoveSpeed = 50.f;
+
 public:
     std::vector<CGameObject*> GetBullets() { return m_pBullets; }
 

@@ -62,6 +62,20 @@ public:
 	void			Create_PipelineState_Illuminate();
 
 	void CreateCubeMesh(float width = 2.0f, float height = 2.0f, float depth = 2.0f);
+	void CreateBasicShaders();
+	void CreateBasicPipelineState();
+	void CreateBasicInputLayout();
+
+	void CreateSphereMesh();
+
+
+	std::shared_ptr<CMesh> CreateGridTerrainMesh(int KeyNum
+		, int xStart
+		, int zStart
+		, int nWidth
+		, int nLength
+		, XMFLOAT3 xmf3Scale
+		, void* pContext);
 
 	
 public:

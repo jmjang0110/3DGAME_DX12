@@ -45,7 +45,7 @@ private:
 	XMFLOAT3					m_xmf3RotationAxis	= XMFLOAT3(0.0f, 1.0f, 0.0f);
 	float						m_fRotationSpeed	= 0.0f;
 
-	//XMFLOAT3					m_xmf3Scale			= XMFLOAT3(1.f, 1.f, 1.f);
+	XMFLOAT3					m_xmf3Scale			= XMFLOAT3(1.f, 1.f, 1.f);
 
 	// MATRIX
 	XMFLOAT4X4					m_xmf4x4Transform = Matrix4x4::Identity();
@@ -83,7 +83,7 @@ public:
 	XMFLOAT4X4	GetWorldMatrix()		{ return m_xmf4x4World; }
 	XMFLOAT3	GetCurPosition()		{ return m_xmf3Position; }
 	XMFLOAT3	GetRotation()			{ return m_xmf3Degree; }
-	//XMFLOAT3	GetScale()				{ return m_xmf3Scale; }
+	XMFLOAT3	GetScale()				{ return m_xmf3Scale; }
 	XMFLOAT3	GetOffset()				{ return m_xmf3Offset; }
 
 
@@ -100,8 +100,8 @@ public:
 	void SetPosition(float x, float y, float z) { m_xmf3Position = XMFLOAT3(x, y, z); }
 	void SetRotation(float x, float y, float z) { m_xmf3Degree = XMFLOAT3(x, y, z); }
 	void SetRotation(XMFLOAT3 Rot) { m_xmf3Degree = Rot; }
-	//void SetScale(float x, float y, float z) { m_xmf3Scale = XMFLOAT3(x, y, z); }
-	//void SetScale(XMFLOAT3 Scale) { m_xmf3Scale = Scale; }
+	void SetScale(float x, float y, float z) { m_xmf3Scale = XMFLOAT3(x, y, z); }
+	void SetScale(XMFLOAT3 Scale) { m_xmf3Scale = Scale; }
 
 	void SetOffset(XMFLOAT3 offset) { m_xmf3Offset = offset; }
 

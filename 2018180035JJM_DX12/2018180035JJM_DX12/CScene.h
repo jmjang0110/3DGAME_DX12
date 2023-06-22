@@ -5,15 +5,21 @@
 class CGameObject;
 class CGraphicsPipelineState;
 class CLight;
+class CHeightmapTerrain;
 
 class CScene
 {
 private:
 	CLight*						m_pLight;
 	CGameObject*				m_pMainCamera;
+	std::vector<CGameObject*>	m_vecMonsters;
+
 
 	std::vector<CGameObject*>	m_vecObjects;
 	std::vector<CGameObject*>	m_vecSubCamera;
+
+	CHeightmapTerrain*			m_pTerrain;
+
 
 private:
 	std::multimap<std::string, std::shared_ptr<CGraphicsPipelineState>> m_PipelineStates;
@@ -26,6 +32,9 @@ public:
 	void AddTank();
 	void AddCamera();
 	void AddMonster();
+	void AddTerrain();
+
+
 
 
 public:
@@ -44,11 +53,15 @@ public:
 
 public:
 	void PushBack_GameObject(CGameObject* pObj);
+	bool Render_PipelineState(std::string PipelineStateName);
+
 
 /// [ G E T ]
 public:
 	CGameObject* GetMainCamera();
 	CGameObject* GetObjByName(std::string name);
+	CHeightmapTerrain* GetTerrain() { return m_pTerrain; }
+	std::vector<CGameObject*> GetMonsters() { return m_vecMonsters; }
 
 
 /// [ S E T ] 
