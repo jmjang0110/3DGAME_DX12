@@ -35,6 +35,8 @@ public:
 	void AddTerrain();
 
 
+public:
+	void CreateHW2Ojbects();
 
 
 public:

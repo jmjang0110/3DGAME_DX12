@@ -61,8 +61,8 @@ using Microsoft::WRL::ComPtr;
 
 
 // WINDOW SIZE 
-#define FRAME_BUFFER_WIDTH	800
-#define FRAME_BUFFER_HEIGHT 600
+#define FRAME_BUFFER_WIDTH	1200
+#define FRAME_BUFFER_HEIGHT 700
 #define ASPECT_RATIO (float(FRAME_BUFFER_WIDTH) / float(FRAME_BUFFER_HEIGHT))
 
 //#define _WITH_CB_GAMEOBJECT_32BIT_CONSTANTS
@@ -104,6 +104,7 @@ public:										\
         delete p;                          \
     p = nullptr;
 
+	
 
 
 
@@ -123,7 +124,6 @@ struct WindowInfo
 #define KEY_PRESSED(key) KEY_STATE::PRESSED == CKeyManager::GetInst()->GetKeyState(key)
 #define KEY_AWAY(key)    KEY_STATE::AWAY == CKeyManager::GetInst()->GetKeyState(key)
 
-
 #define MAX_LIGHTS			16
 
 #define POINT_LIGHT			1
@@ -131,6 +131,18 @@ struct WindowInfo
 #define DIRECTIONAL_LIGHT	3
 
 #define RANDOM_COLOR			XMFLOAT4(rand() / float(RAND_MAX), rand() / float(RAND_MAX), rand() / float(RAND_MAX), rand() / float(RAND_MAX))
+
+
+#define NUM_FRAMES_IN_FLIGHT 3
+
+// Texture Option
+#define TEXTURES 6
+
+#define RESOURCE_TEXTURE2D			0x01
+#define RESOURCE_TEXTURE2D_ARRAY	0x02	//[]
+#define RESOURCE_TEXTURE2DARRAY		0x03
+#define RESOURCE_TEXTURE_CUBE		0x04
+#define RESOURCE_BUFFER				0x05
 
 
 enum class KEY_STATE
@@ -150,7 +162,7 @@ struct tKeyInfo
 
 enum
 {
-	SWAP_CHAIN_BUFFER_COUNT = 2,
+	SWAP_CHAIN_BUFFER_COUNT = 3,
 	END
 };
 

@@ -96,10 +96,31 @@ public:
 
 
 public:
-	void CreateNormalBufferResource(MeshLoadInfo* pMeshInfo);
+/// VERTEX 
+	void CreateVertexBufferResource(int nVertices, XMFLOAT3* pnVertices);
+	void CreateVertexBufferResource(void* pData
+		, UINT nDataCnt
+		, UINT nStride
+		, D3D12_HEAP_TYPE eHeapType       = D3D12_HEAP_TYPE_DEFAULT
+		, D3D12_RESOURCE_STATES eResState = D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
+
+/// INDEX 
 	void CreateIndexBufferResource(MeshLoadInfo* pMeshInfo);
 	void CreateIndexBufferResource(int nIndices, UINT* pnIndices);
-	void CreateVertexBufferResource(int nVertices, XMFLOAT3* pnVertices);
+	void CreateIndexBufferResource(void* pData
+		, UINT nDataCnt
+		, UINT nStride
+		, D3D12_HEAP_TYPE eHeapType       = D3D12_HEAP_TYPE_DEFAULT
+		, D3D12_RESOURCE_STATES eResState = D3D12_RESOURCE_STATE_INDEX_BUFFER
+		, DXGI_FORMAT eDxgiFormat         = DXGI_FORMAT_R32_UINT);
+/// NORMAL 
+	void CreateNormalBufferResource(MeshLoadInfo* pMeshInfo);
+	void CreateNormalBufferResource(void* pData
+		, UINT nDataCnt
+		, UINT nStride
+		, D3D12_HEAP_TYPE eHeapType       = D3D12_HEAP_TYPE_DEFAULT
+		, D3D12_RESOURCE_STATES eResState = D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
+
 	void SetType(UINT Type) { m_nType |= Type; }
 
 

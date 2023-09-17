@@ -71,7 +71,7 @@ public:
 	CComponent*					GetComponent(COMPONENT_TYPE _eType) { return m_arrCom[static_cast<UINT>(_eType)]; }
 	char*						GetFrameName()						{ return m_pstrFrameName; }
 
-	std::shared_ptr<CMesh>		GetMesh() { if(m_pMesh.empty() == false) return m_pMesh[0]; }
+	std::shared_ptr<CMesh>		GetMesh() { if (m_pMesh.empty() == false) return m_pMesh[0]; return nullptr; }
 	std::vector<std::shared_ptr<CMesh>> GetAllMesh() { return m_pMesh; }
 
 	CTransform* Get_Transform_Component()	{ return (CTransform*)m_arrCom[static_cast<UINT>(COMPONENT_TYPE::TRANSFORM)]; }

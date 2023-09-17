@@ -20,15 +20,13 @@
 								[CBV]
 								[CBV]
 								[]
-								[]
-								[]
-								[]
-
-
-
-	
 */
 
+/// 일반적으로 셰이더 프로그램은 특정 자원들 ( Constant Buffer, Texture, SamplerState 등)이
+/// 입력된다고 기대한다. RootSignature는 셰이더 프로그램이 기대하는 자원들을 정의한다.
+/// 셰이더 프로그램은 본질적으로 하나의 함수이고 셰이더에 입력되는 자원들은 함수의 매개변수들에 해당하므로,
+/// RootSignature는 곧 함수 서명을 정의하는 수단이라 할 수있다.
+/// 
 class CRootSignature
 {
 private:

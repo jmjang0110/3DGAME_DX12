@@ -20,15 +20,16 @@ void CCommandQueue::OnCreate(WindowInfo WindowInfo)
 
 	if (!pDevice.get()) 
 		return;
-	m_SwapChain = SWAP_CHAIN(CGameFramework);
+	
 
 
 
 	D3D12_COMMAND_QUEUE_DESC d3dCommandQueueDesc;
 	::ZeroMemory(&d3dCommandQueueDesc, sizeof(D3D12_COMMAND_QUEUE_DESC));
 
-	d3dCommandQueueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
-	d3dCommandQueueDesc.Type  = D3D12_COMMAND_LIST_TYPE_DIRECT;
+	d3dCommandQueueDesc.Flags    = D3D12_COMMAND_QUEUE_FLAG_NONE;
+	d3dCommandQueueDesc.Type     = D3D12_COMMAND_LIST_TYPE_DIRECT;
+	d3dCommandQueueDesc.NodeMask = 1;
 
 /// [ COMMAND QUEUE ]
 
@@ -39,14 +40,20 @@ void CCommandQueue::OnCreate(WindowInfo WindowInfo)
 /// [ COMMAND ALLOCATOR ]
 
 	//직접(Direct) 명령 할당자를 생성한다. 
-	hResult = pDevice->GetDevice()->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT,
-	__uuidof(ID3D12CommandAllocator), (void**)&m_pd3dCommandAllocator);
+	for (int i = 0; i < NUM_FRAMES_IN_FLIGHT; ++i)
+	{
+		//hResult = pDevice->GetDevice()->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT,
+		//__uuidof(ID3D12CommandAllocator), (void**)&m_pd3dCommandAllocator);
+		hResult = pDevice->GetDevice()->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT,
+			__uuidof(ID3D12CommandAllocator), (void**)&m_FrameContext[i].pd3dCommandAllocator);
+
+	}
 
 /// [ COMMAND LIST ]
 
 	/// 직접(Direct) 명령 리스트를 생성한다. 
 	hResult = pDevice->GetDevice()->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT,
-	m_pd3dCommandAllocator.Get(), NULL, __uuidof(ID3D12GraphicsCommandList), (void**)m_pd3dCommandList.GetAddressOf());
+	m_FrameContext[0].pd3dCommandAllocator.Get(), NULL, __uuidof(ID3D12GraphicsCommandList), (void**)m_pd3dCommandList.GetAddressOf());
 	
 	///명령 리스트는 생성되면 열린(Open) 상태이므로 닫힌(Closed) 상태로 만든다
 	hResult = m_pd3dCommandList->Close();
@@ -66,8 +73,18 @@ void CCommandQueue::Prepare_Rendering()
 {
 
 	///명령 할당자와 명령 리스트를 리셋한다.
-	HRESULT hResult = m_pd3dCommandAllocator->Reset();
-	hResult         = m_pd3dCommandList->Reset(m_pd3dCommandAllocator.Get(), NULL);
+	//HRESULT hResult = m_pd3dCommandAllocator->Reset();
+
+/// * pd3dCommandAllocator->Reset()
+/// 	-> 명령 기록에 관련된 메모리의 재활용을 위해 명령 할당자를 재설정한다. 
+///	       재설정은 GPU가 관련 명령 목록들을 모두 처리한 후에 일어난다.
+/// 
+/// * m_pd3dCommandList->Reset
+///		->	명령 목록을 ExecuteCommandList 를 통해서 명령 대기열에 추가했다면 명령 목록을 재설정할 수 있다.
+///			명령 목록을 재설정하면 메모리가 재활용 된다.
+
+	HRESULT hResult = m_FrameContext[SWAP_CHAIN(CGameFramework)->GetDxgiSwapChain()->GetCurrentBackBufferIndex()].pd3dCommandAllocator->Reset();
+	hResult         = m_pd3dCommandList->Reset(m_FrameContext[SWAP_CHAIN(CGameFramework)->GetDxgiSwapChain()->GetCurrentBackBufferIndex()].pd3dCommandAllocator.Get(), NULL);
  
 
 	/// 현재 렌더 타겟에 대한 프리젠트가 끝나기를 기다린다. 
@@ -82,7 +99,7 @@ void CCommandQueue::Prepare_Rendering()
 	m_d3dResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
 	m_d3dResourceBarrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	m_d3dResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-	m_pd3dCommandList->ResourceBarrier(1, &m_d3dResourceBarrier);
+	COMMAND_LIST(CGameFramework)->ResourceBarrier(1, &m_d3dResourceBarrier);  /// 자원 용도에 관련된 상태 전이를 Direct3D 에 통지한다. 
 
 	/// 그래픽 루트 시그너쳐를 설정한다. 
 	COMMAND_LIST(CGameFramework)->SetGraphicsRootSignature(ROOT_SIGNATURE(CGameFramework).Get());
@@ -91,8 +108,8 @@ void CCommandQueue::Prepare_Rendering()
 	/// 뷰포트와 씨저 사각형을 설정한다.
 	const D3D12_VIEWPORT viewPort = CGameFramework::GetInst()->GetViewPort();
 	const D3D12_RECT ScrissorRect = CGameFramework::GetInst()->GetScissorRect();
-	m_pd3dCommandList->RSSetViewports(1, &viewPort);
-	m_pd3dCommandList->RSSetScissorRects(1, &ScrissorRect);
+	COMMAND_LIST(CGameFramework)->RSSetViewports(1, &viewPort);
+	COMMAND_LIST(CGameFramework)->RSSetScissorRects(1, &ScrissorRect);
 	
 	/// 렌더 타겟 뷰(서술자)와 깊이-스텐실 뷰(서술자)를 출력-병합 단계(OM)에 연결한다. 
 	D3D12_CPU_DESCRIPTOR_HANDLE d3dRtvCPUDescriptorHandle = SWAP_CHAIN(CGameFramework)->GetCurRTVBackBufferHandle();
@@ -102,11 +119,11 @@ void CCommandQueue::Prepare_Rendering()
 	
 
 	/// 원하는 색상으로 렌더 타겟(뷰)을 지운다. 
-	m_pd3dCommandList->ClearRenderTargetView(d3dRtvCPUDescriptorHandle, Colors::LightSkyBlue/* Clear Color */, 0, nullptr);
+	COMMAND_LIST(CGameFramework)->ClearRenderTargetView(d3dRtvCPUDescriptorHandle, Colors::LightSkyBlue/* Clear Color */, 0, nullptr);
 	/// 원하는 값으로 깊이-스텐실(뷰)을 지운다. 
-	m_pd3dCommandList->ClearDepthStencilView(d3dDsvCPUDescriptorHandle,D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, NULL); 
+	COMMAND_LIST(CGameFramework)->ClearDepthStencilView(d3dDsvCPUDescriptorHandle,D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, NULL);
 
-	m_pd3dCommandList->OMSetRenderTargets(1, &d3dRtvCPUDescriptorHandle, TRUE,&d3dDsvCPUDescriptorHandle); /// 출력-병합 단계(OM)에 연결한다. 
+	COMMAND_LIST(CGameFramework)->OMSetRenderTargets(1, &d3dRtvCPUDescriptorHandle, TRUE, &d3dDsvCPUDescriptorHandle); /// 출력-병합 단계(OM)에 연결한다. 
 
 }
 
@@ -124,9 +141,10 @@ void CCommandQueue::Execute_Rendering()
 	m_d3dResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 
 
-	m_pd3dCommandList->ResourceBarrier(1, &m_d3dResourceBarrier);
-	/// 명령 리스트를 닫힌 상태로 만든다.
-	HRESULT hResult = m_pd3dCommandList->Close();
+
+	COMMAND_LIST(CGameFramework)->ResourceBarrier(1, &m_d3dResourceBarrier);
+	/// 명령 리스트를 닫힌 상태로 만든다. ( 명령들의 기록을 마친다 ) 
+	HRESULT hResult = COMMAND_LIST(CGameFramework)->Close();
 
 
 	/// 명령 리스트를 명령 큐에 추가하여 실행한다. - Command List 수행 
@@ -195,6 +213,8 @@ ComPtr<ID3D12GraphicsCommandList> CCommandQueue::GetCommandList()
 
 ComPtr<ID3D12CommandAllocator> CCommandQueue::GetCommandAllocator()
 {
-	return m_pd3dCommandAllocator;
+	return m_FrameContext[SWAP_CHAIN(CGameFramework)->GetDxgiSwapChain()->GetCurrentBackBufferIndex()].pd3dCommandAllocator;
+
+	//return m_pd3dCommandAllocator;
 
 }

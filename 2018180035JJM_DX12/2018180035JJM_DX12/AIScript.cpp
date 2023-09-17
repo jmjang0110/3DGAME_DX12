@@ -248,7 +248,7 @@ float AIScript::GetRadAngle(XMFLOAT3 _Standard, XMFLOAT3 _Start)
 	if (fCos <= -1.f) fCos = -1.f;
 
 	double fRotRadian = acos(fCos);
-	float fRotAngle = fRotRadian * (180.f / XM_PI);
+	double fRotAngle = fRotRadian * (180.f / XM_PI);
 
 	XMVECTOR vResult = XMVector3Cross(_vA, _vB);
 	XMFLOAT3 vCross;

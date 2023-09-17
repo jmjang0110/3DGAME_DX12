@@ -31,7 +31,6 @@ ResourceManager::ResourceManager()
 }
 ResourceManager::~ResourceManager()
 {
-
 }
 
 void ResourceManager::OnDestroy()
@@ -66,6 +65,7 @@ void ResourceManager::OnDestroy()
 void ResourceManager::OnCreate()
 {
 	//CreateTriangleMesh();
+	CreateCubeMesh();
 
 	CreateDeafult_RS();
 	CreateDefault_BL();
@@ -535,125 +535,117 @@ void ResourceManager::CreateBasicInputLayout()
 
 void ResourceManager::CreateSphereMesh()
 {
-	//MeshLoadInfo* pMeshInfo      = new MeshLoadInfo;
-	//std::shared_ptr<CMesh> pMesh = std::make_shared<CMesh>();
+	std::shared_ptr<CMesh> pMesh = std::make_shared<CMesh>();
 
 
-	//UINT iStackCount		= 40; // 가로 분할 개수
-	//UINT iSliceCount		= 40; // 세로 분할 개수
-	//UINT _vertices = iStackCount * iSliceCount + 2;
+	UINT iStackCount		= 40; // 가로 분할 개수
+	UINT iSliceCount		= 40; // 세로 분할 개수
+	UINT _vertices = iStackCount * iSliceCount + 2;
+
+	std::vector<XMFLOAT3>  vecVtx;
+	std::vector<XMFLOAT3>  vecNormal;
+	std::vector<UINT> vecIdx;
+
+	// ===========
+		// Sphere Mesh
+		// ===========
+	float fRadius = 0.5f;
+
+	// Top
+	XMFLOAT3 vPos = XMFLOAT3(0.f, fRadius, 0.f);
+	XMFLOAT3 vNormal = vPos;
+	vNormal = Vector3::Normalize(vNormal);
+	vecNormal.push_back(vNormal);
+	vecVtx.push_back(vPos);
+
+	// Body
+	 iStackCount = 40; // 가로 분할 개수
+	iSliceCount = 40; // 세로 분할 개수
+
+	float fStackAngle = XM_PI / iStackCount;
+	float fSliceAngle = XM_2PI / iSliceCount;
+
+	float fUVXStep = 1.f / static_cast<float>(iSliceCount);
+	float fUVYStep = 1.f / static_cast<float>(iStackCount);
+
+	for (UINT i = 1; i < iStackCount; ++i)
+	{
+		float phi = i * fStackAngle;
+
+		for (UINT j = 0; j <= iSliceCount; ++j)
+		{
+			float theta = j * fSliceAngle;
+
+			vPos = XMFLOAT3(fRadius * sinf(i * fStackAngle) * cosf(j * fSliceAngle),
+				fRadius * cosf(i * fStackAngle),
+				fRadius * sinf(i * fStackAngle) * sinf(j * fSliceAngle));
+			vNormal = vPos;
+			vNormal = Vector3::Normalize(vNormal);
+			vecNormal.push_back(vNormal);
+			vecVtx.push_back(vPos);
+		}
+	}
+
+	// Bottom
+	vPos = XMFLOAT3(0.f, -fRadius, 0.f);
+	vNormal = vPos;
+	vNormal = Vector3::Normalize(vNormal);
+
+	vecNormal.push_back(vNormal);
+	vecVtx.push_back(vPos);
+
+	// 인덱스
+	// 북극점
+	for (UINT i = 0; i < iSliceCount; ++i)
+	{
+		vecIdx.push_back(0);
+		vecIdx.push_back(i + 2);
+		vecIdx.push_back(i + 1);
+	}
+
+	// 몸통
+	for (UINT i = 0; i < iStackCount - 2; ++i)
+	{
+		for (UINT j = 0; j < iSliceCount; ++j)
+		{
+			// + 
+			// | \
+			// +--+
+			vecIdx.push_back((iSliceCount + 1) * (i)+(j)+1);
+			vecIdx.push_back((iSliceCount + 1) * (i + 1) + (j + 1) + 1);
+			vecIdx.push_back((iSliceCount + 1) * (i + 1) + (j)+1);
+
+			// +--+
+			//  \ |
+			//    +
+			vecIdx.push_back((iSliceCount + 1) * (i)+(j)+1);
+			vecIdx.push_back((iSliceCount + 1) * (i)+(j + 1) + 1);
+			vecIdx.push_back((iSliceCount + 1) * (i + 1) + (j + 1) + 1);
+		}
+	}
+
+	// 남극점
+	UINT iBottomIdx = static_cast<UINT>(vecVtx.size()) - 1;
+	for (UINT i = 0; i < iSliceCount; ++i)
+	{
+		vecIdx.push_back(iBottomIdx);
+		vecIdx.push_back(iBottomIdx - (i + 2));
+		vecIdx.push_back(iBottomIdx - (i + 1));
+	}
+
+	pMesh = std::make_shared<CMesh>();
+	pMesh->CreateVertexBufferResource(vecVtx.data(), vecVtx.size(), sizeof(XMFLOAT3));
+	pMesh->CreateNormalBufferResource(vecNormal.data(), vecNormal.size(), sizeof(XMFLOAT3));
+	pMesh->CreateIndexBufferResource(vecIdx.data(), vecIdx.size(), sizeof(UINT));
+	pMesh->SetTopology(D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	std::string Key = "Sphere";
+	ResourceManager::GetInst()->AddMesh(Key, pMesh);
 
 
-	//pMeshInfo->m_nType |= VERTEXT_POSITION;
-	//pMeshInfo->m_pxmf3Positions = new XMFLOAT3[_vertices];
 
-	//pMeshInfo->m_nType |= VERTEXT_NORMAL;
-	//pMeshInfo->m_pxmf3Normals = new XMFLOAT3[_vertices];
-
-	//// ===========
-	//// Sphere Mesh
-	//// ===========
-	//float fRadius = 0.5f;
-
-	//// Top
-	//XMFLOAT3 vPos                  = XMFLOAT3(0.f, fRadius, 0.f);
-	//XMFLOAT3 vNormal               = Vector3::Normalize(vPos);
-	//pMeshInfo->m_pxmf3Positions[0] = vPos;
-	//pMeshInfo->m_pxmf3Normals[0]   = vNormal;
-
-	//
-	//// Body
-
-
-	//float fStackAngle = XM_PI / iStackCount;
-	//float fSliceAngle = XM_2PI / iSliceCount;
-
-	//float fUVXStep = 1.f / static_cast<float>(iSliceCount);
-	//float fUVYStep = 1.f / static_cast<float>(iStackCount);
-
-	//for (UINT i = 1; i < iStackCount; ++i)
-	//{
-	//	float phi = i * fStackAngle;
-
-	//	for (UINT j = 0; j <= iSliceCount; ++j)
-	//	{
-	//		float theta = j * fSliceAngle;
-
-	//		vPos = XMFLOAT3(fRadius * sinf(i * fStackAngle) * cosf(j * fSliceAngle),
-	//			fRadius * cosf(i * fStackAngle),
-	//			fRadius * sinf(i * fStackAngle) * sinf(j * fSliceAngle));
-	//		vNormal = Vector3::Normalize(vPos);
-	//		
-	//		UINT idx = (i - 1) * 10 + (j + 1);
-	//		pMeshInfo->m_pxmf3Positions[idx] = vPos;
-	//		pMeshInfo->m_pxmf3Normals[idx] = vPos;
-
-	//	}
-	//}
-
-	//// Bottom
-	//vPos = XMFLOAT3(0.f, -fRadius, 0.f);
-	//vNormal = Vector3::Normalize(vPos);
-	//pMeshInfo->m_pxmf3Positions[_vertices - 1] = vPos;
-	//pMeshInfo->m_pxmf3Normals[_vertices  -1] = vNormal;
-
-
-
-	//// 인덱스
-	//
-	//int _indexNum          = _vertices;
-	//pMeshInfo->m_nIndices  = _indexNum;
-	//pMeshInfo->m_pnIndices = new UINT[_indexNum];
-
-	//// 북극점
-	//for (UINT i = 0; i < iSliceCount; i += 3)
-	//{
-	//	pMeshInfo->m_pnIndices[i] = 0;
-	//	pMeshInfo->m_pnIndices[i + 1] = i + 2;
-	//	pMeshInfo->m_pnIndices[i + 2] = i + 1
-	//}
-
-	//// 몸통
-
-	//int idx = iSliceCount;
-	//for (UINT i = 0; i < iStackCount - 2; ++i)
-	//{
-	//	for (UINT j = 0; j < iSliceCount; ++j)
-	//	{
-	//		// + 
-	//		// | \
-	//		// +--+
-	//		pMeshInfo->m_pnIndices[idx]     = (iSliceCount + 1) * (i)+(j)+1;
-	//		pMeshInfo->m_pnIndices[idx + 1] = (iSliceCount + 1) * (i + 1) + (j + 1) + 1;
-	//		pMeshInfo->m_pnIndices[idx + 2] = (iSliceCount + 1) * (i + 1) + (j)+1;
-
-	//		// +--+
-	//		//  \ |
-	//		//    +
-	//		pMeshInfo->m_pnIndices[idx + 3] = (iSliceCount + 1) * (i)+(j)+1;
-	//		pMeshInfo->m_pnIndices[idx + 4] = (iSliceCount + 1) * (i)+(j + 1) + 1;
-	//		pMeshInfo->m_pnIndices[idx + 5] = (iSliceCount + 1) * (i + 1) + (j + 1) + 1;
-
-	//		idx += 6;
-	//	}
-	//}
-
-	//// 남극점
-	//UINT iBottomIdx = static_cast<UINT>(vecVtx.size()) - 1;
-	//for (UINT i = 0; i < iSliceCount; ++i)
-	//{
-	//	vecIdx.push_back(iBottomIdx);
-	//	vecIdx.push_back(iBottomIdx - (i + 2));
-	//	vecIdx.push_back(iBottomIdx - (i + 1));
-	//}
-
-	//pMesh = new CMesh;
-	//pMesh->Create(vecVtx.data(), static_cast<UINT>(vecVtx.size()), vecIdx.data(), static_cast<UINT>(vecIdx.size()));
-	//AddRes(L"SphereMesh", pMesh, true);
-
-	//vecVtx.clear();
-
-	//vecIdx.clear();
+	vecVtx.clear();
+	vecNormal.clear();
+	vecIdx.clear();
 }
 
 std::shared_ptr<CMesh> ResourceManager::CreateGridTerrainMesh(int KeyNum

@@ -119,6 +119,15 @@
     <Filter Include="Script\AI">
       <UniqueIdentifier>{ac93b047-ff7d-43dc-a98a-b44386d5e017}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ImGui">
+      <UniqueIdentifier>{62e6cd1d-2503-40cf-aa10-e1eb1d70e692}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\Code">
+      <UniqueIdentifier>{2eaa55f0-76dd-4688-a6fc-8efc0e8deb28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\Engine\Resource\Material\Texture">
+      <UniqueIdentifier>{0ece8bf6-c761-4bee-b1b9-d6489c9435dc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CGameFramework.h">
@@ -236,6 +245,24 @@
     <ClInclude Include="AIScript.h">
       <Filter>Script\AI</Filter>
     </ClInclude>
+    <ClInclude Include="CImGui.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imconfig.h">
+      <Filter>ImGui\Code</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui.h">
+      <Filter>ImGui\Code</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_impl_dx12.h">
+      <Filter>ImGui\Code</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_impl_win32.h">
+      <Filter>ImGui\Code</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_internal.h">
+      <Filter>ImGui\Code</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CGameFramework.cpp">
@@ -338,6 +365,30 @@
     <ClCompile Include="AIScript.cpp">
       <Filter>Script\AI</Filter>
     </ClCompile>
+    <ClCompile Include="CImGui.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui.cpp">
+      <Filter>ImGui\Code</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_demo.cpp">
+      <Filter>ImGui\Code</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_draw.cpp">
+      <Filter>ImGui\Code</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_impl_dx12.cpp">
+      <Filter>ImGui\Code</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_impl_win32.cpp">
+      <Filter>ImGui\Code</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_tables.cpp">
+      <Filter>ImGui\Code</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_widgets.cpp">
+      <Filter>ImGui\Code</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="2018180035JJM_DX12.rc">
@@ -367,6 +418,9 @@
       <Filter>GameFramework\Engine\Resource\HLSL</Filter>
     </None>
     <None Include="ClassDiagram1.cd" />
+    <None Include="ImGui\imgui.natstepfilter">
+      <Filter>ImGui\Code</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Resource.txt">
@@ -390,5 +444,10 @@
     <Text Include="HLSL.txt">
       <Filter>D12 정리</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="ImGui\imgui.natvis">
+      <Filter>ImGui\Code</Filter>
+    </Natvis>
   </ItemGroup>
 </Project>

@@ -63,7 +63,9 @@ public:
 
 private:
 	std::shared_ptr<CGraphicsPipelineState>  m_PipelineState;
-	MATERIAL_COLOR							 m_tColor;
+	MATERIAL_COLOR							 m_tColor; // 이제 텍스처로 ...
+	// TEXTURE Add
+
 
 public:
 	void UpdateShaderVariable();

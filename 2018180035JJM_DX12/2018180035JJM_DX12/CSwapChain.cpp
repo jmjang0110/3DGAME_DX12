@@ -20,7 +20,7 @@ void CSwapChain::OnCreate(WindowInfo windowInfo)
 	windowInfo.nWndClientWidth = rcClient.right - rcClient.left;
 	windowInfo.nWndClientHeight = rcClient.bottom - rcClient.top;
 
-
+	/// 4X MASS 품질 수준 지원 점검 
 	D3D12_FEATURE_DATA_MULTISAMPLE_QUALITY_LEVELS d3dMsaaQualityLevels{};
 	d3dMsaaQualityLevels.Format           = DXGI_FORMAT_R8G8B8A8_UNORM;
 	d3dMsaaQualityLevels.SampleCount      = 4;
@@ -148,6 +148,8 @@ void CSwapChain::Present()
 	dxgiPresentParameters.pScrollOffset = NULL;
 	m_pdxgiSwapChain->Present1(1, 0, &dxgiPresentParameters);
 #endif
+
+#define _WITH_SYNCH_SWAPCHAIN
 #ifdef _WITH_SYNCH_SWAPCHAIN
 	m_pdxgiSwapChain->Present(1, 0);
 #else
@@ -157,67 +159,6 @@ void CSwapChain::Present()
 }
 
 
-
-ComPtr<ID3D12Resource> CSwapChain::GetRTVBuffer(UINT index)
-{
-	if (index >= 0 && index < SWAP_CHAIN_BUFFER_COUNT) {
-		return m_ppd3dRenderTargetBuffers[index];
-	}
-	return nullptr;
-
-}
-
-ComPtr<ID3D12Resource> CSwapChain::GetCurRTVBackBuffer()
-{
-	m_BackBufferIdx = m_pdxgiSwapChain->GetCurrentBackBufferIndex();
-	return m_ppd3dRenderTargetBuffers[m_BackBufferIdx];
-
-}
-
-D3D12_CPU_DESCRIPTOR_HANDLE CSwapChain::GetRTVHandle(UINT index)
-{
-	D3D12_CPU_DESCRIPTOR_HANDLE d3dRtvCPUDescriptorHandle = m_pd3dRtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
-	d3dRtvCPUDescriptorHandle.ptr += (index * m_nRtvDescriptorIncrementSize); //현재의 렌더 타겟에 해당하는 서술자의 CPU 주소(핸들)를 계산한다. 
-	return d3dRtvCPUDescriptorHandle;
-}
-
-D3D12_CPU_DESCRIPTOR_HANDLE CSwapChain::GetCurRTVBackBufferHandle()
-{
-	m_BackBufferIdx = m_pdxgiSwapChain->GetCurrentBackBufferIndex();
-	D3D12_CPU_DESCRIPTOR_HANDLE d3dRtvCPUDescriptorHandle = m_pd3dRtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
-	d3dRtvCPUDescriptorHandle.ptr += (m_BackBufferIdx * m_nRtvDescriptorIncrementSize); //현재의 렌더 타겟에 해당하는 서술자의 CPU 주소(핸들)를 계산한다. 
-	return d3dRtvCPUDescriptorHandle;
-}
-
-D3D12_CPU_DESCRIPTOR_HANDLE CSwapChain::GetDSVHandle()
-{
-	///깊이-스텐실 서술자의 CPU 주소를 계산한다. 
-	D3D12_CPU_DESCRIPTOR_HANDLE d3dDsvCPUDescriptorHandle = m_pd3dDsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart(); 
-	return d3dDsvCPUDescriptorHandle;
-}
-
-
-
-void CSwapChain::CreateDSVdescriptorHeap()
-{
-	std::shared_ptr<CDevice> pDevice = DEVICE(CGameFramework);
-
-	D3D12_DESCRIPTOR_HEAP_DESC d3dDescriptorHeapDesc;
-	::ZeroMemory(&d3dDescriptorHeapDesc, sizeof(D3D12_DESCRIPTOR_HEAP_DESC));
-	int i = 0;
-
-	d3dDescriptorHeapDesc.NumDescriptors = 1;
-	d3dDescriptorHeapDesc.Type           = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
-	d3dDescriptorHeapDesc.Flags          = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-	d3dDescriptorHeapDesc.NodeMask       = 0;
-
-	//깊이-스텐실 서술자 힙(서술자의 개수는 1)을 생성한다. 
-	HRESULT hResult = pDevice->GetDevice()->CreateDescriptorHeap(&d3dDescriptorHeapDesc,
-		__uuidof(ID3D12DescriptorHeap), (void**)&m_pd3dDsvDescriptorHeap);
-	
-	//깊이-스텐실 서술자 힙의 원소의 크기를 저장한다.
-	m_nDsvDescriptorIncrementSize = pDevice->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
-}
 
 void CSwapChain::ChangeSwapchainState()
 {
@@ -264,6 +205,21 @@ void CSwapChain::ChangeSwapchainState()
 
 }
 
+
+
+void CSwapChain::CreateRTV()
+{
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvHeapBegin = m_pd3dRtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+
+	for (int i = 0; i < SWAP_CHAIN_BUFFER_COUNT; i++)
+	{
+		m_pdxgiSwapChain->GetBuffer(i, IID_PPV_ARGS(&m_ppd3dRenderTargetBuffers[i]));
+		m__RTV_Handles[i] = CD3DX12_CPU_DESCRIPTOR_HANDLE(rtvHeapBegin, i * m_nRtvDescriptorIncrementSize);
+		DEVICE(CGameFramework)->GetDevice()->CreateRenderTargetView(m_ppd3dRenderTargetBuffers[i].Get(), nullptr, m__RTV_Handles[i]);
+	}
+
+}
+
 void CSwapChain::CreateRTVdescriptorHeap()
 {
 	///렌더 타겟 서술자 힙의 원소의 크기를 저장한다. 
@@ -273,38 +229,13 @@ void CSwapChain::CreateRTVdescriptorHeap()
 	::ZeroMemory(&RTVdesc, sizeof(D3D12_DESCRIPTOR_HEAP_DESC));
 
 	RTVdesc.NumDescriptors = SWAP_CHAIN_BUFFER_COUNT;
-	RTVdesc.Type           = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-	RTVdesc.Flags          = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-	RTVdesc.NodeMask       = 0;
+	RTVdesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+	RTVdesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+	RTVdesc.NodeMask = 0;
 
 	///렌더 타겟 서술자 힙(서술자의 개수는 스왑체인 버퍼의 개수)을 생성한다.
 	HRESULT hResult = DEVICE(CGameFramework)->GetDevice()->CreateDescriptorHeap(&RTVdesc,
 		__uuidof(ID3D12DescriptorHeap), (void**)m_pd3dRtvDescriptorHeap.GetAddressOf());
-
-}
-
-void CSwapChain::CreateRTV()
-{
-
-	//D3D12_CPU_DESCRIPTOR_HANDLE d3dRtvCPUDescriptorHandle = m_pd3dRtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
-
-	//for (UINT i = 0; i < SWAP_CHAIN_BUFFER_COUNT; i++)
-	//{
-	//	m_pdxgiSwapChain->GetBuffer(i, __uuidof(ID3D12Resource), (void**)&m_ppd3dRenderTargetBuffers[i]);
-	//	d3dRtvCPUDescriptorHandle = CD3DX12_CPU_DESCRIPTOR_HANDLE(d3dRtvCPUDescriptorHandle, i * m_nRtvDescriptorIncrementSize);
-	//	DEVICE(CGameFramework)->GetDevice()->CreateRenderTargetView(m_ppd3dRenderTargetBuffers[i].Get(), nullptr ,d3dRtvCPUDescriptorHandle);
-	//	//d3dRtvCPUDescriptorHandle.ptr += m_nRtvDescriptorIncrementSize;
-	//}
-
-
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvHeapBegin = m_pd3dRtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
-
-	for (int i = 0; i < SWAP_CHAIN_BUFFER_COUNT; i++)
-	{
-		m_pdxgiSwapChain->GetBuffer(i, IID_PPV_ARGS(&m_ppd3dRenderTargetBuffers[i]));
-		m__RTV_Handles[i] = CD3DX12_CPU_DESCRIPTOR_HANDLE(rtvHeapBegin, i * m_nRtvDescriptorIncrementSize);
-		DEVICE(CGameFramework)->GetDevice()->CreateRenderTargetView(m_ppd3dRenderTargetBuffers[i].Get(), nullptr, m__RTV_Handles[i]);
-	}
 
 }
 
@@ -365,4 +296,61 @@ void CSwapChain::CreateDSV()
 
 }
 
+void CSwapChain::CreateDSVdescriptorHeap()
+{
+	std::shared_ptr<CDevice> pDevice = DEVICE(CGameFramework);
 
+	D3D12_DESCRIPTOR_HEAP_DESC d3dDescriptorHeapDesc;
+	::ZeroMemory(&d3dDescriptorHeapDesc, sizeof(D3D12_DESCRIPTOR_HEAP_DESC));
+	int i = 0;
+
+	d3dDescriptorHeapDesc.NumDescriptors = 1;
+	d3dDescriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+	d3dDescriptorHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+	d3dDescriptorHeapDesc.NodeMask = 0;
+
+	//깊이-스텐실 서술자 힙(서술자의 개수는 1)을 생성한다. 
+	HRESULT hResult = pDevice->GetDevice()->CreateDescriptorHeap(&d3dDescriptorHeapDesc,
+		__uuidof(ID3D12DescriptorHeap), (void**)&m_pd3dDsvDescriptorHeap);
+
+	//깊이-스텐실 서술자 힙의 원소의 크기를 저장한다.
+	m_nDsvDescriptorIncrementSize = pDevice->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
+}
+
+ComPtr<ID3D12Resource> CSwapChain::GetRTVBuffer(UINT index)
+{
+	if (index >= 0 && index < SWAP_CHAIN_BUFFER_COUNT) {
+		return m_ppd3dRenderTargetBuffers[index];
+	}
+	return nullptr;
+
+}
+
+ComPtr<ID3D12Resource> CSwapChain::GetCurRTVBackBuffer()
+{
+	m_BackBufferIdx = m_pdxgiSwapChain->GetCurrentBackBufferIndex();
+	return m_ppd3dRenderTargetBuffers[m_BackBufferIdx];
+
+}
+
+D3D12_CPU_DESCRIPTOR_HANDLE CSwapChain::GetRTVHandle(UINT index)
+{
+	D3D12_CPU_DESCRIPTOR_HANDLE d3dRtvCPUDescriptorHandle = m_pd3dRtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+	d3dRtvCPUDescriptorHandle.ptr += (index * m_nRtvDescriptorIncrementSize); //현재의 렌더 타겟에 해당하는 서술자의 CPU 주소(핸들)를 계산한다. 
+	return d3dRtvCPUDescriptorHandle;
+}
+
+D3D12_CPU_DESCRIPTOR_HANDLE CSwapChain::GetCurRTVBackBufferHandle()
+{
+	m_BackBufferIdx = m_pdxgiSwapChain->GetCurrentBackBufferIndex();
+	D3D12_CPU_DESCRIPTOR_HANDLE d3dRtvCPUDescriptorHandle = m_pd3dRtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+	d3dRtvCPUDescriptorHandle.ptr += (m_BackBufferIdx * m_nRtvDescriptorIncrementSize); //현재의 렌더 타겟에 해당하는 서술자의 CPU 주소(핸들)를 계산한다. 
+	return d3dRtvCPUDescriptorHandle;
+}
+
+D3D12_CPU_DESCRIPTOR_HANDLE CSwapChain::GetDSVHandle()
+{
+	///깊이-스텐실 서술자의 CPU 주소를 계산한다. 
+	D3D12_CPU_DESCRIPTOR_HANDLE d3dDsvCPUDescriptorHandle = m_pd3dDsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+	return d3dDsvCPUDescriptorHandle;
+}

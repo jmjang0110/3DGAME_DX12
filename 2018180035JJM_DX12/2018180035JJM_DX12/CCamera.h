@@ -48,7 +48,7 @@ private:
 	BoundingFrustum				m_xmFrustumWorld = BoundingFrustum();
 
 	// OFFSET POS 
-	CGameObject* m_pTargetObject;
+	CGameObject*				m_pTargetObject;
 	XMFLOAT3					m_xmf3OffsetFromTargetObj;
 
 public:

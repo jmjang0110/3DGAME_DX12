@@ -19,6 +19,59 @@ CMesh::~CMesh()
 
 }
 
+void CMesh::CreateVertexBufferResource(void* pData
+	, UINT nDataCnt
+	, UINT nStride
+	, D3D12_HEAP_TYPE eHeapType
+	, D3D12_RESOURCE_STATES eResState)
+{
+	m_nVertices = nDataCnt;
+
+	m_pd3dVertexBuffer = ResourceManager::GetInst()->CreateBufferResource(
+		pData,
+		nStride * nDataCnt,
+		eHeapType,
+		eResState,
+		&m_pd3dVertexUploadBuffer
+	);
+
+	m_d3dVertexBufferView.BufferLocation = m_pd3dVertexBuffer->GetGPUVirtualAddress();
+	m_d3dVertexBufferView.StrideInBytes = nStride;
+	m_d3dVertexBufferView.SizeInBytes = nStride * nDataCnt;
+
+}
+
+void CMesh::CreateIndexBufferResource(void* pData, UINT nDataCnt, UINT nStride, D3D12_HEAP_TYPE eHeapType, D3D12_RESOURCE_STATES eResState, DXGI_FORMAT eDxgiFormat)
+{
+	m_nIndices = nDataCnt;
+
+	m_pd3dIndexBuffer = ResourceManager::GetInst()->CreateBufferResource(
+		pData
+		, nStride * nDataCnt
+		, eHeapType
+		, eResState
+		, &m_pd3dIndexUploadBuffer);
+
+	m_d3dIndexBufferView.BufferLocation = m_pd3dIndexBuffer->GetGPUVirtualAddress();
+	m_d3dIndexBufferView.Format         = eDxgiFormat;
+	m_d3dIndexBufferView.SizeInBytes    = nStride * nDataCnt;
+
+}
+
+void CMesh::CreateNormalBufferResource(void* pData, UINT nDataCnt, UINT nStride, D3D12_HEAP_TYPE eHeapType, D3D12_RESOURCE_STATES eResState)
+{
+	m_pd3dNormalBuffer = ResourceManager::GetInst()->CreateBufferResource(
+		pData
+		, nStride
+		, eHeapType
+		, eResState
+		, &m_pd3dNormalUploadBuffer);
+
+	m_d3dNormalBufferView.BufferLocation = m_pd3dNormalBuffer->GetGPUVirtualAddress();
+	m_d3dNormalBufferView.StrideInBytes  = nStride;
+	m_d3dNormalBufferView.SizeInBytes    = nStride;
+}
+
 void CMesh::CreateNormalBufferResource(MeshLoadInfo* pMeshInfo)
 {
 	m_pd3dNormalBuffer = ResourceManager::GetInst()->CreateBufferResource(pMeshInfo->m_pxmf3Normals

@@ -15,6 +15,7 @@
 #include "CFileManager.h"
 #include "CTimer.h"
 #include "CKeyManager.h"
+#include "CImGui.h"
 
 
 
@@ -79,8 +80,10 @@ bool CGameFramework::OnCreate(HINSTANCE hInstance, HWND hMainWnd)
 	BuildObjects();
 
 	CGameTimer::GetInst()->Init();
-
 	CKeyManager::GetInst()->Init();
+
+	CImGui::GetInst()->Init(m_Window);
+
 	return true;
 
 
@@ -106,7 +109,9 @@ void CGameFramework::OnDestroy()
 	ResourceManager::GetInst()->OnDestroy();
 	CFileManager::GetInst()->Destroy();
 
-	
+		
+	CImGui::GetInst()->Destroy();
+
 
 
 }
@@ -162,12 +167,19 @@ void CGameFramework::FrameAdvance()
 		m_pCurScene->FinalUpdate(fTimeElapsed);
 	}
 
+
 /// RENDER 
 	m_CommandQueue->Prepare_Rendering();
-	if(m_pCurScene) m_pCurScene->Render();
+
+	if (m_pCurScene) m_pCurScene->Render();
+	CImGui::GetInst()->Progress();
+	CImGui::GetInst()->Render();
+
 	m_CommandQueue->Execute_Rendering();
 
-	
+
+
+	int BackBufferIdx = SWAP_CHAIN(CGameFramework)->GetDxgiSwapChain()->GetCurrentBackBufferIndex();
 
 /// TIMER 
 	int FPS = CGameTimer::GetInst()->GetFrameRate(m_pszFrameRate + 12, 37);

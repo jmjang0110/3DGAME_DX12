@@ -72,7 +72,7 @@ CHeightmapTerrain::CHeightmapTerrain(
 				xmf3Scale,
 				m_pHeightMapImage);
 
-			pGridMesh->SetTopology(D3D12_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
+			pGridMesh->SetTopology(D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 			//pHeightMapGridMesh = new CHeightMapGridMesh(xStart,
 			//	zStart, nBlockWidth, nBlockLength, xmf3Scale, xmf4Color, m_pHeightMapImage);
 			m_pTerrainObj->SetMesh(pGridMesh);
