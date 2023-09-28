@@ -263,6 +263,12 @@
     <ClInclude Include="ImGui\imgui_internal.h">
       <Filter>ImGui\Code</Filter>
     </ClInclude>
+    <ClInclude Include="CTexture.h">
+      <Filter>GameFramework\Engine\Resource\Material\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="DDSTextureLoader12.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CGameFramework.cpp">
@@ -389,6 +395,15 @@
     <ClCompile Include="ImGui\imgui_widgets.cpp">
       <Filter>ImGui\Code</Filter>
     </ClCompile>
+    <ClCompile Include="CTexture.cpp">
+      <Filter>GameFramework\Engine\Resource\Material\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="DDSTextureLoader12.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="2018180035JJM_DX12.rc">
@@ -407,19 +422,17 @@
     <None Include="value.hlsl">
       <Filter>GameFramework\Engine\Resource\HLSL</Filter>
     </None>
-    <None Include="Light.hlsl">
-      <Filter>GameFramework\Engine\Resource\HLSL</Filter>
-    </None>
-    <None Include="ClassDiagram.cd" />
     <None Include="VertexShader.hlsl">
       <Filter>GameFramework\Engine\Resource\HLSL</Filter>
     </None>
     <None Include="PixelShader.hlsl">
       <Filter>GameFramework\Engine\Resource\HLSL</Filter>
     </None>
-    <None Include="ClassDiagram1.cd" />
     <None Include="ImGui\imgui.natstepfilter">
       <Filter>ImGui\Code</Filter>
+    </None>
+    <None Include="Light.hlsl">
+      <Filter>GameFramework\Engine\Resource\HLSL</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

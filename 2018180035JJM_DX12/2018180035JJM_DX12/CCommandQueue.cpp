@@ -16,7 +16,7 @@ CCommandQueue::~CCommandQueue()
 
 void CCommandQueue::OnCreate(WindowInfo WindowInfo)
 {
-	std::shared_ptr<CDevice> pDevice = DEVICE(CGameFramework);
+	std::shared_ptr<CDevice> pDevice = DX12_DEVICE;
 
 	if (!pDevice.get()) 
 		return;
@@ -83,8 +83,8 @@ void CCommandQueue::Prepare_Rendering()
 ///		->	명령 목록을 ExecuteCommandList 를 통해서 명령 대기열에 추가했다면 명령 목록을 재설정할 수 있다.
 ///			명령 목록을 재설정하면 메모리가 재활용 된다.
 
-	HRESULT hResult = m_FrameContext[SWAP_CHAIN(CGameFramework)->GetDxgiSwapChain()->GetCurrentBackBufferIndex()].pd3dCommandAllocator->Reset();
-	hResult         = m_pd3dCommandList->Reset(m_FrameContext[SWAP_CHAIN(CGameFramework)->GetDxgiSwapChain()->GetCurrentBackBufferIndex()].pd3dCommandAllocator.Get(), NULL);
+	HRESULT hResult = m_FrameContext[DX12_SWAP_CHAIN->GetDxgiSwapChain()->GetCurrentBackBufferIndex()].pd3dCommandAllocator->Reset();
+	hResult         = m_pd3dCommandList->Reset(m_FrameContext[DX12_SWAP_CHAIN->GetDxgiSwapChain()->GetCurrentBackBufferIndex()].pd3dCommandAllocator.Get(), NULL);
  
 
 	/// 현재 렌더 타겟에 대한 프리젠트가 끝나기를 기다린다. 
@@ -95,35 +95,35 @@ void CCommandQueue::Prepare_Rendering()
 	::ZeroMemory(&m_d3dResourceBarrier, sizeof(D3D12_RESOURCE_BARRIER));
 	m_d3dResourceBarrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	m_d3dResourceBarrier.Flags                  = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	m_d3dResourceBarrier.Transition.pResource   = SWAP_CHAIN(CGameFramework)->GetCurRTVBackBuffer().Get();
+	m_d3dResourceBarrier.Transition.pResource   = DX12_SWAP_CHAIN->GetCurRTVBackBuffer().Get();
 	m_d3dResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
 	m_d3dResourceBarrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	m_d3dResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-	COMMAND_LIST(CGameFramework)->ResourceBarrier(1, &m_d3dResourceBarrier);  /// 자원 용도에 관련된 상태 전이를 Direct3D 에 통지한다. 
+	DX12_COMMAND_LIST->ResourceBarrier(1, &m_d3dResourceBarrier);  /// 자원 용도에 관련된 상태 전이를 Direct3D 에 통지한다. 
 
 	/// 그래픽 루트 시그너쳐를 설정한다. 
-	COMMAND_LIST(CGameFramework)->SetGraphicsRootSignature(ROOT_SIGNATURE(CGameFramework).Get());
+	DX12_COMMAND_LIST->SetGraphicsRootSignature(DX12_ROOT_SIGNATURE.Get());
 
 
 	/// 뷰포트와 씨저 사각형을 설정한다.
 	const D3D12_VIEWPORT viewPort = CGameFramework::GetInst()->GetViewPort();
 	const D3D12_RECT ScrissorRect = CGameFramework::GetInst()->GetScissorRect();
-	COMMAND_LIST(CGameFramework)->RSSetViewports(1, &viewPort);
-	COMMAND_LIST(CGameFramework)->RSSetScissorRects(1, &ScrissorRect);
+	DX12_COMMAND_LIST->RSSetViewports(1, &viewPort);
+	DX12_COMMAND_LIST->RSSetScissorRects(1, &ScrissorRect);
 	
 	/// 렌더 타겟 뷰(서술자)와 깊이-스텐실 뷰(서술자)를 출력-병합 단계(OM)에 연결한다. 
-	D3D12_CPU_DESCRIPTOR_HANDLE d3dRtvCPUDescriptorHandle = SWAP_CHAIN(CGameFramework)->GetCurRTVBackBufferHandle();
-	//d3dRtvCPUDescriptorHandle.ptr += (SWAP_CHAIN(CGameFramework)->GetCurBackBufferIndex() * SWAP_CHAIN(CGameFramework)->GetRtvDescriptorIncrementSize());
-	D3D12_CPU_DESCRIPTOR_HANDLE d3dDsvCPUDescriptorHandle = SWAP_CHAIN(CGameFramework)->GetDSVHandle();	 ///깊이-스텐실 서술자의 CPU 주소를 계산한다. 
+	D3D12_CPU_DESCRIPTOR_HANDLE d3dRtvCPUDescriptorHandle = DX12_SWAP_CHAIN->GetCurRTVBackBufferHandle();
+	//d3dRtvCPUDescriptorHandle.ptr += (DX12_SWAP_CHAIN->GetCurBackBufferIndex() * DX12_SWAP_CHAIN->GetRtvDescriptorIncrementSize());
+	D3D12_CPU_DESCRIPTOR_HANDLE d3dDsvCPUDescriptorHandle = DX12_SWAP_CHAIN->GetDSVHandle();	 ///깊이-스텐실 서술자의 CPU 주소를 계산한다. 
 
 	
 
 	/// 원하는 색상으로 렌더 타겟(뷰)을 지운다. 
-	COMMAND_LIST(CGameFramework)->ClearRenderTargetView(d3dRtvCPUDescriptorHandle, Colors::LightSkyBlue/* Clear Color */, 0, nullptr);
+	DX12_COMMAND_LIST->ClearRenderTargetView(d3dRtvCPUDescriptorHandle, Colors::LightSkyBlue/* Clear Color */, 0, nullptr);
 	/// 원하는 값으로 깊이-스텐실(뷰)을 지운다. 
-	COMMAND_LIST(CGameFramework)->ClearDepthStencilView(d3dDsvCPUDescriptorHandle,D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, NULL);
-
-	COMMAND_LIST(CGameFramework)->OMSetRenderTargets(1, &d3dRtvCPUDescriptorHandle, TRUE, &d3dDsvCPUDescriptorHandle); /// 출력-병합 단계(OM)에 연결한다. 
+	DX12_COMMAND_LIST->ClearDepthStencilView(d3dDsvCPUDescriptorHandle,D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, NULL);
+	/// 렌더링 결과가 기록될 렌더타겟버퍼들을 지정한다. 
+	DX12_COMMAND_LIST->OMSetRenderTargets(1, &d3dRtvCPUDescriptorHandle, TRUE, &d3dDsvCPUDescriptorHandle); /// 출력-병합 단계(OM)에 연결한다. 
 
 }
 
@@ -142,9 +142,9 @@ void CCommandQueue::Execute_Rendering()
 
 
 
-	COMMAND_LIST(CGameFramework)->ResourceBarrier(1, &m_d3dResourceBarrier);
+	DX12_COMMAND_LIST->ResourceBarrier(1, &m_d3dResourceBarrier);
 	/// 명령 리스트를 닫힌 상태로 만든다. ( 명령들의 기록을 마친다 ) 
-	HRESULT hResult = COMMAND_LIST(CGameFramework)->Close();
+	HRESULT hResult = DX12_COMMAND_LIST->Close();
 
 
 	/// 명령 리스트를 명령 큐에 추가하여 실행한다. - Command List 수행 
@@ -156,19 +156,19 @@ void CCommandQueue::Execute_Rendering()
 	WaitForGpuComplete();
 
 	/// Present 
-	SWAP_CHAIN(CGameFramework)->Present();
+	DX12_SWAP_CHAIN->Present();
 
 	
 
 	MoveToNextFrame();
-	//SWAP_CHAIN(CGameFramework)->SwapIndex();
+	//DX12_SWAP_CHAIN->SwapIndex();
 }
 
 void CCommandQueue::WaitForGpuComplete()
 {
 
 /// CPU 펜스의 값을 증가한다. 
-	UINT BackBufferIdx	= SWAP_CHAIN(CGameFramework)->GetDxgiSwapChain()->GetCurrentBackBufferIndex();
+	UINT BackBufferIdx	= DX12_SWAP_CHAIN->GetDxgiSwapChain()->GetCurrentBackBufferIndex();
 	UINT64 nFenceValue	= ++m_nFenceValues[BackBufferIdx];
 
 /// GPU가 펜스의 값을 설정하는 명령을 명령 큐에 추가한다. 
@@ -186,7 +186,7 @@ void CCommandQueue::MoveToNextFrame()
 {
 
 /// MOVE TO NEXT FRAME 
-	auto	 pSwapChain     = SWAP_CHAIN(CGameFramework);
+	auto	 pSwapChain     = DX12_SWAP_CHAIN;
 	UINT	 BackBufferIdx  = pSwapChain->GetDxgiSwapChain()->GetCurrentBackBufferIndex();
 	UINT64	 nFenceValue    = ++m_nFenceValues[BackBufferIdx];
 	HRESULT  hResult        = m_pd3dCommandQueue->Signal(m_pd3dFence.Get(), nFenceValue);
@@ -213,7 +213,7 @@ ComPtr<ID3D12GraphicsCommandList> CCommandQueue::GetCommandList()
 
 ComPtr<ID3D12CommandAllocator> CCommandQueue::GetCommandAllocator()
 {
-	return m_FrameContext[SWAP_CHAIN(CGameFramework)->GetDxgiSwapChain()->GetCurrentBackBufferIndex()].pd3dCommandAllocator;
+	return m_FrameContext[DX12_SWAP_CHAIN->GetDxgiSwapChain()->GetCurrentBackBufferIndex()].pd3dCommandAllocator;
 
 	//return m_pd3dCommandAllocator;
 

@@ -182,9 +182,10 @@ void CTransform::FinalUpdate(float _fTimeElapsed)
 
 void CTransform::UpdateShaderVariables()
 {
-	XMFLOAT4X4 xmf4x4World;
+	XMFLOAT4X4 xmf4x4World{};
 	XMStoreFloat4x4(&xmf4x4World, XMMatrixTranspose(XMLoadFloat4x4(&m_xmf4x4World)));
-	COMMAND_LIST(CGameFramework)->SetGraphicsRoot32BitConstants(1, 16, &xmf4x4World, 0);
+	DX12_COMMAND_LIST->SetGraphicsRoot32BitConstants((UINT)CBV_REGISTER::b1, 16, &xmf4x4World, 0);
+
 }
 
 void CTransform::UpdateTransform()

@@ -248,13 +248,14 @@ void CCamera::FinalUpdate(float _fTimeElapsed)
 
 void CCamera::UpdateViewportsAndScissorRects()
 {
-	COMMAND_LIST(CGameFramework)->RSSetViewports(1, &m_Viewport);
-	COMMAND_LIST(CGameFramework)->RSSetScissorRects(1, &m_ScissorRect);
+	DX12_COMMAND_LIST->RSSetViewports(1, &m_Viewport);
+	DX12_COMMAND_LIST->RSSetScissorRects(1, &m_ScissorRect);
 
 }
 
 void CCamera::UpdateShaderVariables()
 {
+
 	XMFLOAT4X4 xmf4x4View{};
 	XMStoreFloat4x4(&xmf4x4View, XMMatrixTranspose(XMLoadFloat4x4(&m_xmf4x4View)));
 	::memcpy(&m_pcbMappedCamera->m_xmf4x4View, &xmf4x4View, sizeof(XMFLOAT4X4));
@@ -267,15 +268,14 @@ void CCamera::UpdateShaderVariables()
 	::memcpy(&m_pcbMappedCamera->m_xmf3Position, &Pos, sizeof(XMFLOAT3));
 
 	D3D12_GPU_VIRTUAL_ADDRESS d3dGpuVirtualAddress = m_pd3dcbCamera->GetGPUVirtualAddress();
-	COMMAND_LIST(CGameFramework)->SetGraphicsRootConstantBufferView(0, d3dGpuVirtualAddress);
-
+	DX12_COMMAND_LIST->SetGraphicsRootConstantBufferView((UINT)CBV_REGISTER::b0, d3dGpuVirtualAddress);
 
 
 }
 
 void CCamera::CreateShaderVariables()
 {
-	UINT ncbElementBytes = ((sizeof(VS_CB_CAMERA_INFO) + 255) & ~255); //256의 배수
+	UINT ncbElementBytes = D3DUtils::CalcConstantBufferByteSize(sizeof(VS_CB_CAMERA_INFO)); //256의 배수
 	m_pd3dcbCamera = ResourceManager::GetInst()->CreateBufferResource(NULL
 																	, ncbElementBytes
 																	, D3D12_HEAP_TYPE_UPLOAD

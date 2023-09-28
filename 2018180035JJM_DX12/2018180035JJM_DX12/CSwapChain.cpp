@@ -26,7 +26,7 @@ void CSwapChain::OnCreate(WindowInfo windowInfo)
 	d3dMsaaQualityLevels.SampleCount      = 4;
 	d3dMsaaQualityLevels.Flags            = D3D12_MULTISAMPLE_QUALITY_LEVELS_FLAG_NONE;
 	d3dMsaaQualityLevels.NumQualityLevels = 0;
-	HRESULT hResult                               = DEVICE(CGameFramework)->GetDevice()->CheckFeatureSupport(D3D12_FEATURE_MULTISAMPLE_QUALITY_LEVELS
+	HRESULT hResult                               = DX12_DEVICE->GetDevice()->CheckFeatureSupport(D3D12_FEATURE_MULTISAMPLE_QUALITY_LEVELS
 		, &d3dMsaaQualityLevels, sizeof(D3D12_FEATURE_DATA_MULTISAMPLE_QUALITY_LEVELS));
 	m_nMsaa4xQualityLevels                = d3dMsaaQualityLevels.NumQualityLevels;
 	m_bMsaa4xEnable                       = (m_nMsaa4xQualityLevels > 1) ? true : false;
@@ -114,10 +114,10 @@ void CSwapChain::OnCreate(WindowInfo windowInfo)
 
 
 /// (4) CREATE SWPCHAIN
-	hResult = DEVICE(CGameFramework)->GetDxgiFactory4()->CreateSwapChain(COMMAND_QUEUE(CGameFramework)->GetCommandQueue().Get()
+	hResult = DX12_DEVICE->GetDxgiFactory4()->CreateSwapChain(DX12_COMMAND_QUEUE->GetCommandQueue().Get()
 		, &dxgiSwapChainDesc, (IDXGISwapChain**)m_pdxgiSwapChain.GetAddressOf());
 	m_BackBufferIdx = m_pdxgiSwapChain->GetCurrentBackBufferIndex();
-	hResult = DEVICE(CGameFramework)->GetDxgiFactory4()->MakeWindowAssociation(CGameFramework::GetInst()->GetWindowInfo().hWnd, DXGI_MWA_NO_ALT_ENTER);
+	hResult = DX12_DEVICE->GetDxgiFactory4()->MakeWindowAssociation(CGameFramework::GetInst()->GetWindowInfo().hWnd, DXGI_MWA_NO_ALT_ENTER);
 
 
 #endif
@@ -215,7 +215,7 @@ void CSwapChain::CreateRTV()
 	{
 		m_pdxgiSwapChain->GetBuffer(i, IID_PPV_ARGS(&m_ppd3dRenderTargetBuffers[i]));
 		m__RTV_Handles[i] = CD3DX12_CPU_DESCRIPTOR_HANDLE(rtvHeapBegin, i * m_nRtvDescriptorIncrementSize);
-		DEVICE(CGameFramework)->GetDevice()->CreateRenderTargetView(m_ppd3dRenderTargetBuffers[i].Get(), nullptr, m__RTV_Handles[i]);
+		DX12_DEVICE->GetDevice()->CreateRenderTargetView(m_ppd3dRenderTargetBuffers[i].Get(), nullptr, m__RTV_Handles[i]);
 	}
 
 }
@@ -223,7 +223,7 @@ void CSwapChain::CreateRTV()
 void CSwapChain::CreateRTVdescriptorHeap()
 {
 	///렌더 타겟 서술자 힙의 원소의 크기를 저장한다. 
-	m_nRtvDescriptorIncrementSize = DEVICE(CGameFramework)->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+	m_nRtvDescriptorIncrementSize = DX12_DEVICE->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
 	D3D12_DESCRIPTOR_HEAP_DESC RTVdesc;
 	::ZeroMemory(&RTVdesc, sizeof(D3D12_DESCRIPTOR_HEAP_DESC));
@@ -234,7 +234,7 @@ void CSwapChain::CreateRTVdescriptorHeap()
 	RTVdesc.NodeMask = 0;
 
 	///렌더 타겟 서술자 힙(서술자의 개수는 스왑체인 버퍼의 개수)을 생성한다.
-	HRESULT hResult = DEVICE(CGameFramework)->GetDevice()->CreateDescriptorHeap(&RTVdesc,
+	HRESULT hResult = DX12_DEVICE->GetDevice()->CreateDescriptorHeap(&RTVdesc,
 		__uuidof(ID3D12DescriptorHeap), (void**)m_pd3dRtvDescriptorHeap.GetAddressOf());
 
 }
@@ -242,7 +242,7 @@ void CSwapChain::CreateRTVdescriptorHeap()
 void CSwapChain::CreateDSV()
 {
 
-	std::shared_ptr<CDevice> pDevice = DEVICE(CGameFramework);
+	std::shared_ptr<CDevice> pDevice = DX12_DEVICE;
 	WindowInfo sWindowInfo = CGameFramework::GetInst()->GetWindowInfo();
 
 	D3D12_RESOURCE_DESC d3dResourceDesc{};
@@ -298,7 +298,7 @@ void CSwapChain::CreateDSV()
 
 void CSwapChain::CreateDSVdescriptorHeap()
 {
-	std::shared_ptr<CDevice> pDevice = DEVICE(CGameFramework);
+	std::shared_ptr<CDevice> pDevice = DX12_DEVICE;
 
 	D3D12_DESCRIPTOR_HEAP_DESC d3dDescriptorHeapDesc;
 	::ZeroMemory(&d3dDescriptorHeapDesc, sizeof(D3D12_DESCRIPTOR_HEAP_DESC));

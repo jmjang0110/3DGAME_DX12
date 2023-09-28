@@ -1,5 +1,9 @@
 
-#include <vector>
-#include <bitset>
-#include <random>
+#pragma once
 
+
+class D3DUtils
+{
+public:
+	static UINT CalcConstantBufferByteSize(UINT bytesize);
+};

@@ -53,6 +53,9 @@ void ResourceManager::OnDestroy()
 
 	for (auto iter = m_Mesh.begin(); iter != m_Mesh.end(); ++iter)
 	{
+		if (iter->first == "Cube")
+			int i = 0;
+
 		iter->second.reset();
 	}
 	m_Mesh.clear();
@@ -65,7 +68,8 @@ void ResourceManager::OnDestroy()
 void ResourceManager::OnCreate()
 {
 	//CreateTriangleMesh();
-	CreateCubeMesh();
+	//CreateCubeMesh(); /// 여기서 Mesh를 만들면 안됨 
+
 
 	CreateDeafult_RS();
 	CreateDefault_BL();
@@ -122,7 +126,7 @@ ComPtr<ID3D12Resource> ResourceManager::CreateBufferResource(void* pData
 	//	if (d3dHeapType == D3D12_HEAP_TYPE_UPLOAD) d3dResourceInitialStates = D3D12_RESOURCE_STATE_GENERIC_READ;
 	//	else if (d3dHeapType == D3D12_HEAP_TYPE_READBACK) d3dResourceInitialStates = D3D12_RESOURCE_STATE_COPY_DEST;
 
-	HRESULT hResult = DEVICE(CGameFramework)->GetDevice()->CreateCommittedResource(&d3dHeapPropertiesDesc
+	HRESULT hResult = DX12_DEVICE->GetDevice()->CreateCommittedResource(&d3dHeapPropertiesDesc
 		, D3D12_HEAP_FLAG_NONE
 		, &d3dResourceDesc
 		, d3dResourceInitialStates
@@ -137,7 +141,7 @@ ComPtr<ID3D12Resource> ResourceManager::CreateBufferResource(void* pData
 			if (pd3dUploadBuffer)
 			{
 				d3dHeapPropertiesDesc.Type = D3D12_HEAP_TYPE_UPLOAD;
-				DEVICE(CGameFramework)->GetDevice()->CreateCommittedResource(&d3dHeapPropertiesDesc
+				DX12_DEVICE->GetDevice()->CreateCommittedResource(&d3dHeapPropertiesDesc
 					, D3D12_HEAP_FLAG_NONE
 					, &d3dResourceDesc
 					, D3D12_RESOURCE_STATE_GENERIC_READ
@@ -147,11 +151,12 @@ ComPtr<ID3D12Resource> ResourceManager::CreateBufferResource(void* pData
 
 				D3D12_RANGE d3dReadRange = { 0, 0 };
 				UINT8* pBufferDataBegin = NULL;
+
 				(*pd3dUploadBuffer)->Map(0, &d3dReadRange, (void**)&pBufferDataBegin);
 				memcpy(pBufferDataBegin, pData, nBytes);
 				(*pd3dUploadBuffer)->Unmap(0, NULL);
 
-				COMMAND_LIST(CGameFramework)->CopyResource(pd3dBuffer.Get()
+				DX12_COMMAND_LIST->CopyResource(pd3dBuffer.Get()
 					, pd3dUploadBuffer->Get());
 
 				D3D12_RESOURCE_BARRIER d3dResourceBarrier;
@@ -164,7 +169,7 @@ ComPtr<ID3D12Resource> ResourceManager::CreateBufferResource(void* pData
 				d3dResourceBarrier.Transition.StateAfter  = d3dResourceStates;
 				d3dResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 
-				COMMAND_LIST(CGameFramework)->ResourceBarrier(1, &d3dResourceBarrier);
+				DX12_COMMAND_LIST->ResourceBarrier(1, &d3dResourceBarrier);
 			}
 			break;
 		}
@@ -328,17 +333,17 @@ void ResourceManager::CreateDeafult_PipelineState()
 {
 	std::shared_ptr<CGraphicsPipelineState> pPS = std::make_shared<CGraphicsPipelineState>();
 
-	pPS->SetVertexShader(ResourceManager::GetInst()->GetShader("Deafult_VS"));
-	pPS->SetPixelShader(ResourceManager::GetInst()->GetShader("Default_PS"));
+	pPS->SetVertexShader(RES_MGR->GetShader("Deafult_VS"));
+	pPS->SetPixelShader(RES_MGR->GetShader("Default_PS"));
 	
-	pPS->SetRasterizerState(ResourceManager::GetInst()->GetRasterizerDesc("Default"));
-	pPS->SetBlendState(ResourceManager::GetInst()->GetBlendDesc("Default"));
-	pPS->SetDepthStencilState(ResourceManager::GetInst()->GetDepthStencilState("Default"));
-	pPS->SetInputLayout(ResourceManager::GetInst()->GetInputLayoutDesc("Default"));
+	pPS->SetRasterizerState(RES_MGR->GetRasterizerDesc("Default"));
+	pPS->SetBlendState(RES_MGR->GetBlendDesc("Default"));
+	pPS->SetDepthStencilState(RES_MGR->GetDepthStencilState("Default"));
+	pPS->SetInputLayout(RES_MGR->GetInputLayoutDesc("Default"));
 
 	HRESULT hResult = pPS->CreateGraphicsPipelineState();
 	if (hResult == S_OK) {
-		ResourceManager::GetInst()->AddPipelineState("Default", pPS);
+		RES_MGR->AddPipelineState("Default", pPS);
 	}
 
 }
@@ -348,13 +353,13 @@ void ResourceManager::Create_PipelineState_Illuminate()
 	std::shared_ptr<CGraphicsPipelineState> pPS = std::make_shared<CGraphicsPipelineState>();
 
 
-	pPS->SetVertexShader(ResourceManager::GetInst()->GetShader("Lighting_VS"));
-	pPS->SetPixelShader(ResourceManager::GetInst()->GetShader("Lighting_PS"));
+	pPS->SetVertexShader(RES_MGR->GetShader("Lighting_VS"));
+	pPS->SetPixelShader(RES_MGR->GetShader("Lighting_PS"));
 
-	pPS->SetRasterizerState(ResourceManager::GetInst()->GetRasterizerDesc("Default"));
-	pPS->SetBlendState(ResourceManager::GetInst()->GetBlendDesc("Default"));
-	pPS->SetDepthStencilState(ResourceManager::GetInst()->GetDepthStencilState("Default"));
-	pPS->SetInputLayout(ResourceManager::GetInst()->GetInputLayoutDesc("Illuminate"));
+	pPS->SetRasterizerState(RES_MGR->GetRasterizerDesc("Default"));
+	pPS->SetBlendState(RES_MGR->GetBlendDesc("Default"));
+	pPS->SetDepthStencilState(RES_MGR->GetDepthStencilState("Default"));
+	pPS->SetInputLayout(RES_MGR->GetInputLayoutDesc("Illuminate"));
 
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC desc = pPS->GetPipelineStateDesc();
@@ -363,7 +368,7 @@ void ResourceManager::Create_PipelineState_Illuminate()
 
 	HRESULT hResult = pPS->CreateGraphicsPipelineState();
 	if (hResult == S_OK) {
-		ResourceManager::GetInst()->AddPipelineState("Illuminate", pPS);
+		RES_MGR->AddPipelineState("Illuminate", pPS);
 	}
 
 }
@@ -466,7 +471,7 @@ void ResourceManager::CreateCubeMesh(float width, float height, float depth)
 
 	pMesh->OnCreate(pMeshInfo);
 	//pMesh->CreateNormalBufferResource(pMeshInfo);
-	ResourceManager::GetInst()->AddMesh("Cube", pMesh);
+	RES_MGR->AddMesh("Cube", pMesh);
 	pMesh->CreateIndexBufferResource(pMeshInfo);
 	pMesh->SetTopology(D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 }
@@ -488,17 +493,17 @@ void ResourceManager::CreateBasicPipelineState()
 {
 	std::shared_ptr<CGraphicsPipelineState> pPS = std::make_shared<CGraphicsPipelineState>();
 
-	pPS->SetVertexShader(ResourceManager::GetInst()->GetShader("Basic_VS"));
-	pPS->SetPixelShader(ResourceManager::GetInst()->GetShader("Basic_PS"));
+	pPS->SetVertexShader(RES_MGR->GetShader("Basic_VS"));
+	pPS->SetPixelShader(RES_MGR->GetShader("Basic_PS"));
 
-	pPS->SetRasterizerState(ResourceManager::GetInst()->GetRasterizerDesc("Default"));
-	pPS->SetBlendState(ResourceManager::GetInst()->GetBlendDesc("Default"));
-	pPS->SetDepthStencilState(ResourceManager::GetInst()->GetDepthStencilState("Default"));
-	pPS->SetInputLayout(ResourceManager::GetInst()->GetInputLayoutDesc("basic"));
+	pPS->SetRasterizerState(RES_MGR->GetRasterizerDesc("Default"));
+	pPS->SetBlendState(RES_MGR->GetBlendDesc("Default"));
+	pPS->SetDepthStencilState(RES_MGR->GetDepthStencilState("Default"));
+	pPS->SetInputLayout(RES_MGR->GetInputLayoutDesc("basic"));
 
 	HRESULT hResult = pPS->CreateGraphicsPipelineState();
 	if (hResult == S_OK) {
-		ResourceManager::GetInst()->AddPipelineState("Basic", pPS);
+		RES_MGR->AddPipelineState("Basic", pPS);
 	}
 
 }
@@ -639,7 +644,7 @@ void ResourceManager::CreateSphereMesh()
 	pMesh->CreateIndexBufferResource(vecIdx.data(), vecIdx.size(), sizeof(UINT));
 	pMesh->SetTopology(D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 	std::string Key = "Sphere";
-	ResourceManager::GetInst()->AddMesh(Key, pMesh);
+	RES_MGR->AddMesh(Key, pMesh);
 
 
 
@@ -745,7 +750,7 @@ std::shared_ptr<CMesh> ResourceManager::CreateGridTerrainMesh(int KeyNum
 	pMesh->SetTopology(D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 	
 	std::string Key = "HeightmapGridMesh_" + std::to_string(KeyNum);
-	ResourceManager::GetInst()->AddMesh(Key, pMesh);
+	RES_MGR->AddMesh(Key, pMesh);
 
 	
 	SAFE_DELETE(pVertices);

@@ -58,37 +58,48 @@ CScene::~CScene()
 
 void CScene::OnCreate()
 {
+	//ResourceManager::GetInst()->CreateSphereMesh();
+
+
 	//CreateHW2Ojbects();
+	//return;
+
 	m_pLight = new CLight;
 	m_pLight->OnCreate();
 	AddCamera();
 
-	CGameObject* PGunShip = CFileManager::GetInst()->LoadGeometryFromFile("Model/Mi24.bin");
-	MeshLoadInfo* pTankModelInfo = CFileManager::GetInst()->LoadMeshInfo_Tank("Model/tank_body.bin");
-	CGameObject* pModel = CFileManager::GetInst()->LoadGeometryFromFile("Model/Apache.bin");
+	CGameObject * PGunShip = FILE_MGR->LoadGeometryFromFile("Model/Mi24.bin");
+	MeshLoadInfo* pTankModelInfo = FILE_MGR->LoadMeshInfo_Tank("Model/tank_body.bin");
+	CGameObject* pModel          = FILE_MGR->LoadGeometryFromFile("Model/Apache.bin");
+	//CGameObject* pPepper		= FILE_MGR->LoadGeometryFromFile("Model/Bell_pepper_green.bin");
+	
+	ResourceManager::GetInst()->CreateCubeMesh(10, 10, 10);
+
 
 	CGameObject* CubeObj = new CGameObject;
 	CubeObj->SetPipelineStateKeyName("Basic");
-	CubeObj->SetName("Sphere");
+	CubeObj->SetName("Cube");
 	CubeObj->SetMesh(ResourceManager::GetInst()->GetMesh("Cube"));
 	CubeObj->SetMaterial(0, ResourceManager::GetInst()->GetMaterial("rotor0"));
 	CTransform* CubeTrans = new CTransform;
-	CubeTrans->SetScale(0.2f, 0.2f, 0.2f);
+	CubeTrans->SetScale(10.f, 10.f, 10.f);
 	CubeTrans->SetPosition(50.f, 0.f, 0.f);
 	CubeObj->AddComponent(CubeTrans);
 	PushBack_GameObject(CubeObj);
 
-	AddTerrain();
+	//AddTerrain();
+
 
 	SAFE_DELETE(PGunShip);
-	SAFE_DELETE(pModel);
+	//SAFE_DELETE(pModel);
 	SAFE_DELETE(pTankModelInfo);
+
 }
 
 
 void CScene::AddTank()
 {
-	CGameObject* pObj = CFileManager::GetInst()->LoadGeometryFromFile("Model/Gunship.bin");
+	CGameObject* pObj = FILE_MGR->LoadGeometryFromFile("Model/Gunship.bin");
 	pObj->SetName("Gunship");
 	CTransform* TransCom = new CTransform;
 	TransCom->SetPosition(0.f, 0.f, -0.f);
@@ -112,7 +123,7 @@ void CScene::AddTank()
 
 
 
-	MeshLoadInfo* pTankModelInfo = CFileManager::GetInst()->LoadMeshInfo_Tank("Model/tank_body.bin");
+	MeshLoadInfo* pTankModelInfo = FILE_MGR->LoadMeshInfo_Tank("Model/tank_body.bin");
 	if (pTankModelInfo)
 	{
 		std::shared_ptr<CMesh> pMesh = std::make_shared<CMesh>();
@@ -153,7 +164,7 @@ void CScene::AddTank()
 
 	CGameObject* pObj_turret = new CGameObject;
 	pObj_turret->SetName("Turret");
-	pTankModelInfo = CFileManager::GetInst()->LoadMeshInfo_Tank("Model/tank_turret.bin");
+	pTankModelInfo = FILE_MGR->LoadMeshInfo_Tank("Model/tank_turret.bin");
 	if (pTankModelInfo)
 	{
 		std::shared_ptr<CMesh> pMesh = std::make_shared<CMesh>();
@@ -188,7 +199,7 @@ void CScene::AddTank()
 
 	CGameObject* pObj_gun = new CGameObject;
 	pObj_gun->SetName("Gun");
-	pTankModelInfo = CFileManager::GetInst()->LoadMeshInfo_Tank("Model/tank_gun.bin");
+	pTankModelInfo = FILE_MGR->LoadMeshInfo_Tank("Model/tank_gun.bin");
 	if (pTankModelInfo)
 	{
 		std::shared_ptr<CMesh> pMesh = std::make_shared<CMesh>();
@@ -340,9 +351,9 @@ void CScene::CreateHW2Ojbects()
 	m_pLight->OnCreate();
 	AddCamera();
 
-	CGameObject* PGunShip = CFileManager::GetInst()->LoadGeometryFromFile("Model/Mi24.bin");
-	MeshLoadInfo* pTankModelInfo = CFileManager::GetInst()->LoadMeshInfo_Tank("Model/tank_body.bin");
-	CGameObject* pModel = CFileManager::GetInst()->LoadGeometryFromFile("Model/Apache.bin");
+	CGameObject* PGunShip = FILE_MGR->LoadGeometryFromFile("Model/Mi24.bin");
+	MeshLoadInfo* pTankModelInfo = FILE_MGR->LoadMeshInfo_Tank("Model/tank_body.bin");
+	CGameObject* pModel = FILE_MGR->LoadGeometryFromFile("Model/Apache.bin");
 
 
 	ResourceManager::GetInst()->CreateCubeMesh(10, 10, 10);
@@ -378,7 +389,7 @@ void CScene::CreateHW2Ojbects()
 	PushBack_GameObject(CubeObj2);
 
 
-	std::shared_ptr<CMesh> cube = ResourceManager::GetInst()->GetMesh("Cube");
+	//std::shared_ptr<CMesh> cube = ResourceManager::GetInst()->GetMesh("Cube");
 	std::shared_ptr<CMesh> Other = ResourceManager::GetInst()->GetMesh("tank_body");
 
 
@@ -485,7 +496,7 @@ void CScene::Render()
 {
 
 	
-	COMMAND_LIST(CGameFramework)->SetGraphicsRootSignature(ROOT_SIGNATURE(CGameFramework).Get());
+	DX12_COMMAND_LIST->SetGraphicsRootSignature(DX12_ROOT_SIGNATURE.Get());
 	if (m_pMainCamera)
 	{
 		m_pMainCamera->Get_Camera_Component()->UpdateViewportsAndScissorRects();

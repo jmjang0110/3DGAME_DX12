@@ -13,6 +13,7 @@
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
+#include <filesystem>
 
 #include <string>
 #include <wrl.h>
@@ -27,7 +28,8 @@
 
 #include <minwindef.h>
 
-
+#include <bitset>
+#include <random>
 
 
 // DIRECT X12
@@ -42,10 +44,14 @@
 #include <DirectXColors.h>
 #include "d3dx12.h"
 
+
+
 using namespace DirectX;
 using namespace DirectX::PackedVector;
 using Microsoft::WRL::ComPtr;
 
+#include <DirectXTex/DirectXTex.h>
+#include <DirectXTex/DirectXTex.inl>
 
 
 // IMPORT LIB
@@ -53,6 +59,12 @@ using Microsoft::WRL::ComPtr;
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "dxguid.lib")
+
+#ifdef _DEBUG
+#pragma comment(lib, "DirectXTex\\DirectXTex_debug.lib")
+#else
+#pragma comment(lib, "DirectXTex\\DirectXTex.lib")
+#endif
 
 
 //#define RANDOM_COLOR			(0xFF000000 | ((rand() * 0xFFFFFF) / RAND_MAX))
@@ -96,6 +108,14 @@ public:										\
 #define ROOT_SIGNATURE(TYPE) TYPE::GetInst()->GetRootSignature()->GetRootSignature()
 #define DX12_PIPELINESTATE(TYPE) TYPE::GetInst()->GetGraphicsPipelineStateMachine()
 
+#define DX12_DEVICE CGameFramework::GetInst()->GetDevice()
+#define DX12_COMMAND_QUEUE CGameFramework::GetInst()->GetCmdQueue()
+#define DX12_COMMAND_LIST CGameFramework::GetInst()->GetCmdQueue()->GetCommandList()
+#define DX12_SWAP_CHAIN CGameFramework::GetInst()->GetSwapChain()
+#define DX12_ROOT_SIGNATURE CGameFramework::GetInst()->GetRootSignature()->GetRootSignature()
+
+#define RES_MGR ResourceManager::GetInst()
+#define FILE_MGR CFileManager::GetInst()
 
 
 
@@ -144,6 +164,43 @@ struct WindowInfo
 #define RESOURCE_TEXTURE_CUBE		0x04
 #define RESOURCE_BUFFER				0x05
 
+// °¢Á¾ typedef
+using int8   = __int8;
+using int16  = __int16;
+using int32  = __int32;
+using int64  = __int64;
+using uint8  = unsigned __int8;
+using uint16 = unsigned __int16;
+using uint32 = unsigned __int32;
+using uint64 = unsigned __int64;
+using Vec2   = XMFLOAT2;
+using Vec3   = XMFLOAT3;
+using Vec4   = XMFLOAT4;
+using Matrix = XMMATRIX;
+
+enum class CBV_REGISTER : uint8
+{
+	b0,
+	b1,
+	b2,
+	b3,
+	b4,
+
+	END
+};
+
+enum class SRV_REGISTER : uint8
+{
+	t0 = static_cast<uint8>(CBV_REGISTER::END),
+	t1,
+	t2,
+	t3,
+	t4,
+
+	END
+};
+
+
 
 enum class KEY_STATE
 {
@@ -163,6 +220,9 @@ struct tKeyInfo
 enum
 {
 	SWAP_CHAIN_BUFFER_COUNT = 3,
+	CBV_REGISTER_COUNT = CBV_REGISTER::END,
+	SRV_REGISTER_COUNT = SRV_REGISTER::END,
+
 	END
 };
 

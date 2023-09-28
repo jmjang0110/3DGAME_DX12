@@ -44,8 +44,8 @@ void PlayerScript::Init()
 {
 	m_pTurret = CScript::GetOwner()->FindChild("Turret");
 	m_pGun    = CScript::GetOwner()->FindChild("Gun");
-	CGameObject* pObj = CFileManager::GetInst()->LoadGeometryFromFile("Model/Apache.bin");
-	CGameObject* pBullet = CFileManager::GetInst()->LoadGeometryFromFile("Model/Gunship.bin");
+	CGameObject* pObj = FILE_MGR->LoadGeometryFromFile("Model/Apache.bin");
+	CGameObject* pBullet = FILE_MGR->LoadGeometryFromFile("Model/Gunship.bin");
 
 
 	for (UINT i = 0; i < m_iBulletMax; ++i) {

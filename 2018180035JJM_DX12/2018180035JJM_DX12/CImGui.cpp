@@ -9,6 +9,9 @@
 #include "CCommandQueue.h"
 
 
+#include "CScene.h"
+#include "CGameObject.h"
+#include "CTransform.h"
 
 
 CImGui* CImGui::m_pInst = nullptr;
@@ -33,7 +36,7 @@ bool CImGui::Init(WindowInfo WinInfo)
         desc.NumDescriptors = 1;
         desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 
-        if (DEVICE(CGameFramework)->GetDevice()->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&m_pd3dSrvDescHeap)) != S_OK)
+        if (DX12_DEVICE->GetDevice()->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&m_pd3dSrvDescHeap)) != S_OK)
             return false;
     }
 
@@ -57,7 +60,7 @@ bool CImGui::Init(WindowInfo WinInfo)
     //ImGui::StyleColorsLight();
 
     ImGui_ImplWin32_Init(WinInfo.hWnd);
-    ImGui_ImplDX12_Init(DEVICE(CGameFramework)->GetDevice().Get(), NUM_FRAMES_IN_FLIGHT,
+    ImGui_ImplDX12_Init(DX12_DEVICE->GetDevice().Get(), NUM_FRAMES_IN_FLIGHT,
         DXGI_FORMAT_R8G8B8A8_UNORM, m_pd3dSrvDescHeap.Get(),
         m_pd3dSrvDescHeap->GetCPUDescriptorHandleForHeapStart(),
         m_pd3dSrvDescHeap->GetGPUDescriptorHandleForHeapStart());
@@ -115,7 +118,11 @@ void CImGui::Render()
         ImGui::Checkbox("Demo Window", &m_show_demo_window);      // Edit bools storing our window open/close state
         ImGui::Checkbox("Another Window", &m_show_another_window);
 
-        ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+        ImGui::SliderFloat("float", &f, 1.0f, 100.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+        CTransform* pTrans =  (CTransform*)CGameFramework::GetInst()->GetCurScene()->GetObjByName("Cube")->GetComponent(COMPONENT_TYPE::TRANSFORM);
+        if (pTrans) {
+            pTrans->SetScale(XMFLOAT3(f, f, f));
+        }
         ImGui::ColorEdit3("clear color", (float*)&m_clear_color); // Edit 3 floats representing a color
 
         if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
@@ -139,11 +146,11 @@ void CImGui::Render()
     }
 
 
-    COMMAND_LIST(CGameFramework)->SetDescriptorHeaps(1, m_pd3dSrvDescHeap.GetAddressOf());
+    DX12_COMMAND_LIST->SetDescriptorHeaps(1, m_pd3dSrvDescHeap.GetAddressOf());
 
     // Rendering
     ImGui::Render();
-    ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), COMMAND_QUEUE(CGameFramework)->GetCommandList().Get()); 
+    ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), DX12_COMMAND_QUEUE->GetCommandList().Get()); 
 
 
 }

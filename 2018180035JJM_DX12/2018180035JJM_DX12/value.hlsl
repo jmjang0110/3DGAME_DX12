@@ -44,18 +44,23 @@ struct MATERIAL
 	float4					m_cEmissive;
 };
 
-cbuffer cbCameraInfo : register(b1)
+cbuffer cbCameraInfo : register(b0)
 {
 	matrix					gmtxView			: packoffset(c0);
 	matrix					gmtxProjection		: packoffset(c4);
 	float3					gvCameraPosition	: packoffset(c8);
 };
 
-cbuffer cbGameObjectInfo : register(b2)
+cbuffer cbGameObjectInfo : register(b1)
 {
 	matrix					gmtxGameObject		: packoffset(c0);
 	MATERIAL				gMaterial			: packoffset(c4);
 };
+
+// [ b4 ] 는 light.hlsl 에 있음 
+
+Texture2D gtxTexture		 : register(t0);
+SamplerState gSamplerState	 : register(s0);
 
 
 #define FRAME_BUFFER_WIDTH 800.0f

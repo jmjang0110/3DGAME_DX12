@@ -107,7 +107,7 @@ void CGameFramework::OnDestroy()
 		m_RootSignature->~CRootSignature();
 
 	ResourceManager::GetInst()->OnDestroy();
-	CFileManager::GetInst()->Destroy();
+	FILE_MGR->Destroy();
 
 		
 	CImGui::GetInst()->Destroy();
@@ -121,18 +121,18 @@ void CGameFramework::OnDestroy()
 void CGameFramework::BuildObjects()
 {
 
-	COMMAND_LIST(CGameFramework)->Reset(COMMAND_QUEUE(CGameFramework)->GetCommandAllocator().Get(), NULL);
+	DX12_COMMAND_LIST->Reset(DX12_COMMAND_QUEUE->GetCommandAllocator().Get(), NULL);
 
 	//씬 객체를 생성하고 씬에 포함될 게임 객체들을 생성한다
 	m_pCurScene = new CScene;
 	m_pCurScene->OnCreate();
 
 
-	COMMAND_LIST(CGameFramework)->Close();
-	ID3D12CommandList* ppd3dCommandLists[] = { COMMAND_LIST(CGameFramework).Get() };
-	COMMAND_QUEUE(CGameFramework)->GetCommandQueue()->ExecuteCommandLists(1, ppd3dCommandLists);
+	DX12_COMMAND_LIST->Close();
+	ID3D12CommandList* ppd3dCommandLists[] = { DX12_COMMAND_LIST.Get() };
+	DX12_COMMAND_QUEUE->GetCommandQueue()->ExecuteCommandLists(1, ppd3dCommandLists);
 
-	COMMAND_QUEUE(CGameFramework)->WaitForGpuComplete();
+	DX12_COMMAND_QUEUE->WaitForGpuComplete();
 	
 	m_pCurScene->ReleaseUploadBuffers();
 
@@ -179,7 +179,7 @@ void CGameFramework::FrameAdvance()
 
 
 
-	int BackBufferIdx = SWAP_CHAIN(CGameFramework)->GetDxgiSwapChain()->GetCurrentBackBufferIndex();
+	int BackBufferIdx = DX12_SWAP_CHAIN->GetDxgiSwapChain()->GetCurrentBackBufferIndex();
 
 /// TIMER 
 	int FPS = CGameTimer::GetInst()->GetFrameRate(m_pszFrameRate + 12, 37);
@@ -188,7 +188,7 @@ void CGameFramework::FrameAdvance()
 
 
 /// RENDERING -> FULL SCREEN 터지네..? 
-	/*std::shared_ptr<CSwapChain> pSC = SWAP_CHAIN(CGameFramework);
+	/*std::shared_ptr<CSwapChain> pSC = DX12_SWAP_CHAIN;
 	pSC->ChangeSwapchainState();*/
 
 }

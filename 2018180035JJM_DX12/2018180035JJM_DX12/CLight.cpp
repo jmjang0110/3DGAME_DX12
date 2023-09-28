@@ -115,7 +115,7 @@ void CLight::UpdateGraphicsRootConstantBufferView()
 {
 
 	D3D12_GPU_VIRTUAL_ADDRESS d3dcbLightsGpuVirtualAddress = m_pd3dcbLights->GetGPUVirtualAddress();
-	COMMAND_LIST(CGameFramework)->SetGraphicsRootConstantBufferView(2, d3dcbLightsGpuVirtualAddress); //Lights
+	DX12_COMMAND_LIST->SetGraphicsRootConstantBufferView(2, d3dcbLightsGpuVirtualAddress); //Lights
 }
 
 bool CLight::UpdateLightPosition(std::string Keyname, XMFLOAT3 Pos)

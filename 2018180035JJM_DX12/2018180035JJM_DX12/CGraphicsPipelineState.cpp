@@ -22,7 +22,7 @@ CGraphicsPipelineState::~CGraphicsPipelineState()
 HRESULT CGraphicsPipelineState::CreateGraphicsPipelineState()
 {
 
-	auto pRootSignature = ROOT_SIGNATURE(CGameFramework);
+	auto pRootSignature = DX12_ROOT_SIGNATURE;
 	
 	//그래픽 파이프라인 상태를 설정한다.
 	::ZeroMemory(&m_pipelineDesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
@@ -55,7 +55,7 @@ HRESULT CGraphicsPipelineState::CreateGraphicsPipelineState()
 	m_pipelineDesc.SampleDesc.Count					= 1;
 	m_pipelineDesc.Flags							= D3D12_PIPELINE_STATE_FLAG_NONE;
 
-	HRESULT hResult = DEVICE(CGameFramework)->GetDevice()->CreateGraphicsPipelineState(&m_pipelineDesc
+	HRESULT hResult = DX12_DEVICE->GetDevice()->CreateGraphicsPipelineState(&m_pipelineDesc
 											,__uuidof(ID3D12PipelineState)
 											, (void**)m_pd3dPipelineState.GetAddressOf());
 
@@ -71,7 +71,7 @@ HRESULT CGraphicsPipelineState::CreateGraphicsPipelineState()
 void CGraphicsPipelineState::SetPipelineState()
 {
 	if (m_pd3dPipelineState)
-		COMMAND_LIST(CGameFramework)->SetPipelineState(m_pd3dPipelineState.Get());
+		DX12_COMMAND_LIST->SetPipelineState(m_pd3dPipelineState.Get());
 
 
 }

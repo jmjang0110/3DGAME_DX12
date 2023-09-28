@@ -128,7 +128,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
     ::UpdateWindow(hMainWnd);
 
 #ifdef _WITH_SWAPCHAIN_FULLSCREEN_STATE
-    std::shared_ptr<CSwapChain> pSswapChain = SWAP_CHAIN(CGameFramework);
+    std::shared_ptr<CSwapChain> pSswapChain = DX12_SWAP_CHAIN;
     pSswapChain->ChangeSwapchainState();
 
 #endif

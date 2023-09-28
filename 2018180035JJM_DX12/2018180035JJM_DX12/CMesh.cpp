@@ -16,7 +16,6 @@ CMesh::CMesh()
 CMesh::~CMesh()
 {
 
-
 }
 
 void CMesh::CreateVertexBufferResource(void* pData
@@ -210,11 +209,7 @@ void CMesh::OnCreate(MeshLoadInfo* tMeshInfo)
 
 void CMesh::Render(int nSubSet)
 {
-
-
-
-	auto pCmdList = COMMAND_LIST(CGameFramework);
-
+	auto pCmdList = DX12_COMMAND_LIST;
 	pCmdList->IASetPrimitiveTopology(m_d3dPrimitiveTopology);
 
 	if(m_pd3dNormalBuffer)

@@ -68,7 +68,7 @@ HellicopterScript::~HellicopterScript()
 void HellicopterScript::Init()
 {
 
-	CGameObject* pBullet = CFileManager::GetInst()->LoadGeometryFromFile("Model/Gunship.bin");
+	CGameObject* pBullet = FILE_MGR->LoadGeometryFromFile("Model/Gunship.bin");
 
 
 	for (UINT i = 0; i < m_iBulletMax; ++i) {

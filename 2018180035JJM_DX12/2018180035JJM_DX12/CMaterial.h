@@ -1,5 +1,8 @@
 #pragma once
 
+class CTexture;
+
+
 #define DIR_FORWARD					0x01
 #define DIR_BACKWARD				0x02
 #define DIR_LEFT					0x04
@@ -64,6 +67,8 @@ public:
 private:
 	std::shared_ptr<CGraphicsPipelineState>  m_PipelineState;
 	MATERIAL_COLOR							 m_tColor; // 이제 텍스처로 ...
+	std::shared_ptr<CTexture>				 m_Texture;
+
 	// TEXTURE Add
 
 
@@ -75,10 +80,12 @@ public:
 	/// [ S E T ]
 	void SetPipelineState(std::shared_ptr<CGraphicsPipelineState> pPipelineState) { m_PipelineState = pPipelineState; }
 	void SetColor(MATERIAL_COLOR tColor) { m_tColor = tColor; }
+	void SetTexture(std::shared_ptr<CTexture> pTexture) { m_Texture = pTexture; }
 
 	/// [ G E T ]
 	std::shared_ptr<CGraphicsPipelineState> GetPipelineState() { return m_PipelineState; }
 	MATERIAL_COLOR GetColor() { return m_tColor; }
+	std::shared_ptr<CTexture> GetTexture() { return m_Texture; }
 
 public:
 	CMaterial();
