@@ -1,0 +1,466 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="GameFramework">
+      <UniqueIdentifier>{2022f07b-1b60-46ab-a52d-a64b674a984f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="main">
+      <UniqueIdentifier>{575bc941-5015-4360-95cc-4d6d8e1f9f73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility">
+      <UniqueIdentifier>{a0d56e5f-0b75-4c90-93de-92a89ae340ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility\pch">
+      <UniqueIdentifier>{acba5b5c-788e-4a1c-9eea-8a77ff806bf9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility\리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="GameFramework\DX12_Graphic_Devices">
+      <UniqueIdentifier>{2b5b6d30-6b40-4147-840a-d73ccc77c1e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\DX12_Graphic_Devices\CommandQueue">
+      <UniqueIdentifier>{d4b76766-2a74-4331-bfed-3aa531a62406}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\DX12_Graphic_Devices\Device">
+      <UniqueIdentifier>{c5e41b59-16d9-463e-8369-7da4f037d1f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\DX12_Graphic_Devices\RootSignature">
+      <UniqueIdentifier>{0c05bea4-3514-4c77-b449-72ae49ab5788}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\DX12_Graphic_Devices\Shader">
+      <UniqueIdentifier>{36dfeeb4-1aee-4608-a06e-afa5faa734b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\DX12_Graphic_Devices\SwapChain">
+      <UniqueIdentifier>{5520b3a5-3977-4dc6-af20-ff779599f661}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\Engine">
+      <UniqueIdentifier>{63db8f56-fe51-4217-8bcc-455692b9c02c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\Engine\Scene">
+      <UniqueIdentifier>{df936a75-d1f1-4086-8470-58703c7146d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\Engine\Key">
+      <UniqueIdentifier>{2bd21461-c097-453f-9e25-2cd38ae52f8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\Engine\GameObject">
+      <UniqueIdentifier>{f317fa66-4d73-4bfc-9408-efc8a7ef6bc8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\Engine\Resource">
+      <UniqueIdentifier>{e3f70af4-5e6d-43b3-81a0-f542ccb65593}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\DX12_Graphic_Devices\GraphicsPipelineState">
+      <UniqueIdentifier>{41a0c671-9c84-4ee6-8b2a-aa5832c2898f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\Engine\Resource\HLSL">
+      <UniqueIdentifier>{6ef96583-298f-4b1e-bc89-0b559b908e67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\Engine\GameObject\Component">
+      <UniqueIdentifier>{00426b83-c5db-48c6-9d46-059f0e5ed300}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\Engine\GameObject\Component\Transform">
+      <UniqueIdentifier>{eade209d-ada2-4406-94a9-c5a4bbdadd86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\Engine\Resource\Mesh">
+      <UniqueIdentifier>{e5490cc0-c033-4986-a5a9-8bc86effafd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\Engine\Resource\Mesh\Vertex">
+      <UniqueIdentifier>{92e60223-0cc6-4d2d-9093-3a1d20e970c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\Engine\Resource\Material">
+      <UniqueIdentifier>{c38aa5bf-2038-4ca6-a6a1-d4dec85d549b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\Engine\Resource\Light">
+      <UniqueIdentifier>{6cb71517-1665-418a-ad9e-ddc6ecad88c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\Engine\File">
+      <UniqueIdentifier>{12c6100d-708e-405b-97b4-10e39f5e8b09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\Engine\Timer">
+      <UniqueIdentifier>{9f934018-ae39-42e6-9290-80b44b9caf34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\Engine\GameObject\Component\Camera">
+      <UniqueIdentifier>{69712e5e-7adf-45e4-ab26-a7c659882a55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script">
+      <UniqueIdentifier>{22588163-0869-420d-9321-318b239e0854}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Camera">
+      <UniqueIdentifier>{61d643aa-7b42-482a-93a3-db9f37af762b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Player">
+      <UniqueIdentifier>{63d8befd-4e28-4738-8ac7-fc06a0da8d6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Bullet">
+      <UniqueIdentifier>{0fd2d4cc-aa2d-485e-ba64-b50988569e50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Monster">
+      <UniqueIdentifier>{7ffda179-4cc2-40d3-a051-813ffe68be27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="D12 정리">
+      <UniqueIdentifier>{cbe7fd6f-d395-46f4-b17a-6b8c132e99a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\Engine\Resource\Mesh\Heightmap">
+      <UniqueIdentifier>{b26cab7c-1058-46f2-beb6-d41c9a053822}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\Engine\Resource\Mesh\HeightmapGrid">
+      <UniqueIdentifier>{32ef9e70-0a03-48dd-8215-492a33da7a4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\Engine\Resource\Mesh\HeightMapTerrain">
+      <UniqueIdentifier>{cac847a5-ee26-43f2-a4cd-0d478a24f4d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Rotate">
+      <UniqueIdentifier>{9c14ae9c-3a17-4d2c-8f74-509070121834}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Hellicopter">
+      <UniqueIdentifier>{ae979179-ac9d-4694-b7a5-0aec75a84a62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\AI">
+      <UniqueIdentifier>{ac93b047-ff7d-43dc-a98a-b44386d5e017}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui">
+      <UniqueIdentifier>{62e6cd1d-2503-40cf-aa10-e1eb1d70e692}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\Code">
+      <UniqueIdentifier>{2eaa55f0-76dd-4688-a6fc-8efc0e8deb28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\Engine\Resource\Material\Texture">
+      <UniqueIdentifier>{0ece8bf6-c761-4bee-b1b9-d6489c9435dc}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CGameFramework.h">
+      <Filter>GameFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Utility\pch</Filter>
+    </ClInclude>
+    <ClInclude Include="2018180035JJM_DX12.h">
+      <Filter>main</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="CDevice.h">
+      <Filter>GameFramework\DX12_Graphic_Devices\Device</Filter>
+    </ClInclude>
+    <ClInclude Include="CRootSignature.h">
+      <Filter>GameFramework\DX12_Graphic_Devices\RootSignature</Filter>
+    </ClInclude>
+    <ClInclude Include="CSwapChain.h">
+      <Filter>GameFramework\DX12_Graphic_Devices\SwapChain</Filter>
+    </ClInclude>
+    <ClInclude Include="CCommandQueue.h">
+      <Filter>GameFramework\DX12_Graphic_Devices\CommandQueue</Filter>
+    </ClInclude>
+    <ClInclude Include="CShader.h">
+      <Filter>GameFramework\DX12_Graphic_Devices\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="CKeyManager.h">
+      <Filter>GameFramework\Engine\Key</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="CScene.h">
+      <Filter>GameFramework\Engine\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="CGameObject.h">
+      <Filter>GameFramework\Engine\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="CGraphicsPipelineState.h">
+      <Filter>GameFramework\DX12_Graphic_Devices\GraphicsPipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="d3dx12.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="CMesh.h">
+      <Filter>GameFramework\Engine\Resource\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleMath.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="CEntity.h" />
+    <ClInclude Include="ResourceManager.h">
+      <Filter>GameFramework\Engine\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="CVertex.h">
+      <Filter>GameFramework\Engine\Resource\Mesh\Vertex</Filter>
+    </ClInclude>
+    <ClInclude Include="CComponent.h">
+      <Filter>GameFramework\Engine\GameObject\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="CTransform.h">
+      <Filter>GameFramework\Engine\GameObject\Component\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="CMaterial.h">
+      <Filter>GameFramework\Engine\Resource\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="CLight.h">
+      <Filter>GameFramework\Engine\Resource\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="CFileManager.h">
+      <Filter>GameFramework\Engine\File</Filter>
+    </ClInclude>
+    <ClInclude Include="CTimer.h">
+      <Filter>GameFramework\Engine\Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="CCamera.h">
+      <Filter>GameFramework\Engine\GameObject\Component\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraScript.h">
+      <Filter>Script\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="CScript.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerScript.h">
+      <Filter>Script\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="BulletScript.h">
+      <Filter>Script\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="TankMonster.h">
+      <Filter>Script\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="CHeightMapImage.h">
+      <Filter>GameFramework\Engine\Resource\Mesh\Heightmap</Filter>
+    </ClInclude>
+    <ClInclude Include="CHeightmapGrid.h">
+      <Filter>GameFramework\Engine\Resource\Mesh\HeightmapGrid</Filter>
+    </ClInclude>
+    <ClInclude Include="CHeightmapTerrain.h">
+      <Filter>GameFramework\Engine\Resource\Mesh\HeightMapTerrain</Filter>
+    </ClInclude>
+    <ClInclude Include="RotateScript.h">
+      <Filter>Script\Rotate</Filter>
+    </ClInclude>
+    <ClInclude Include="HellicopterScript.h">
+      <Filter>Script\Hellicopter</Filter>
+    </ClInclude>
+    <ClInclude Include="AIScript.h">
+      <Filter>Script\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="CImGui.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imconfig.h">
+      <Filter>ImGui\Code</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui.h">
+      <Filter>ImGui\Code</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_impl_dx12.h">
+      <Filter>ImGui\Code</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_impl_win32.h">
+      <Filter>ImGui\Code</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_internal.h">
+      <Filter>ImGui\Code</Filter>
+    </ClInclude>
+    <ClInclude Include="CTexture.h">
+      <Filter>GameFramework\Engine\Resource\Material\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="DDSTextureLoader12.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CGameFramework.cpp">
+      <Filter>GameFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Utility\pch</Filter>
+    </ClCompile>
+    <ClCompile Include="2018180035JJM_DX12.cpp">
+      <Filter>main</Filter>
+    </ClCompile>
+    <ClCompile Include="CDevice.cpp">
+      <Filter>GameFramework\DX12_Graphic_Devices\Device</Filter>
+    </ClCompile>
+    <ClCompile Include="CRootSignature.cpp">
+      <Filter>GameFramework\DX12_Graphic_Devices\RootSignature</Filter>
+    </ClCompile>
+    <ClCompile Include="CSwapChain.cpp">
+      <Filter>GameFramework\DX12_Graphic_Devices\SwapChain</Filter>
+    </ClCompile>
+    <ClCompile Include="CCommandQueue.cpp">
+      <Filter>GameFramework\DX12_Graphic_Devices\CommandQueue</Filter>
+    </ClCompile>
+    <ClCompile Include="CShader.cpp">
+      <Filter>GameFramework\DX12_Graphic_Devices\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="CKeyManager.cpp">
+      <Filter>GameFramework\Engine\Key</Filter>
+    </ClCompile>
+    <ClCompile Include="CSene.cpp">
+      <Filter>GameFramework\Engine\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="CGameObject.cpp">
+      <Filter>GameFramework\Engine\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="CGraphicsPipelineState.cpp">
+      <Filter>GameFramework\DX12_Graphic_Devices\GraphicsPipelineState</Filter>
+    </ClCompile>
+    <ClCompile Include="CMesh.cpp">
+      <Filter>GameFramework\Engine\Resource\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="CEntity.cpp" />
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>GameFramework\Engine\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="CVertex.cpp">
+      <Filter>GameFramework\Engine\Resource\Mesh\Vertex</Filter>
+    </ClCompile>
+    <ClCompile Include="CComponent.cpp">
+      <Filter>GameFramework\Engine\GameObject\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="CTransform.cpp">
+      <Filter>GameFramework\Engine\GameObject\Component\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="CMaterial.cpp">
+      <Filter>GameFramework\Engine\Resource\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="CLight.cpp">
+      <Filter>GameFramework\Engine\Resource\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="CFileManager.cpp">
+      <Filter>GameFramework\Engine\File</Filter>
+    </ClCompile>
+    <ClCompile Include="CTimer.cpp">
+      <Filter>GameFramework\Engine\Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="CCamera.cpp">
+      <Filter>GameFramework\Engine\GameObject\Component\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraScript.cpp">
+      <Filter>Script\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="CScript.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerScript.cpp">
+      <Filter>Script\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="BulletScript.cpp">
+      <Filter>Script\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="TankMonster.cpp">
+      <Filter>Script\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="CHeightMapImage.cpp">
+      <Filter>GameFramework\Engine\Resource\Mesh\Heightmap</Filter>
+    </ClCompile>
+    <ClCompile Include="CHeightmapGrid.cpp">
+      <Filter>GameFramework\Engine\Resource\Mesh\HeightmapGrid</Filter>
+    </ClCompile>
+    <ClCompile Include="CHeightmapTerrain.cpp">
+      <Filter>GameFramework\Engine\Resource\Mesh\HeightMapTerrain</Filter>
+    </ClCompile>
+    <ClCompile Include="RotateScript.cpp">
+      <Filter>Script\Rotate</Filter>
+    </ClCompile>
+    <ClCompile Include="HellicopterScript.cpp">
+      <Filter>Script\Hellicopter</Filter>
+    </ClCompile>
+    <ClCompile Include="AIScript.cpp">
+      <Filter>Script\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="CImGui.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui.cpp">
+      <Filter>ImGui\Code</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_demo.cpp">
+      <Filter>ImGui\Code</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_draw.cpp">
+      <Filter>ImGui\Code</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_impl_dx12.cpp">
+      <Filter>ImGui\Code</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_impl_win32.cpp">
+      <Filter>ImGui\Code</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_tables.cpp">
+      <Filter>ImGui\Code</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_widgets.cpp">
+      <Filter>ImGui\Code</Filter>
+    </ClCompile>
+    <ClCompile Include="CTexture.cpp">
+      <Filter>GameFramework\Engine\Resource\Material\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="DDSTextureLoader12.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="2018180035JJM_DX12.rc">
+      <Filter>Utility\리소스 파일</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="small.ico">
+      <Filter>Utility\리소스 파일</Filter>
+    </Image>
+    <Image Include="2018180035JJM_DX12.ico">
+      <Filter>Utility\리소스 파일</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="value.hlsl">
+      <Filter>GameFramework\Engine\Resource\HLSL</Filter>
+    </None>
+    <None Include="VertexShader.hlsl">
+      <Filter>GameFramework\Engine\Resource\HLSL</Filter>
+    </None>
+    <None Include="PixelShader.hlsl">
+      <Filter>GameFramework\Engine\Resource\HLSL</Filter>
+    </None>
+    <None Include="ImGui\imgui.natstepfilter">
+      <Filter>ImGui\Code</Filter>
+    </None>
+    <None Include="Light.hlsl">
+      <Filter>GameFramework\Engine\Resource\HLSL</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Resource.txt">
+      <Filter>D12 정리</Filter>
+    </Text>
+    <Text Include="Descriptor.txt">
+      <Filter>D12 정리</Filter>
+    </Text>
+    <Text Include="RootSignature.txt">
+      <Filter>D12 정리</Filter>
+    </Text>
+    <Text Include="Pipeline.txt">
+      <Filter>D12 정리</Filter>
+    </Text>
+    <Text Include="질문거리.txt">
+      <Filter>D12 정리</Filter>
+    </Text>
+    <Text Include="Frame_Hiererarchy.txt">
+      <Filter>D12 정리</Filter>
+    </Text>
+    <Text Include="HLSL.txt">
+      <Filter>D12 정리</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="ImGui\imgui.natvis">
+      <Filter>ImGui\Code</Filter>
+    </Natvis>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,87 @@
+
+
+ID3D12Resource
+리소스 ( Resource )
+
+-> 
+파이프라인에서 쓰이는 메모리 영역
+가능하다면 비디오 메모리 존재해야 한다.
+
+정점버퍼 
+인덱스 버퍼
+상수 버퍼 
+텍스처 
+
+- 바인딩 되어야한다.
+바인딩은 뷰를 통해 연결한다.
+
+
+
+* Committed Resource	[ 커밋 리소스 ]
+
+	- 가상 메모리 공간과 물리적 메모리 공간 모두 생성 
+	- 힙을 할당할 때 커밋 리소스의 물리 메모리 생성 
+
+* Placed Resource		[ 위치 리소스 ]
+
+	- 힙의 어떤 연속적인 영역에 대한 포인터 ( 겹칠 수 있다 )
+
+* Reserved Resource		[ 예약 리소스 ]
+
+	- 자체적인 GPU 가상 주소 공간을 가진다 
+	- 나중에 가상 페이지를 힙의 어떤 영역으로 매핑 가능 
+	- 힙의 영역을 참조할 수 있다. 
+	- 모든 Direct3D 12 하드웨어에서 제공 X 
+
+
+
+a. 리소스는 쉐이더 파이프라인에 연결(Binding - 리소스 객체 쉐이더에 연결)되어야 사용가능
+b. 리소스는 파이프라인에 직접 연결되지 않고 서술자(Descriptor)를 통해 연결 
+c. 리소스 바인딩에 대한 규약은 루트 시그니쳐가 담당한다.
+
+* SubResource  서브 리소스 
+	- 텍스처 리소스의 부분집합 ( 텍스처는 서브리소스들의 집합으로 취급 )
+	- 각 서브 리소스는 인덱스로 접근한다.
+	- 버퍼는 하나의 서브리소스로 구성된다. ( 서브리소스 인덱스 필요없음)
+	- 텍스쳐는 텍스쳐 유형에 따라 서브 리소스 개수 달라짐 ( 배열크기와 밉맵 레벨에 다라 )
+	- 밉맵 텍스쳐는 하나의 서브리소스로 취급됨  
+	- SubResource Index = MipSlice + (ArraySlice * MipLevels)
+		
+		Array Index	  [0]    [1]     [2]    [3]    [4] ...
+		MupLevel
+
+		[0]			[.....][     ][     ][     ]
+		[1]			[ ... ][     ][     ][     ]
+					-----------------------------
+		[2]			[  .  ][     ][     ][     ]   → MipSlice 
+					-----------------------------
+					↓
+			   Array Slice 
+		...
+
+
+ID3D12Resource::Map -  GPU 액세스 비활성화 
+	- 리소스 갱신 ( 리소스(서브 리소스) 에 대한 CPU 포인터 반환 )
+		* Default 
+		* Upload 
+		* ReadBack
+
+	
+ID3D12Resource::Unmap - GPU 액세스 활성화 
+
+
+
+ID3D12GraphicsCommandList::CopyResource() -> GPU 에서 리소스 전체를 복사
+ID3D12GraphicsCommandList::CopyBufferRegion() -> GPU 에서 리소스의 일부 영역을 다른 리소스로 복사
+ID3D12GraphicsCommandList::CopyTextureRegion()
+
+
+ID3D12Resource::WriteToSubresource() -> CPU 를 사용하여 데이터를 서브리소스로 복사 
+										리소스는 먼저 Map()호출로 매핑되어야 한다. 
+										D3D12_RESOURCE_STATE_COMMON 상태이어야한다. 
+
+
+ID3D12Resource::ReadFromSubresource() -> CPU 를 사용하여 서브리소스를 데이터로 복사한다. 
+
+
+ID3D12Resource:: GetCopyableFootPrints() -> 리소스의 복사 할 수 있는 서브리소스 구조(레이아웃)정보를 반혼 

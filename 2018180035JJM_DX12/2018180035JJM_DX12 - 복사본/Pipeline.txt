@@ -1,0 +1,52 @@
+
+
+파이프 라인
+
+[ Input Assembler ] 
+
+	- 입력된 정점 데이터를 읽어서 프리미티브를 조립하고 
+	- 시스템 생성 값을 추가하여 Vertex Shader 로 출력한다.
+
+	1. 입력 버퍼(정점or인덱스 버퍼)객체 생성 
+		ID3D12Device::CreateCommittedResource()
+
+	2. 입력 버퍼(정점or인덱스 버퍼)에 대한 뷰 생성
+		D3D12_VERTEX_BUFFER_VIEW
+		D3D12_INDEX_BUFFER_VIEW
+
+	3. 입력-레이아웃 생성 ( Input Layout - 정점 버퍼의 한 원소 구조 )
+		D3D12_INPUT_ELEMENT_DESC
+
+	4. 입력 버퍼와 Input Layout 을 파이프라인 에 연결 
+		D3D12_GRAPHICS_PIPELINE_STATE_DESC::InputLayout
+
+	5. 프리미티브 설정 ( IA - 입력 데이터를 프리미티브 형태로 조립 )
+		ID3D12GraphicsCommandList::IASetPrimitiveTopology()
+
+	6. 입력 버퍼를 입력 조립단계에 연결 
+		ID3D12GraphicsCommandList::IASetIndexBuffer()
+		ID3D12GraphicsCommandList::IASetVertexBuffers()
+
+	7. 그리기 함수 호출 
+		ID3D12GraphicsCommandList::DrawIndexedInstanced()
+		ID3D12GraphicsCommandList::DrawInstanced()
+	
+
+
+
+{ Vertex Shader }
+
+{ Hull Shader }
+
+[ Tesselator ]
+
+{ Domain Shader }
+
+{ Geometry SHader }
+
+[ Rasterizer ]
+
+{ Pixel Shader }
+
+[ Output Merger ]
+

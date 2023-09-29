@@ -1,0 +1,19 @@
+		
+	1.	
+	D3D12_HEAP_TYPE_DEFAULT 는 맵을 호출 할 수 없다고 피피티에 쓰여있는데 여기서는 왜
+	이렇게 만들어진거지??
+
+		case D3D12_HEAP_TYPE_DEFAULT:
+		{
+			if (pd3dUploadBuffer)
+			{
+
+				(*pd3dUploadBuffer)->Map(0, &d3dReadRange, (void**)&pBufferDataBegin);
+
+
+	2.
+	* 하나의 쉐이더에 동시에 16개의 샘플러 연결 가능 
+	128개의 테스처와 버퍼, 16(실제로 14)개의 상수 버퍼를 연결 가능 
+
+
+
