@@ -79,10 +79,10 @@ void CScene::OnCreate()
 	CGameObject* CubeObj = new CGameObject;
 	CubeObj->SetPipelineStateKeyName("Basic");
 	CubeObj->SetName("Cube");
-	CubeObj->SetMesh(ResourceManager::GetInst()->GetMesh("Cube"));
+	CubeObj->SetMesh(RES_MGR->GetMesh("Cube"));
 
-	ResourceManager::GetInst()->GetMaterial("rotor0")->SetTexture(RES_MGR->GetTexture("Image/Stone.dds"));
-	CubeObj->SetMaterial(0, ResourceManager::GetInst()->GetMaterial("rotor0"));
+	RES_MGR->GetMaterial("rotor0")->SetTexture(RES_MGR->GetTexture("Image/Stone.dds"));
+	CubeObj->SetMaterial(0, RES_MGR->GetMaterial("rotor0"));
 	
 	CTransform* CubeTrans = new CTransform;
 	CubeTrans->SetScale(10.f, 10.f, 10.f);

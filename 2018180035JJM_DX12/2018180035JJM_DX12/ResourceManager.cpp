@@ -103,28 +103,28 @@ ComPtr<ID3D12Resource> ResourceManager::CreateBufferResource(void* pData
 															, ComPtr<ID3D12Resource>* pd3dUploadBuffer)
 {
 	ComPtr<ID3D12Resource> pd3dBuffer{};
-	
+
 	D3D12_HEAP_PROPERTIES d3dHeapPropertiesDesc;
 	::ZeroMemory(&d3dHeapPropertiesDesc, sizeof(D3D12_HEAP_PROPERTIES));
-	d3dHeapPropertiesDesc.Type                 = d3dHeapType;
-	d3dHeapPropertiesDesc.CPUPageProperty      = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+	d3dHeapPropertiesDesc.Type = d3dHeapType;
+	d3dHeapPropertiesDesc.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
 	d3dHeapPropertiesDesc.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
-	d3dHeapPropertiesDesc.CreationNodeMask     = 1;
-	d3dHeapPropertiesDesc.VisibleNodeMask      = 1;
+	d3dHeapPropertiesDesc.CreationNodeMask = 1;
+	d3dHeapPropertiesDesc.VisibleNodeMask = 1;
 
 	D3D12_RESOURCE_DESC d3dResourceDesc;
 	::ZeroMemory(&d3dResourceDesc, sizeof(D3D12_RESOURCE_DESC));
-	d3dResourceDesc.Dimension          = D3D12_RESOURCE_DIMENSION_BUFFER;
-	d3dResourceDesc.Alignment          = 0;
-	d3dResourceDesc.Width              = nBytes;
-	d3dResourceDesc.Height             = 1;
-	d3dResourceDesc.DepthOrArraySize   = 1;
-	d3dResourceDesc.MipLevels          = 1;
-	d3dResourceDesc.Format             = DXGI_FORMAT_UNKNOWN;
-	d3dResourceDesc.SampleDesc.Count   = 1;
+	d3dResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+	d3dResourceDesc.Alignment = 0;
+	d3dResourceDesc.Width = nBytes;
+	d3dResourceDesc.Height = 1;
+	d3dResourceDesc.DepthOrArraySize = 1;
+	d3dResourceDesc.MipLevels = 1;
+	d3dResourceDesc.Format = DXGI_FORMAT_UNKNOWN;
+	d3dResourceDesc.SampleDesc.Count = 1;
 	d3dResourceDesc.SampleDesc.Quality = 0;
-	d3dResourceDesc.Layout             = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-	d3dResourceDesc.Flags              = D3D12_RESOURCE_FLAG_NONE;
+	d3dResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+	d3dResourceDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
 
 	D3D12_RESOURCE_STATES d3dResourceInitialStates = D3D12_RESOURCE_STATE_COMMON;
 	//	if (d3dHeapType == D3D12_HEAP_TYPE_UPLOAD) d3dResourceInitialStates = D3D12_RESOURCE_STATE_GENERIC_READ;
@@ -166,11 +166,11 @@ ComPtr<ID3D12Resource> ResourceManager::CreateBufferResource(void* pData
 				D3D12_RESOURCE_BARRIER d3dResourceBarrier;
 				::ZeroMemory(&d3dResourceBarrier, sizeof(D3D12_RESOURCE_BARRIER));
 
-				d3dResourceBarrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-				d3dResourceBarrier.Flags                  = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-				d3dResourceBarrier.Transition.pResource   = pd3dBuffer.Get();
+				d3dResourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+				d3dResourceBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+				d3dResourceBarrier.Transition.pResource = pd3dBuffer.Get();
 				d3dResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
-				d3dResourceBarrier.Transition.StateAfter  = d3dResourceStates;
+				d3dResourceBarrier.Transition.StateAfter = d3dResourceStates;
 				d3dResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 
 				DX12_COMMAND_LIST->ResourceBarrier(1, &d3dResourceBarrier);
